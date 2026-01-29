@@ -2,9 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>ANN BERRY MARCUS 字符阵列</title>
+    <title>ANN BERRY MARCUS 全屏阵列</title>
     <style>
-        body { margin: 0; overflow: hidden; background: #050505; cursor: crosshair; }
+        body { margin: 0; overflow: hidden; background: #000; cursor: crosshair; }
         canvas { display: block; }
     </style>
 </head>
@@ -16,14 +16,11 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
 let width, height;
-let mouseX = 0, mouseY = 0;
 let lastMouseX = 0, lastMouseY = 0;
 let speed = 0;
 let hueOffset = 0;
 
-// 定义三个名字
 const names = ["ANN", "BERRY", "MARCUS"];
-const fontSize = 12; // 小字母的基础大小
 
 function resize() {
     width = canvas.width = window.innerWidth;
@@ -33,7 +30,7 @@ function resize() {
 window.addEventListener('resize', resize);
 window.addEventListener('mousemove', (e) => {
     const dist = Math.sqrt(Math.pow(e.clientX - lastMouseX, 2) + Math.pow(e.clientY - lastMouseY, 2));
-    speed = Math.min(dist, 100); 
+    speed = Math.min(dist, 120); 
     lastMouseX = e.clientX;
     lastMouseY = e.clientY;
 });
@@ -50,59 +47,65 @@ function drawReference() {
     octx.textAlign = "center";
     octx.textBaseline = "middle";
     
-    const mainFontSize = Math.min(width / 8, 150);
+    // 计算铺满全屏的字号：高度的 1/4 作为基准
+    const sectionHeight = height / 3;
+    const mainFontSize = Math.min(width / 5, sectionHeight * 0.9);
     
-    // 绘制三个大字区域作为采样参考
+    octx.font = `900 ${mainFontSize}px sans-serif`; // 使用最粗体字
+    
+    // 均匀分布在三行
     names.forEach((name, i) => {
-        octx.font = `bold ${mainFontSize}px Arial`;
-        octx.fillText(name, width / 2, height * (i + 1) / 4);
+        octx.fillText(name, width / 2, sectionHeight * i + sectionHeight / 2);
     });
 }
 
 function animate() {
-    // 渐淡背景，制造丝滑的视觉残留
-    ctx.fillStyle = 'rgba(5, 5, 5, 0.2)';
+    // 增加一点点透明度让拖尾更长，更有氛围感
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
     ctx.fillRect(0, 0, width, height);
 
     drawReference();
     const imgData = octx.getImageData(0, 0, width, height).data;
     
-    hueOffset += 0.5 + (speed / 10); // 移动越快，颜色转得越快
+    // 颜色随鼠标速度动态加速
+    hueOffset += 1 + (speed / 5);
     
-    // 遍历点阵
-    // 我们步进大一点以容纳完整的小名字
-    const stepX = 35; 
-    const stepY = 15;
+    // 步进值调整：stepX 决定横向间距，stepY 决定纵向间距
+    const stepX = 45; 
+    const stepY = 16;
+    const fontSize = 13;
 
     for (let y = 0; y < height; y += stepY) {
         for (let x = 0; x < width; x += stepX) {
             const index = (Math.floor(y) * width + Math.floor(x)) * 4;
             
-            if (imgData[index] > 128) {
-                // 判断当前位置属于哪一个名字区域
+            // 只要在该位置有文字底稿
+            if (imgData[index] > 100) {
+                // 根据 Y 轴位置分配小名字
                 let activeName = "";
-                if (y < height * 0.37) activeName = names[0];
-                else if (y < height * 0.62) activeName = names[1];
+                if (y < height * 0.33) activeName = names[0];
+                else if (y < height * 0.66) activeName = names[1];
                 else activeName = names[2];
 
-                // 颜色计算
-                const h = (hueOffset + x/10) % 360;
-                const s = 50 + (speed / 2);
-                const l = 40 + (speed / 4);
+                // 彩虹色彩逻辑：鼠标越快，颜色越亮、饱和度越高
+                const h = (hueOffset + (x / width) * 100 + (y / height) * 50) % 360;
+                const s = 60 + (speed / 2);
+                const l = 45 + (speed / 3);
                 
                 ctx.fillStyle = `hsl(${h}, ${s}%, ${l}%)`;
-                ctx.font = `bold ${fontSize}px monospace`;
+                ctx.font = `bold ${fontSize}px "Courier New", monospace`;
                 
-                // 增加一点点随机抖动，让画面更灵动
-                const jitterX = (Math.random() - 0.5) * (speed / 5);
-                const jitterY = (Math.random() - 0.5) * (speed / 5);
+                // 鼠标速度带来的位置扰动
+                const shift = (speed / 10);
+                const rx = (Math.random() - 0.5) * shift;
+                const ry = (Math.random() - 0.5) * shift;
                 
-                ctx.fillText(activeName, x + jitterX, y + jitterY);
+                ctx.fillText(activeName, x + rx, y + ry);
             }
         }
     }
 
-    speed *= 0.95; // 速度摩擦力
+    speed *= 0.94; // 摩擦力使变色平缓停止
     requestAnimationFrame(animate);
 }
 
