@@ -2,114 +2,85 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>ANN BERRY MARCUS 全屏阵列</title>
+    <title>ANN BERRY MARCUS - 手势控制旋转</title>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; background: #000; cursor: crosshair; }
+        body { margin: 0; overflow: hidden; background: #000; color: white; font-family: sans-serif; }
         canvas { display: block; }
+        /* 隐藏原始视频，仅用于后台处理 */
+        #input_video { display: none; }
+        #status { position: absolute; top: 10px; left: 10px; color: #0f0; z-index: 10; font-size: 12px; }
     </style>
 </head>
 <body>
-<canvas id="canvas"></canvas>
+    <div id="status">正在启动摄像头并加载模型...</div>
+    <video id="input_video"></video>
+    <canvas id="output_canvas"></canvas>
 
 <script>
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d', { willReadFrequently: true });
-
-let width, height;
-let lastMouseX = 0, lastMouseY = 0;
-let speed = 0;
-let hueOffset = 0;
+const videoElement = document.getElementById('input_video');
+const canvasElement = document.getElementById('output_canvas');
+const ctx = canvasElement.getContext('2d');
+const status = document.getElementById('status');
 
 const names = ["ANN", "BERRY", "MARCUS"];
+let width, height;
+let rotationY = 0; // 旋转角度
+let targetRotationY = 0;
+let lastIndexX = 0.5; // 上次手指位置
 
 function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
+    width = canvasElement.width = window.innerWidth;
+    height = canvasElement.height = window.innerHeight;
 }
-
 window.addEventListener('resize', resize);
-window.addEventListener('mousemove', (e) => {
-    const dist = Math.sqrt(Math.pow(e.clientX - lastMouseX, 2) + Math.pow(e.clientY - lastMouseY, 2));
-    speed = Math.min(dist, 120); 
-    lastMouseX = e.clientX;
-    lastMouseY = e.clientY;
-});
-
 resize();
 
-const offscreen = document.createElement('canvas');
-const octx = offscreen.getContext('2d');
-
-function drawReference() {
-    offscreen.width = width;
-    offscreen.height = height;
-    octx.fillStyle = "white";
-    octx.textAlign = "center";
-    octx.textBaseline = "middle";
+// 处理手势结果
+function onResults(results) {
+    status.innerText = "手势检测中 - 移动右手旋转名字";
     
-    // 计算铺满全屏的字号：高度的 1/4 作为基准
-    const sectionHeight = height / 3;
-    const mainFontSize = Math.min(width / 5, sectionHeight * 0.9);
-    
-    octx.font = `900 ${mainFontSize}px sans-serif`; // 使用最粗体字
-    
-    // 均匀分布在三行
-    names.forEach((name, i) => {
-        octx.fillText(name, width / 2, sectionHeight * i + sectionHeight / 2);
-    });
-}
-
-function animate() {
-    // 增加一点点透明度让拖尾更长，更有氛围感
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    // 清空画布
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, width, height);
 
-    drawReference();
-    const imgData = octx.getImageData(0, 0, width, height).data;
-    
-    // 颜色随鼠标速度动态加速
-    hueOffset += 1 + (speed / 5);
-    
-    // 步进值调整：stepX 决定横向间距，stepY 决定纵向间距
-    const stepX = 45; 
-    const stepY = 16;
-    const fontSize = 13;
-
-    for (let y = 0; y < height; y += stepY) {
-        for (let x = 0; x < width; x += stepX) {
-            const index = (Math.floor(y) * width + Math.floor(x)) * 4;
-            
-            // 只要在该位置有文字底稿
-            if (imgData[index] > 100) {
-                // 根据 Y 轴位置分配小名字
-                let activeName = "";
-                if (y < height * 0.33) activeName = names[0];
-                else if (y < height * 0.66) activeName = names[1];
-                else activeName = names[2];
-
-                // 彩虹色彩逻辑：鼠标越快，颜色越亮、饱和度越高
-                const h = (hueOffset + (x / width) * 100 + (y / height) * 50) % 360;
-                const s = 60 + (speed / 2);
-                const l = 45 + (speed / 3);
-                
-                ctx.fillStyle = `hsl(${h}, ${s}%, ${l}%)`;
-                ctx.font = `bold ${fontSize}px "Courier New", monospace`;
-                
-                // 鼠标速度带来的位置扰动
-                const shift = (speed / 10);
-                const rx = (Math.random() - 0.5) * shift;
-                const ry = (Math.random() - 0.5) * shift;
-                
-                ctx.fillText(activeName, x + rx, y + ry);
-            }
-        }
+    // 检查是否有检测到手
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        // 获取第一只手（通常是右手，MediaPipe会标注左右）
+        const landmarks = results.multiHandLandmarks[0];
+        const indexFingerTip = landmarks[8]; // 食指尖的关键点索引为 8
+        
+        // 计算旋转：根据手指在屏幕上的水平位置计算目标角度
+        // 这里的 0.5 是中心点，减去它得到偏移量
+        targetRotationY = (indexFingerTip.x - 0.5) * Math.PI * 2;
     }
 
-    speed *= 0.94; // 摩擦力使变色平缓停止
-    requestAnimationFrame(animate);
+    // 缓动平滑旋转
+    rotationY += (targetRotationY - rotationY) * 0.1;
+
+    drawNames();
 }
 
-animate();
-</script>
-</body>
-</html>
+function drawNames() {
+    const sectionHeight = height / 3;
+    const fontSize = Math.min(width / 6, sectionHeight * 0.7);
+    const subFontSize = 14;
+
+    names.forEach((name, i) => {
+        const centerY = sectionHeight * i + sectionHeight / 2;
+        
+        ctx.save();
+        ctx.translate(width / 2, centerY);
+        
+        // 核心旋转逻辑：使用 scale 控制视觉上的水平翻转，模拟旋转
+        // 加入 Math.cos(rotationY) 让名字有“变薄-消失-反转”的立体感
+        const scale = Math.cos(rotationY);
+        ctx.scale(scale, 1);
+
+        // 设置动态色彩
+        const hue = (Date.now() / 20 + i * 60) % 360;
+        ctx.fillStyle = `hsl(${hue}, 80%, 60%)`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
