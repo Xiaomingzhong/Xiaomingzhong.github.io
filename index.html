@@ -2,85 +2,139 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>ANN BERRY MARCUS - 手势控制旋转</title>
+    <title>ANN BERRY MARCUS - 手势交互终极版</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; background: #000; color: white; font-family: sans-serif; }
+        body { margin: 0; overflow: hidden; background: #000; }
         canvas { display: block; }
-        /* 隐藏原始视频，仅用于后台处理 */
         #input_video { display: none; }
-        #status { position: absolute; top: 10px; left: 10px; color: #0f0; z-index: 10; font-size: 12px; }
+        #status { 
+            position: absolute; top: 20px; left: 20px; 
+            color: #00ffcc; font-family: monospace; z-index: 100;
+            background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-    <div id="status">正在启动摄像头并加载模型...</div>
+    <div id="status">正在初始化摄像头手势系统...</div>
     <video id="input_video"></video>
     <canvas id="output_canvas"></canvas>
 
 <script>
 const videoElement = document.getElementById('input_video');
-const canvasElement = document.getElementById('output_canvas');
-const ctx = canvasElement.getContext('2d');
+const canvas = document.getElementById('output_canvas');
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
 const status = document.getElementById('status');
 
 const names = ["ANN", "BERRY", "MARCUS"];
 let width, height;
-let rotationY = 0; // 旋转角度
+let rotationY = 0;
 let targetRotationY = 0;
-let lastIndexX = 0.5; // 上次手指位置
+let hue = 0;
+
+// 离屏画布：用于生成名字的像素模板
+const offCanvas = document.createElement('canvas');
+const octx = offCanvas.getContext('2d');
 
 function resize() {
-    width = canvasElement.width = window.innerWidth;
-    height = canvasElement.height = window.innerHeight;
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+    offCanvas.width = width;
+    offCanvas.height = height;
 }
 window.addEventListener('resize', resize);
 resize();
 
-// 处理手势结果
-function onResults(results) {
-    status.innerText = "手势检测中 - 移动右手旋转名字";
-    
-    // 清空画布
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, width, height);
-
-    // 检查是否有检测到手
-    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-        // 获取第一只手（通常是右手，MediaPipe会标注左右）
-        const landmarks = results.multiHandLandmarks[0];
-        const indexFingerTip = landmarks[8]; // 食指尖的关键点索引为 8
-        
-        // 计算旋转：根据手指在屏幕上的水平位置计算目标角度
-        // 这里的 0.5 是中心点，减去它得到偏移量
-        targetRotationY = (indexFingerTip.x - 0.5) * Math.PI * 2;
-    }
-
-    // 缓动平滑旋转
-    rotationY += (targetRotationY - rotationY) * 0.1;
-
-    drawNames();
-}
-
-function drawNames() {
+// 绘制大字模板并获取像素数据
+function getNamePixels() {
+    octx.clearRect(0, 0, width, height);
+    octx.fillStyle = "white";
+    octx.textAlign = "center";
+    octx.textBaseline = "middle";
     const sectionHeight = height / 3;
-    const fontSize = Math.min(width / 6, sectionHeight * 0.7);
-    const subFontSize = 14;
+    const fontSize = Math.min(width / 6, sectionHeight * 0.8);
+    octx.font = `900 ${fontSize}px sans-serif`;
 
     names.forEach((name, i) => {
-        const centerY = sectionHeight * i + sectionHeight / 2;
-        
-        ctx.save();
-        ctx.translate(width / 2, centerY);
-        
-        // 核心旋转逻辑：使用 scale 控制视觉上的水平翻转，模拟旋转
-        // 加入 Math.cos(rotationY) 让名字有“变薄-消失-反转”的立体感
-        const scale = Math.cos(rotationY);
-        ctx.scale(scale, 1);
+        octx.fillText(name, width / 2, sectionHeight * i + sectionHeight / 2);
+    });
+    return octx.getImageData(0, 0, width, height).data;
+}
 
-        // 设置动态色彩
-        const hue = (Date.now() / 20 + i * 60) % 360;
-        ctx.fillStyle = `hsl(${hue}, 80%, 60%)`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+function onResults(results) {
+    status.innerText = results.multiHandLandmarks?.length > 0 ? "右手已锁定：左右移动手指旋转名字" : "等待右手进入画面...";
+    
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        const hand = results.multiHandLandmarks[0];
+        // 追踪食指尖 (Landmark 8) 的 X 轴坐标
+        const x = hand[8].x;
+        targetRotationY = (x - 0.5) * Math.PI * 1.5; // 映射旋转角度
+    }
+
+    render();
+}
+
+function render() {
+    // 渐隐效果
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+    ctx.fillRect(0, 0, width, height);
+
+    const pixels = getNamePixels();
+    rotationY += (targetRotationY - rotationY) * 0.1; // 平滑过渡
+    hue = (hue + 1) % 360;
+
+    const stepX = 40; // 小名字横向密度
+    const stepY = 18; // 小名字纵向密度
+
+    for (let y = 0; y < height; y += stepY) {
+        for (let x = 0; x < width; x += stepX) {
+            const i = (Math.floor(y) * width + Math.floor(x)) * 4;
+            
+            if (pixels[i] > 128) { // 如果模板上有字
+                let activeName = names[Math.floor(y / (height / 3.01))];
+
+                ctx.save();
+                // 1. 移动到大字中心点（以便绕中心旋转）
+                ctx.translate(width / 2, 0);
+                // 2. 模拟 3D 旋转效果：计算物体在该角度下的投影 X 坐标
+                const perspectiveX = (x - width / 2) * Math.cos(rotationY);
+                
+                // 颜色随 Y 坐标和旋转角度变化
+                const dynamicHue = (hue + y / 5 + rotationY * 50) % 360;
+                ctx.fillStyle = `hsl(${dynamicHue}, 80%, 60%)`;
+                ctx.font = "bold 12px monospace";
+                
+                // 3. 渲染小名字
+                ctx.fillText(activeName, perspectiveX, y);
+                ctx.restore();
+            }
+        }
+    }
+}
+
+// 初始化 MediaPipe
+const hands = new Hands({
+    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+});
+
+hands.setOptions({
+    maxNumHands: 1,
+    modelComplexity: 1,
+    minDetectionConfidence: 0.7,
+    minTrackingConfidence: 0.7
+});
+
+hands.onResults(onResults);
+
+const camera = new Camera(videoElement, {
+    onFrame: async () => {
+        await hands.send({image: videoElement});
+    },
+    width: 640,
+    height: 480
+});
+camera.start();
+</script>
+</body>
+</html>
