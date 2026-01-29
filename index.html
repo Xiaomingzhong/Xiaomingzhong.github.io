@@ -2,9 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>ANN BERRY MARCUS - 手势交互终极版</title>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <title>ANN BERRY MARCUS - 手势交互版</title>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <style>
         body { margin: 0; overflow: hidden; background: #000; }
         canvas { display: block; }
@@ -12,13 +12,14 @@
         #status { 
             position: absolute; top: 20px; left: 20px; 
             color: #00ffcc; font-family: monospace; z-index: 100;
-            background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px;
+            background: rgba(0,0,0,0.7); padding: 15px; border-radius: 5px;
+            border: 1px solid #00ffcc;
         }
     </style>
 </head>
 <body>
-    <div id="status">正在初始化摄像头手势系统...</div>
-    <video id="input_video"></video>
+    <div id="status">正在初始化系统... 请确保已点击地址栏旁边的“允许摄像头”</div>
+    <video id="input_video" playsinline></video>
     <canvas id="output_canvas"></canvas>
 
 <script>
@@ -33,79 +34,71 @@ let rotationY = 0;
 let targetRotationY = 0;
 let hue = 0;
 
-// 离屏画布：用于生成名字的像素模板
-const offCanvas = document.createElement('canvas');
-const octx = offCanvas.getContext('2d');
-
 function resize() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
-    offCanvas.width = width;
-    offCanvas.height = height;
 }
 window.addEventListener('resize', resize);
 resize();
 
-// 绘制大字模板并获取像素数据
-function getNamePixels() {
-    octx.clearRect(0, 0, width, height);
+// --- 鼠标兜底方案 ---
+window.addEventListener('mousemove', (e) => {
+    // 如果摄像头没动，鼠标也能控制
+    if (!videoActive) {
+        targetRotationY = (e.clientX / width - 0.5) * Math.PI * 1.5;
+    }
+});
+
+let videoActive = false;
+
+function onResults(results) {
+    videoActive = true;
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        status.innerText = "🙌 已检测到手势：左右移动旋转名字";
+        const hand = results.multiHandLandmarks[0];
+        const x = hand[8].x; 
+        targetRotationY = (x - 0.5) * Math.PI * 1.5;
+    } else {
+        status.innerText = "📷 摄像头已开启：请将右手举入画面 (或使用鼠标移动)";
+    }
+    render();
+}
+
+function render() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.fillRect(0, 0, width, height);
+
+    // 绘制离屏采样
+    const offCanvas = document.createElement('canvas');
+    offCanvas.width = width; offCanvas.height = height;
+    const octx = offCanvas.getContext('2d');
     octx.fillStyle = "white";
     octx.textAlign = "center";
     octx.textBaseline = "middle";
     const sectionHeight = height / 3;
     const fontSize = Math.min(width / 6, sectionHeight * 0.8);
     octx.font = `900 ${fontSize}px sans-serif`;
-
     names.forEach((name, i) => {
         octx.fillText(name, width / 2, sectionHeight * i + sectionHeight / 2);
     });
-    return octx.getImageData(0, 0, width, height).data;
-}
 
-function onResults(results) {
-    status.innerText = results.multiHandLandmarks?.length > 0 ? "右手已锁定：左右移动手指旋转名字" : "等待右手进入画面...";
-    
-    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-        const hand = results.multiHandLandmarks[0];
-        // 追踪食指尖 (Landmark 8) 的 X 轴坐标
-        const x = hand[8].x;
-        targetRotationY = (x - 0.5) * Math.PI * 1.5; // 映射旋转角度
-    }
-
-    render();
-}
-
-function render() {
-    // 渐隐效果
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-    ctx.fillRect(0, 0, width, height);
-
-    const pixels = getNamePixels();
-    rotationY += (targetRotationY - rotationY) * 0.1; // 平滑过渡
+    const pixels = octx.getImageData(0, 0, width, height).data;
+    rotationY += (targetRotationY - rotationY) * 0.1;
     hue = (hue + 1) % 360;
 
-    const stepX = 40; // 小名字横向密度
-    const stepY = 18; // 小名字纵向密度
+    const stepX = 45; 
+    const stepY = 18;
 
     for (let y = 0; y < height; y += stepY) {
         for (let x = 0; x < width; x += stepX) {
             const i = (Math.floor(y) * width + Math.floor(x)) * 4;
-            
-            if (pixels[i] > 128) { // 如果模板上有字
+            if (pixels[i] > 128) {
                 let activeName = names[Math.floor(y / (height / 3.01))];
-
                 ctx.save();
-                // 1. 移动到大字中心点（以便绕中心旋转）
                 ctx.translate(width / 2, 0);
-                // 2. 模拟 3D 旋转效果：计算物体在该角度下的投影 X 坐标
                 const perspectiveX = (x - width / 2) * Math.cos(rotationY);
-                
-                // 颜色随 Y 坐标和旋转角度变化
-                const dynamicHue = (hue + y / 5 + rotationY * 50) % 360;
-                ctx.fillStyle = `hsl(${dynamicHue}, 80%, 60%)`;
+                ctx.fillStyle = `hsl(${(hue + y/10) % 360}, 80%, 60%)`;
                 ctx.font = "bold 12px monospace";
-                
-                // 3. 渲染小名字
                 ctx.fillText(activeName, perspectiveX, y);
                 ctx.restore();
             }
@@ -113,7 +106,9 @@ function render() {
     }
 }
 
-// 初始化 MediaPipe
+// 初始渲染一次（保证鼠标能用）
+setInterval(() => { if(!videoActive) render(); }, 30);
+
 const hands = new Hands({
     locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
 });
@@ -121,10 +116,9 @@ const hands = new Hands({
 hands.setOptions({
     maxNumHands: 1,
     modelComplexity: 1,
-    minDetectionConfidence: 0.7,
-    minTrackingConfidence: 0.7
+    minDetectionConfidence: 0.5,
+    minTrackingConfidence: 0.5
 });
-
 hands.onResults(onResults);
 
 const camera = new Camera(videoElement, {
@@ -134,7 +128,11 @@ const camera = new Camera(videoElement, {
     width: 640,
     height: 480
 });
-camera.start();
+
+// 捕获错误信息
+camera.start().catch(err => {
+    status.innerHTML = `<b style="color: #ff4444">无法调用摄像头:</b><br>${err}<br><br>💡 请检查 GitHub 页面权限，或改用鼠标移动测试效果。`;
+});
 </script>
 </body>
 </html>
