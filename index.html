@@ -1,94 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <title>Marcus Zhong — Photography & Motion</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #111;
-      color: #eee;
-    }
-    header {
-      padding: 60px 10%;
-    }
-    h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
-    nav a {
-      margin-right: 20px;
-      color: #aaa;
-      text-decoration: none;
-    }
-    section {
-      padding: 80px 10%;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .grid img {
-      width: 100%;
-      display: block;
-    }
-    iframe {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border: none;
-    }
-    footer {
-      padding: 40px 10%;
-      color: #666;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>ANN BERRY MARCUS - 字符矩阵</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; cursor: pointer; }
+        canvas { display: block; }
+    </style>
 </head>
-
 <body>
+<canvas id="canvas"></canvas>
 
-<header>
-  <h1>Marcus Zhong</h1>
-  <p>Photography · Video · AI Visual</p>
-  <nav>
-    <a href="#photo">Photography</a>
-    <a href="#video">Video</a>
-    <a href="#about">About</a>
-    <a href="#contact">Contact</a>
-  </nav>
-</header>
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-<section id="photo">
-  <h2>Photography</h2>
-  <div class="grid">
-    <img src="https://picsum.photos/800/600?1">
-    <img src="https://picsum.photos/800/600?2">
-    <img src="https://picsum.photos/800/600?3">
-  </div>
-</section>
+let width, height;
+let mouseX = 0, mouseY = 0;
+let lastMouseX = 0, lastMouseY = 0;
+let speed = 0;
+let baseHue = 0;
 
-<section id="video">
-  <h2>Video</h2>
-  <iframe src="https://player.vimeo.com/video/76979871"></iframe>
-</section>
+const charList = "ANNBERRYMARCUS"; 
+const fontSize = 10; // 每个小字母的大小
 
-<section id="about">
-  <h2>About Me</h2>
-  <p>
-    I am a visual creator focusing on photography, motion design and AI-driven visuals.
-  </p>
-</section>
+function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+}
 
-<section id="contact">
-  <h2>Contact</h2>
-  <p>Email: your@email.com</p>
-</section>
+window.addEventListener('resize', resize);
+window.addEventListener('mousemove', (e) => {
+    const dist = Math.sqrt(Math.pow(e.clientX - lastMouseX, 2) + Math.pow(e.clientY - lastMouseY, 2));
+    speed = Math.min(dist, 80); // 捕捉移动速度
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+});
 
-<footer>
-  © 2026 Marcus Zhong
-</footer>
+resize();
 
+// 在内存中绘制巨大的名字作为“底稿”
+const offscreen = document.createElement('canvas');
+const octx = offscreen.getContext('2d');
+
+function drawTextReference() {
+    offscreen.width = width;
+    offscreen.height = height;
+    octx.fillStyle = "white";
+    octx.textAlign = "center";
+    octx.textBaseline = "middle";
+    
+    // 根据屏幕宽度自动调整字号
+    const mainFontSize = Math.min(width / 10, 120);
+    octx.font = `bold ${mainFontSize}px Arial`;
+    
+    // 分三行绘制名字，视觉冲击力更强
+    octx.fillText("ANN", width / 2, height / 2 - mainFontSize);
+    octx.fillText("BERRY", width / 2, height / 2);
+    octx.fillText("MARCUS", width / 2, height / 2 + mainFontSize);
+}
+
+function animate() {
+    // 渐隐效果，制造流光拖尾
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+    ctx.fillRect(0, 0, width, height);
+
+    drawTextReference();
+    const imgData = octx.getImageData(0, 0, width, height).data;
+    
+    baseHue = (baseHue + 1) % 360;
+    
+    // 遍历屏幕点阵
+    for (let y = 0; y < height; y += fontSize) {
+        for (let x = 0; x < width; x += fontSize) {
+            const index = (Math.floor(y) * width + Math.floor(x)) * 4;
+            
+            // 如果底稿在这个坐标有文字（白色像素）
+            if (imgData[index] > 128) {
+                const char = charList[Math.floor(Math.random() * charList.length)];
+                
+                // 核心颜色逻辑：
+                // 1. 基础颜色随时间变化 (baseHue)
+                // 2. 鼠标移动速度越快，颜色偏移(speed*3)越剧烈，亮度(lightness)越高
+                const h = (baseHue + speed * 3) % 360;
+                const s = 60 + (speed / 2);
+                const l = 40 + (speed / 2);
+                
+                ctx.fillStyle = `hsl(${h}, ${s}%, ${l}%)`;
+                ctx.font = `${fontSize}px monospace`;
+                ctx.fillText(char, x, y);
+            }
+        }
+    }
+
+    // 速度平滑衰减
+    speed *= 0.96;
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
 </body>
 </html>
