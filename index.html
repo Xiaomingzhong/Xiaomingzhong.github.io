@@ -2,153 +2,268 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>3D Magic Name Generator - Fixed Loading</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Pose-to-Character AI - Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
     <style>
-        body { margin: 0; overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; }
-        #input_video { 
-            position: absolute; bottom: 10px; right: 10px; 
-            width: 120px; height: 90px; border: 2px solid #00ffcc; 
-            z-index: 100; border-radius: 4px; transform: scaleX(-1);
-            background: #222;
-        }
-        #ui-container {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 100; display: flex; gap: 10px; background: rgba(0, 0, 0, 0.7);
-            padding: 15px; border-radius: 12px; border: 1px solid #00ffcc;
-        }
-        input {
-            background: rgba(255, 255, 255, 0.1); border: 1px solid #00ffcc;
-            color: #fff; padding: 8px; border-radius: 5px; outline: none; width: 180px;
-        }
-        button {
-            background: #00ffcc; border: none; color: #000; padding: 8px 15px;
-            border-radius: 5px; cursor: pointer; font-weight: bold; min-width: 100px;
-        }
-        button:disabled { background: #444; color: #888; cursor: wait; }
-        #magic-msg {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(0, 255, 204, 0.15); color: #00ffcc; border: 2px solid #00ffcc;
-            padding: 20px 40px; border-radius: 50px; font-size: 22px; font-weight: bold;
-            text-align: center; z-index: 200; display: none; backdrop-filter: blur(10px);
-            animation: pulse 2s infinite; pointer-events: none;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
-        #status {
-            position: absolute; bottom: 20px; left: 20px; color: #00ffcc;
-            font-size: 11px; background: rgba(0,0,0,0.5); padding: 5px 10px;
-        }
+        body { margin: 0; overflow: hidden; background-color: #0f172a; font-family: 'Inter', sans-serif; }
+        canvas { display: block; }
+        .ui-card { backdrop-filter: blur(12px); background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255,255,255,0.1); }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 </head>
 <body>
-    <div id="ui-container">
-        <input type="text" id="nameInput" placeholder="English Name..." maxlength="12">
-        <button id="genBtn" onclick="onGenerateClick()" disabled>Loading...</button>
+
+    <div class="fixed top-6 left-6 z-10 space-y-4">
+        <div class="ui-card p-6 rounded-3xl shadow-2xl text-white w-80">
+            <h1 class="text-2xl font-black mb-1 bg-gradient-to-r from-amber-200 to-yellow-500 bg-clip-text text-transparent">3D POSE AI</h1>
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-6">Wooden Mannequin Editor</p>
+            
+            <div class="space-y-5">
+                <div>
+                    <label class="text-[10px] font-bold text-gray-500 uppercase mb-2 block">Quick Poses</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="applyPose('tpose')" class="bg-slate-800 hover:bg-slate-700 py-2 rounded-xl text-xs transition border border-slate-700">Default</button>
+                        <button onclick="applyPose('run')" class="bg-slate-800 hover:bg-slate-700 py-2 rounded-xl text-xs transition border border-slate-700">Running</button>
+                        <button onclick="applyPose('sit')" class="bg-slate-800 hover:bg-slate-700 py-2 rounded-xl text-xs transition border border-slate-700">Sitting</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase mb-2 block">Lens</label>
+                        <select id="lensSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs outline-none">
+                            <option value="45">Standard</option>
+                            <option value="28">Wide</option>
+                            <option value="85">Tele</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase mb-2 block">Ratio</label>
+                        <select id="ratioSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs outline-none">
+                            <option value="1">1:1</option>
+                            <option value="0.75">3:4</option>
+                            <option value="1.77">16:9</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="magic-msg">You made it! <br> Now wave your hand and feel the magic!</div>
-    <div id="status">Starting 3D Engine...</div>
-    <video id="input_video"></video>
 
-    <script>
-        let scene, camera, renderer, textGroup, globalFont;
-        let targetRotationY = 0, canControl = false, videoActive = false;
-        const statusDiv = document.getElementById('status');
-        const genBtn = document.getElementById('genBtn');
-        const magicMsg = document.getElementById('magic-msg');
-        const videoElement = document.getElementById('input_video');
+    <div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3">
+        <p class="text-white/40 text-[10px] uppercase tracking-tighter">Drag gizmo to rotate joints</p>
+        <button id="captureBtn" class="bg-gradient-to-br from-amber-400 to-orange-600 hover:from-amber-300 hover:to-orange-500 text-white font-black py-4 px-16 rounded-2xl shadow-[0_0_30px_rgba(245,158,11,0.3)] transition-all active:scale-95 uppercase tracking-widest text-sm">
+            Capture & Save
+        </button>
+    </div>
 
-        function initThree() {
+    <div id="container"></div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { TransformControls } from 'three/addons/controls/TransformControls.js';
+
+        let scene, camera, renderer, orbit, transformControl, raycaster;
+        const joints = {}; // Store joints by name for easy access
+        const mouse = new THREE.Vector2();
+
+        init();
+        animate();
+
+        function init() {
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 25;
-            renderer = new THREE.WebGLRenderer({ antialias: true });
+            scene.background = new THREE.Color(0x0f172a);
+            scene.fog = new THREE.Fog(0x0f172a, 10, 30);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
+            renderer.shadowMap.enabled = true;
+            renderer.toneMapping = THREE.ReinhardToneMapping;
+            document.getElementById('container').appendChild(renderer.domElement);
 
-            textGroup = new THREE.Group();
-            scene.add(textGroup);
-            scene.add(new THREE.AmbientLight(0xffffff, 1));
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(4, 3, 6);
 
-            // 加载字体：主路径和备用路径
-            const loader = new THREE.FontLoader();
-            const fontPaths = [
-                'https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/fonts/helvetiker_bold.typeface.json',
-                'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_bold.typeface.json'
-            ];
+            // Lighting
+            const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+            scene.add(hemiLight);
 
-            function loadFont(index) {
-                if (index >= fontPaths.length) {
-                    statusDiv.innerText = "Error: Failed to load fonts. Check connection.";
-                    return;
-                }
-                loader.load(fontPaths[index], 
-                    (font) => {
-                        globalFont = font;
-                        genBtn.disabled = false;
-                        genBtn.innerText = "Generate";
-                        statusDiv.innerText = "3D Engine Ready.";
-                    },
-                    undefined,
-                    () => loadFont(index + 1)
-                );
-            }
-            loadFont(0);
-            animate();
+            const spotLight = new THREE.SpotLight(0xffffff, 20);
+            spotLight.position.set(5, 8, 5);
+            spotLight.castShadow = true;
+            scene.add(spotLight);
+
+            // Floor
+            const floor = new THREE.Mesh(
+                new THREE.PlaneGeometry(50, 50),
+                new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8 })
+            );
+            floor.rotation.x = -Math.PI / 2;
+            floor.receiveShadow = true;
+            scene.add(floor);
+
+            // Material
+            const woodMat = new THREE.MeshStandardMaterial({ 
+                color: 0xba8a5d, 
+                roughness: 0.4, 
+                metalness: 0.1,
+                flatShading: false
+            });
+
+            buildCharacter(woodMat);
+
+            // Controls
+            orbit = new OrbitControls(camera, renderer.domElement);
+            orbit.target.set(0, 1, 0);
+            orbit.update();
+            
+            transformControl = new TransformControls(camera, renderer.domElement);
+            transformControl.setMode('rotate');
+            transformControl.setSize(0.8);
+            scene.add(transformControl);
+
+            raycaster = new THREE.Raycaster();
+            window.addEventListener('mousedown', onMouseDown);
+            window.addEventListener('resize', onWindowResize);
+
+            // UI Listeners
+            document.getElementById('lensSelect').addEventListener('change', e => {
+                camera.fov = e.target.value;
+                camera.updateProjectionMatrix();
+            });
+            document.getElementById('captureBtn').addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.download = 'character-pose.png';
+                link.href = renderer.domElement.toDataURL();
+                link.click();
+            });
         }
 
-        function onGenerateClick() {
-            const val = document.getElementById('nameInput').value.trim();
-            if(!val) return;
+        function buildCharacter(material) {
+            const createPart = (geo, mat, name, parent) => {
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.name = name;
+                mesh.castShadow = true;
+                parent.add(mesh);
+                return mesh;
+            };
+
+            const jointGeo = new THREE.SphereGeometry(0.1, 32, 32);
+            const limbGeo = (len) => new THREE.CylinderGeometry(0.08, 0.06, len, 16);
+
+            // --- HIERARCHY ---
+            // Root - Pelvis
+            const pelvis = createPart(new THREE.CapsuleGeometry(0.15, 0.2, 4, 16), material, "pelvis", scene);
+            pelvis.position.y = 1.1;
+            joints.pelvis = pelvis;
+
+            // Spine to Neck
+            const spine = createPart(new THREE.CapsuleGeometry(0.18, 0.4, 4, 16), material, "spine", pelvis);
+            spine.position.y = 0.35;
+            joints.spine = spine;
+
+            const head = createPart(new THREE.SphereGeometry(0.15, 32, 32), material, "head", spine);
+            head.position.y = 0.45;
+            head.scale.y = 1.2;
+            joints.head = head;
+
+            // Arms (L/R)
+            const setupArm = (side) => {
+                const sign = side === 'L' ? -1 : 1;
+                const shoulder = createPart(jointGeo, material, `${side}_shoulder`, spine);
+                shoulder.position.set(sign * 0.3, 0.25, 0);
+                
+                const upperArm = createPart(limbGeo(0.4), material, `${side}_upperarm`, shoulder);
+                upperArm.position.y = -0.2;
+                
+                const elbow = createPart(jointGeo, material, `${side}_elbow`, upperArm);
+                elbow.position.y = -0.2;
+                
+                const lowerArm = createPart(limbGeo(0.4), material, `${side}_lowerarm`, elbow);
+                lowerArm.position.y = -0.2;
+
+                joints[`${side}_shoulder`] = shoulder;
+                joints[`${side}_elbow`] = elbow;
+            };
+
+            // Legs (L/R)
+            const setupLeg = (side) => {
+                const sign = side === 'L' ? -1 : 1;
+                const hip = createPart(jointGeo, material, `${side}_hip`, pelvis);
+                hip.position.set(sign * 0.15, -0.15, 0);
+                
+                const thigh = createPart(limbGeo(0.5), material, `${side}_thigh`, hip);
+                thigh.position.y = -0.25;
+                
+                const knee = createPart(jointGeo, material, `${side}_knee`, thigh);
+                knee.position.y = -0.25;
+                
+                const calf = createPart(limbGeo(0.5), material, `${side}_calf`, knee);
+                calf.position.y = -0.25;
+
+                joints[`${side}_hip`] = hip;
+                joints[`${side}_knee`] = knee;
+            };
+
+            setupArm('L'); setupArm('R');
+            setupLeg('L'); setupLeg('R');
+        }
+
+        function onMouseDown(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
             
-            while(textGroup.children.length > 0) textGroup.remove(textGroup.children[0]);
-            const geo = new THREE.TextGeometry(val.toUpperCase(), {
-                font: globalFont, size: 5, height: 1.5, bevelEnabled: true, bevelThickness: 0.2, bevelSize: 0.1
-            });
-            geo.center();
-            textGroup.add(new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0x00ffcc, wireframe: true })));
+            const intersects = raycaster.intersectObjects(Object.values(joints), true);
+            if (intersects.length > 0) {
+                const target = intersects[0].object;
+                transformControl.attach(target);
+            } else if (!transformControl.dragging) {
+                transformControl.detach();
+            }
+        }
+
+        window.applyPose = (type) => {
+            // Reset all
+            Object.values(joints).forEach(j => j.rotation.set(0,0,0));
             
-            magicMsg.style.display = 'block';
-            setTimeout(() => { magicMsg.style.display = 'none'; }, 4000);
-            
-            canControl = true;
-            statusDiv.innerText = "Magic activated! Wave your hand.";
+            if(type === 'run') {
+                joints.L_hip.rotation.x = 0.8;
+                joints.L_knee.rotation.x = 0.6;
+                joints.R_hip.rotation.x = -0.5;
+                joints.R_knee.rotation.x = 0.2;
+                joints.L_shoulder.rotation.x = -0.8;
+                joints.R_shoulder.rotation.x = 0.8;
+            } else if(type === 'sit') {
+                joints.L_hip.rotation.x = -Math.PI/2.2;
+                joints.R_hip.rotation.x = -Math.PI/2.2;
+                joints.L_knee.rotation.x = Math.PI/2.5;
+                joints.R_knee.rotation.x = Math.PI/2.5;
+                joints.pelvis.position.y = 0.6;
+            } else {
+                joints.pelvis.position.y = 1.1;
+            }
+        };
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            if (canControl) textGroup.rotation.y += (targetRotationY - textGroup.rotation.y) * 0.1;
-            textGroup.children.forEach(m => m.material.color.setHSL((Date.now()*0.0005)%1, 0.8, 0.6));
             renderer.render(scene, camera);
         }
-
-        const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
-        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6 });
-        hands.onResults((results) => {
-            if (canControl && results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-                videoActive = true;
-                targetRotationY = (results.multiHandLandmarks[0][8].x - 0.5) * Math.PI * 2.5;
-            }
-        });
-
-        const cameraObj = new Camera(videoElement, {
-            onFrame: async () => { await hands.send({image: videoElement}); },
-            width: 640, height: 480
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if(canControl && !videoActive) targetRotationY = (e.clientX / window.innerWidth - 0.5) * Math.PI * 2.5;
-        });
-
-        initThree();
-        cameraObj.start().catch(() => statusDiv.innerText = "Using Mouse Control.");
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
     </script>
 </body>
 </html>
