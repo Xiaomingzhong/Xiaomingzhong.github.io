@@ -2,17 +2,15 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marcus Z Creative Lab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Marcus Creative Lab</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         /* ==================== 基础样式与字体 ==================== */
         :root {
             --bg-color: #ffffff;
             --text-color: #111111;
-            /* 正文与导航 */
             --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            /* 艺术字标题 */
             --font-serif: 'Playfair Display', "Georgia", "Noto Serif SC", serif;
         }
 
@@ -37,7 +35,8 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: #000000; /* 改为全黑背景 */
+            height: 100dvh; /* 修复移动端 Chrome 视口高度问题 */
+            background-color: #000000; 
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -47,39 +46,40 @@
         }
 
         .loader-content {
-            width: 320px; /* 适当放大整体宽度 */
+            width: 320px; 
+            max-width: 80%; /* 适配小屏幕 */
             text-align: center;
         }
 
         .loader-text-top {
-            font-size: 14px; /* 放大文字 */
+            font-size: 14px; 
             text-transform: uppercase;
             letter-spacing: 0.25em;
-            margin-bottom: 20px; /* 与进度条的间距 */
-            color: #ffffff; /* 黑色背景配纯白文字 */
+            margin-bottom: 20px; 
+            color: #ffffff; 
             font-weight: 500;
         }
 
         .progress-bar-container {
             width: 100%;
-            height: 2px; /* 进度条适当加粗 */
-            background-color: #333333; /* 进度条底色暗灰 */
+            height: 2px; 
+            background-color: #333333; 
             overflow: hidden;
         }
 
         .progress-bar {
             width: 0%;
             height: 100%;
-            background-color: #ffffff; /* 进度条白色 */
+            background-color: #ffffff; 
             transition: width 0.1s ease-out;
         }
 
         .loader-text-bottom {
-            font-size: 14px; /* 放大文字 */
+            font-size: 14px; 
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            margin-top: 20px; /* 与进度条的间距 */
-            color: #888888; /* 百分比采用灰色，增加视觉层次 */
+            margin-top: 20px; 
+            color: #888888; 
             font-weight: 400;
         }
 
@@ -124,6 +124,7 @@
             position: relative;
             padding-bottom: 4px;
             transition: color 0.3s ease;
+            white-space: nowrap; /* 保证文字不折行 */
         }
 
         .nav-links a::after {
@@ -176,6 +177,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh; /* 动态视口高度，解决移动端 Chrome 裁切问题 */
             overflow: hidden;
         }
 
@@ -228,6 +230,38 @@
             text-transform: uppercase;
             font-weight: 500;
         }
+
+        /* ==================== 手机端适配 (重中之重) ==================== */
+        @media (max-width: 768px) {
+            header {
+                padding: 16px 20px; /* 减小导航栏内边距 */
+                justify-content: flex-start; /* 居左以允许滚动 */
+            }
+
+            .nav-links {
+                gap: 24px; /* 减小间距 */
+                overflow-x: auto; /* 允许横向滚动 */
+                -webkit-overflow-scrolling: touch; /* 让 iOS 滚动丝滑 */
+                width: 100%;
+                padding-bottom: 4px; /* 留出一点空间防裁切 */
+            }
+
+            /* 隐藏手机端导航栏的滚动条，保持美观 */
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+
+            .lang-switch {
+                top: 14px;
+                right: 20px;
+                padding: 6px 12px;
+                font-size: 10px;
+            }
+
+            .text-overlay {
+                top: 90%; /* 手机端稍微上提一点避免与底部安全区冲突 */
+            }
+        }
     </style>
 </head>
 <body>
@@ -237,11 +271,9 @@
     <div id="preloader">
         <div class="loader-content">
             <div class="loader-text-top">Welcome</div>
-            
             <div class="progress-bar-container">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
-            
             <div class="loader-text-bottom" id="loaderText">0%</div>
         </div>
     </div>
@@ -297,10 +329,11 @@
 
         const canvas = document.getElementById('heroCanvas');
         const ctx = canvas.getContext('2d');
+        const canvasContainer = document.getElementById('canvas-container');
 
         function preloadImages() {
             const progressBar = document.getElementById('progressBar');
-            const loaderText = document.getElementById('loaderText'); // 指向底部的百分比数字
+            const loaderText = document.getElementById('loaderText'); 
             const preloader = document.getElementById('preloader');
 
             for (let i = 0; i < FRAME_COUNT; i++) {
@@ -312,12 +345,10 @@
                     loadedImages++;
                     const progress = Math.round((loadedImages / FRAME_COUNT) * 100);
                     progressBar.style.width = `${progress}%`;
-                    
-                    // 这里只动态修改百分比数字，不再拼接文字
                     loaderText.innerText = `${progress}%`;
 
                     if (i === 0 && img.complete) {
-                        renderFrame(0);
+                        resizeCanvas(); // 确保第一张图按正确尺寸渲染
                     }
 
                     if (loadedImages === FRAME_COUNT) {
@@ -335,16 +366,17 @@
             }
         }
 
+        // 精确获取画布父容器的真实尺寸，修复浏览器窗口计算误差
         function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            const rect = canvasContainer.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
             if (images[currentFrame] && images[currentFrame].complete) {
                 renderFrame(currentFrame);
             }
         }
 
         window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
 
         function drawImageCover(img) {
             const hRatio = canvas.width / img.width;
@@ -388,13 +420,11 @@
                 requestAnimationFrame(() => renderFrame(currentFrame));
             }
 
-            // 更新后的滚动触发区间
             toggleActive(textCinematography, scrollProgress >= 0.37 && scrollProgress <= 0.42);
             toggleActive(textPhotography, scrollProgress >= 0.49 && scrollProgress <= 0.54);
             toggleActive(textLandscaping, scrollProgress >= 0.61 && scrollProgress <= 0.66);
             toggleActive(textResearch, scrollProgress >= 0.80 && scrollProgress <= 0.85);
 
-            // 更新后的导航栏触发区间
             if (scrollProgress >= 0.92) {
                 navbar.classList.add('visible');
             } else {
@@ -430,6 +460,8 @@
             langBtn.innerText = currentLang === 'en' ? 'EN / 简' : '简 / EN';
         });
 
+        // 页面初始化
+        resizeCanvas();
         preloadImages();
     </script>
 </body>
