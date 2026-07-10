@@ -29,7 +29,7 @@
             line-height: 1.6;
         }
 
-        /* ==================== 顶部导航栏 (常驻显示) ==================== */
+        /* ==================== 顶部导航栏 ==================== */
         header {
             position: fixed;
             top: 0;
@@ -115,7 +115,7 @@
             width: 90%;
         }
 
-        /* 首屏 Hero 标题 (修复重点：使用纯 CSS 动画，一打开必定显示) */
+        /* 首屏 Hero 标题 */
         .hero-section {
             text-align: center;
             margin-bottom: 100px;
@@ -140,7 +140,7 @@
         .hero-section p {
             font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.15em;
             color: var(--text-secondary);
             margin-top: 16px;
         }
@@ -199,7 +199,12 @@
             line-height: 1.8;
         }
 
-        /* 滚动淡入动画 (仅用于下方的图文区块) */
+        /* 为教育经历等需要换行的文本特殊优化的行高 */
+        .education-text {
+            line-height: 2.2 !important;
+        }
+
+        /* 滚动淡入动画 */
         .reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -271,10 +276,10 @@
         <nav>
             <ul class="nav-links">
                 <li><a href="index.html" class="i18n" data-cn="首页" data-en="Home">Home</a></li>
-                <li><a href="your-cinematography-link.html" class="i18n" data-cn="电影摄影" data-en="Cinematographer">Cinematographer</a></li>
-                <li><a href="your-photography-link.html" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
-                <li><a href="your-landscaping-link.html" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
-                <li><a href="your-research-link.html" class="i18n" data-cn="学术研究" data-en="Research">Research</a></li>
+                <li><a href="Cinematography.html" class="i18n" data-cn="影视美学" data-en="Cinematography">Cinematographer</a></li>
+                <li><a href="Photography.html" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
+                <li><a href="Landscaping.html" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
+                <li><a href="Research.html" class="i18n" data-cn="数字媒体探索" data-en="Research">Research</a></li>
                 <li><a href="#" class="i18n active" data-cn="关于我" data-en="About Me">About Me</a></li>
             </ul>
         </nav>
@@ -283,35 +288,47 @@
     <main>
         <section class="hero-section">
             <h1 class="i18n" data-cn="关于我" data-en="About Me">About Me</h1>
-            <p class="i18n" data-cn="加中两地多背景融合视觉艺术家 / 景观高级工程师" data-en="A Canada $ China multidisciplinary visual artist and senior landscape engineer">Visual Artist & Landscape Designer</p>
+            <p class="i18n" data-cn="加中两地多背景融合视觉艺术家 / 景观高级工程师 / 终生学习主义者" data-en="A Canada & China Multidisciplinary Visual Artist / Senior Landscape Engineer / Life-long Learner">A Canada & China Multidisciplinary Visual Artist / Senior Landscape Engineer / Life-long Learner</p>
         </section>
 
+        <!-- 第一部分：自传 -->
         <section class="content-section reveal">
             <div class="image-block">
                 <img src="https://images.unsplash.com/photo-1551524164-687a55dd1126?q=80&w=1000&auto=format&fit=crop" alt="Profile placeholder 1">
             </div>
             <div class="text-block">
-                <h2 class="i18n" data-cn="光影的雕刻者" data-en="Sculpting with Light">Sculpting with Light</h2>
-                <p class="i18n" data-cn="在这里输入你的第一段个人简介。你可以谈论你对电影摄影和光影美学的理解。保持句子的简练，能让排版看起来更加现代和呼吸感十足。我们通过镜头观察世界，通过设计重塑空间。" data-en="Enter your first paragraph of personal bio here. You can talk about your understanding of cinematography and the aesthetics of light and shadow. Keep sentences concise to make the typography look modern and airy. We observe the world through the lens and reshape space through design.">
-                    Enter your first paragraph of personal bio here. You can talk about your understanding of cinematography and the aesthetics of light and shadow. Keep sentences concise to make the typography look modern and airy. We observe the world through the lens and reshape space through design.
-                </p>
-                <p class="i18n" data-cn="第二小段落，用来补充你的教育背景、过往的奖项，或者是你从事这个行业的核心驱动力。" data-en="A second small paragraph to supplement your educational background, past awards, or the core driving force behind your work in this industry.">
-                    A second small paragraph to supplement your educational background, past awards, or the core driving force behind your work in this industry.
+                <h2 class="i18n" data-cn="自传" data-en="Biography">Biography</h2>
+                
+                <p class="i18n" 
+                   data-cn="作为一位跨领域数字媒体艺术家与创意思维实践者，长期深耕于平面设计、摄影、影像制作及三维数字媒体等领域。凭借多年设计师与创意导演的专业经验，我形成了敏锐而成熟的视觉判断力，并深刻理解数字媒介如何在不同平台中传递情感、建构叙事并塑造品牌身份。<br><br>基于对科技与创造力交汇关系的持续关注，我近年来将创作重心进一步转向人工智能对媒体生产与传播方式的革新。在 AI 驱动的数字媒体领域，连续三年进行 AI 创意摄影的系统性创作实践，并通过高效运用人工智能技术，建立起一个传统上往往需要多人协作方能支撑的独立个人工作室，同时保持稳定而高质量的创意产出。这些经历充分体现了我作为终身学习者的探索精神，以及对知识、创新与创作边界的持续热忱。<br><br>在专业实践中，也具备出色的项目管理、时间管理与统筹协调能力，能够在高压与紧迫期限下保持高效执行，并在团队项目中兼具创意贡献与组织推动力，确保作品在质量、效率与表达层面达到理想成果。<br><br>其融合艺术、科学与设计的跨学科背景，进一步塑造了我开放、实验且具有前瞻性的数字媒体创作方法，使其不断在形式与观念层面拓展创意表达的边界。" 
+                   
+                   data-en="I am a multidisciplinary digital media artist and creative thinker working across graphic design, photography, video production, and 3D digital media. With years of experience as a designer and director, I've developed a strong visual sensibility and a practical understanding of how digital media communicate emotion, story, and brand identity across different platforms.<br><br>With a deep interest in the intersection of technology and creativity, my recent focus has shifted toward the role of AI in transforming media production and communication. In recent years within the AI-driven digital media field, I have consistently produced AI-based creative photography over a three-year period. Through the effective use of AI, I established an independent personal studio that would traditionally require the efforts of multiple individuals, while maintaining strong creative output. These accomplishments reflect my identity as a lifelong learner with a strong passion for knowledge and exploration.<br><br>I bring strong project management, time management, and coordination skills to my practice. I work efficiently under deadlines and collaborate effectively within team-based projects, contributing both creatively and organizationally to ensure high-quality outcomes.<br><br>My interdisciplinary background in art, science, and design shapes an experimental approach to digital media, expanding boundaries in both form and concept.">
+                    
+                    I am a multidisciplinary digital media artist and creative thinker working across graphic design, photography, video production, and 3D digital media. With years of experience as a designer and director, I've developed a strong visual sensibility and a practical understanding of how digital media communicate emotion, story, and brand identity across different platforms.<br><br>
+                    With a deep interest in the intersection of technology and creativity, my recent focus has shifted toward the role of AI in transforming media production and communication. In recent years within the AI-driven digital media field, I have consistently produced AI-based creative photography over a three-year period. Through the effective use of AI, I established an independent personal studio that would traditionally require the efforts of multiple individuals, while maintaining strong creative output. These accomplishments reflect my identity as a lifelong learner with a strong passion for knowledge and exploration.<br><br>
+                    I bring strong project management, time management, and coordination skills to my practice. I work efficiently under deadlines and collaborate effectively within team-based projects, contributing both creatively and organizationally to ensure high-quality outcomes.<br><br>
+                    My interdisciplinary background in art, science, and design shapes an experimental approach to digital media, expanding boundaries in both form and concept.
                 </p>
             </div>
         </section>
 
+        <!-- 第二部分：教育经历 -->
         <section class="content-section reveal">
             <div class="image-block">
                 <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1000&auto=format&fit=crop" alt="Profile placeholder 2">
             </div>
             <div class="text-block">
-                <h2 class="i18n" data-cn="自然与建筑的对话" data-en="Dialogue Between Nature & Architecture">Dialogue Between Nature & Architecture</h2>
-                <p class="i18n" data-cn="在这里输入你的第二段个人简介。重点可以放在景观设计 (Landscaping) 和学术研究方面。描述你是如何将摄影中对构图的理解，转化到三维空间的构建中的。" data-en="Enter your second paragraph of personal bio here. The focus can be on Landscape Design and academic research. Describe how you translate the understanding of composition in photography into the construction of three-dimensional spaces.">
-                    Enter your second paragraph of personal bio here. The focus can be on Landscape Design and academic research. Describe how you translate the understanding of composition in photography into the construction of three-dimensional spaces.
-                </p>
-                <p class="i18n" data-cn="不断探索视觉认知的边界，是我所有艺术创作的基石。" data-en="Continuously exploring the boundaries of visual perception is the cornerstone of all my artistic creations.">
-                    Continuously exploring the boundaries of visual perception is the cornerstone of all my artistic creations.
+                <h2 class="i18n" data-cn="教育经历" data-en="Education">Education</h2>
+                
+                <!-- 使用 <br> 标签进行换行排版，并增加了 education-text 类增加行高 -->
+                <p class="i18n education-text" 
+                   data-cn="<strong>多伦多都市大学</strong> | 数字媒体（AI方向）硕士<br><strong>加拿大谢尔丹学院</strong> | 数字动画 研究生<br><strong>华中科技大学</strong> | 风景园林 硕士<br><strong>广州大学</strong> | 数字美术 本科" 
+                   data-en="<strong>Master of Digital Media</strong> | Toronto Metropolitan University<br><strong>Postgraduate of Computer Animation</strong> | Sheridan College, Canada<br><strong>Master of Landscape Architecture</strong> | Huazhong University of Science and Technology<br><strong>Bachelor of Computer Fine Arts</strong> | Guangzhou University">
+                   
+                   <strong>Master of Digital Media</strong> | Toronto Metropolitan University<br>
+                   <strong>Postgraduate of Computer Animation</strong> | Sheridan College, Canada<br>
+                   <strong>Master of Landscape Architecture</strong> | Huazhong University of Science and Technology<br>
+                   <strong>Bachelor of Computer Fine Arts</strong> | Guangzhou University
                 </p>
             </div>
         </section>
@@ -332,13 +349,14 @@
             i18nElements.forEach(el => {
                 const targetText = el.getAttribute(`data-${currentLang}`);
                 if (targetText) {
-                    el.innerText = targetText;
+                    // 关键修复：使用 innerHTML 替换 innerText，使得 <br> 换行和 <strong> 加粗标签可以生效
+                    el.innerHTML = targetText;
                 }
             });
             langBtn.innerText = currentLang === 'en' ? 'EN / 简' : '简 / EN';
         });
 
-        // 优化触发算法，降低灵敏度门槛，确保图文能够顺利淡入
+        // 滚动淡入动画监听
         document.addEventListener('DOMContentLoaded', () => {
             const reveals = document.querySelectorAll('.reveal');
             const revealOptions = {
