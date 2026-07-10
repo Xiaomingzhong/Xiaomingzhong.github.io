@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>About Me | Xiaoming (Marcus) Zhong</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ==================== 基础样式与字体 ==================== */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #111111;
+            --text-secondary: #666666;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-serif: 'Playfair Display', "Georgia", "Noto Serif SC", serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ==================== 顶部导航栏 (常驻显示) ==================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            padding: 24px 48px;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(240, 240, 240, 0.9); 
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 48px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            position: relative;
+            padding-bottom: 4px;
+            transition: color 0.3s ease;
+            white-space: nowrap; 
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0%;
+            height: 1px;
+            background-color: var(--text-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* 语言切换按钮 */
+        .lang-switch {
+            position: fixed;
+            top: 22px;
+            right: 48px;
+            z-index: 1001; 
+            background: none;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            border-radius: 100px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .lang-switch:hover {
+            border-color: #000000;
+            background-color: #ffffff;
+            transform: scale(1.03);
+        }
+
+        /* ==================== 页面主体布局 ==================== */
+        main {
+            padding-top: 120px; 
+            padding-bottom: 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 90%;
+        }
+
+        /* 首屏 Hero 标题 (修复重点：使用纯 CSS 动画，一打开必定显示) */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 100px;
+            margin-top: 60px;
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-section h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            color: #000000;
+        }
+
+        .hero-section p {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-secondary);
+            margin-top: 16px;
+        }
+
+        /* 图文交错区块 */
+        .content-section {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+            margin-bottom: 140px;
+        }
+
+        .content-section:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .image-block {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-block img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            aspect-ratio: 4/5; 
+            display: block;
+            filter: grayscale(20%); 
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+        }
+
+        .image-block:hover img {
+            transform: scale(1.05); 
+            filter: grayscale(0%);
+        }
+
+        .text-block {
+            flex: 1;
+        }
+
+        .text-block h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 3vw, 3rem);
+            font-weight: 400;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .text-block p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-weight: 300;
+            letter-spacing: 0.02em;
+            line-height: 1.8;
+        }
+
+        /* 滚动淡入动画 (仅用于下方的图文区块) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ==================== 页脚 ==================== */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            margin-top: 60px;
+        }
+
+        footer p {
+            font-size: 12px;
+            color: #999999;
+            letter-spacing: 0.05em;
+            font-family: var(--font-sans);
+        }
+
+        /* ==================== 手机端适配 ==================== */
+        @media (max-width: 768px) {
+            header {
+                padding: 16px 20px; 
+                justify-content: flex-start; 
+            }
+            .nav-links {
+                gap: 24px; 
+                overflow-x: auto; 
+                -webkit-overflow-scrolling: touch; 
+                width: 100%;
+                padding-bottom: 4px; 
+            }
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+            .lang-switch {
+                top: 14px;
+                right: 20px;
+                padding: 6px 12px;
+                font-size: 10px;
+            }
+            .hero-section {
+                margin-top: 40px;
+                margin-bottom: 60px;
+            }
+            .content-section, .content-section:nth-child(even) {
+                flex-direction: column; 
+                gap: 40px;
+                margin-bottom: 80px;
+            }
+            .image-block img {
+                aspect-ratio: 1/1; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="lang-switch" id="langBtn">EN / 简</button>
+
+    <header id="navbar">
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html" class="i18n" data-cn="首页" data-en="Home">Home</a></li>
+                <li><a href="your-cinematography-link.html" class="i18n" data-cn="电影摄影" data-en="Cinematographer">Cinematographer</a></li>
+                <li><a href="your-photography-link.html" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
+                <li><a href="your-landscaping-link.html" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
+                <li><a href="your-research-link.html" class="i18n" data-cn="学术研究" data-en="Research">Research</a></li>
+                <li><a href="#" class="i18n active" data-cn="关于我" data-en="About Me">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <h1 class="i18n" data-cn="关于我" data-en="About Me">About Me</h1>
+            <p class="i18n" data-cn="加中两地多背景融合视觉艺术家 / 景观高级工程师" data-en="A Canada $ China multidisciplinary visual artist and senior landscape engineer">Visual Artist & Landscape Designer</p>
+        </section>
+
+        <section class="content-section reveal">
+            <div class="image-block">
+                <img src="https://images.unsplash.com/photo-1551524164-687a55dd1126?q=80&w=1000&auto=format&fit=crop" alt="Profile placeholder 1">
+            </div>
+            <div class="text-block">
+                <h2 class="i18n" data-cn="光影的雕刻者" data-en="Sculpting with Light">Sculpting with Light</h2>
+                <p class="i18n" data-cn="在这里输入你的第一段个人简介。你可以谈论你对电影摄影和光影美学的理解。保持句子的简练，能让排版看起来更加现代和呼吸感十足。我们通过镜头观察世界，通过设计重塑空间。" data-en="Enter your first paragraph of personal bio here. You can talk about your understanding of cinematography and the aesthetics of light and shadow. Keep sentences concise to make the typography look modern and airy. We observe the world through the lens and reshape space through design.">
+                    Enter your first paragraph of personal bio here. You can talk about your understanding of cinematography and the aesthetics of light and shadow. Keep sentences concise to make the typography look modern and airy. We observe the world through the lens and reshape space through design.
+                </p>
+                <p class="i18n" data-cn="第二小段落，用来补充你的教育背景、过往的奖项，或者是你从事这个行业的核心驱动力。" data-en="A second small paragraph to supplement your educational background, past awards, or the core driving force behind your work in this industry.">
+                    A second small paragraph to supplement your educational background, past awards, or the core driving force behind your work in this industry.
+                </p>
+            </div>
+        </section>
+
+        <section class="content-section reveal">
+            <div class="image-block">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1000&auto=format&fit=crop" alt="Profile placeholder 2">
+            </div>
+            <div class="text-block">
+                <h2 class="i18n" data-cn="自然与建筑的对话" data-en="Dialogue Between Nature & Architecture">Dialogue Between Nature & Architecture</h2>
+                <p class="i18n" data-cn="在这里输入你的第二段个人简介。重点可以放在景观设计 (Landscaping) 和学术研究方面。描述你是如何将摄影中对构图的理解，转化到三维空间的构建中的。" data-en="Enter your second paragraph of personal bio here. The focus can be on Landscape Design and academic research. Describe how you translate the understanding of composition in photography into the construction of three-dimensional spaces.">
+                    Enter your second paragraph of personal bio here. The focus can be on Landscape Design and academic research. Describe how you translate the understanding of composition in photography into the construction of three-dimensional spaces.
+                </p>
+                <p class="i18n" data-cn="不断探索视觉认知的边界，是我所有艺术创作的基石。" data-en="Continuously exploring the boundaries of visual perception is the cornerstone of all my artistic creations.">
+                    Continuously exploring the boundaries of visual perception is the cornerstone of all my artistic creations.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Xiaoming (Marcus) Zhong. All rights reserved</p>
+    </footer>
+
+    <script>
+        const langBtn = document.getElementById('langBtn');
+        const i18nElements = document.querySelectorAll('.i18n');
+        let currentLang = 'en'; 
+
+        langBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+            
+            i18nElements.forEach(el => {
+                const targetText = el.getAttribute(`data-${currentLang}`);
+                if (targetText) {
+                    el.innerText = targetText;
+                }
+            });
+            langBtn.innerText = currentLang === 'en' ? 'EN / 简' : '简 / EN';
+        });
+
+        // 优化触发算法，降低灵敏度门槛，确保图文能够顺利淡入
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+            const revealOptions = {
+                threshold: 0.1, 
+                rootMargin: "0px" 
+            };
+
+            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, revealOptions);
+
+            reveals.forEach(reveal => {
+                revealOnScroll.observe(reveal);
+            });
+        });
+    </script>
+</body>
+</html>
