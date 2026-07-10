@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Marcus Creative Lab</title>
+    <title>Portfolio | Scroll Animation</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         /* ==================== 基础样式与字体 ==================== */
@@ -35,7 +35,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            height: 100dvh; /* 修复移动端 Chrome 视口高度问题 */
+            height: 100dvh; 
             background-color: #000000; 
             z-index: 9999;
             display: flex;
@@ -47,7 +47,7 @@
 
         .loader-content {
             width: 320px; 
-            max-width: 80%; /* 适配小屏幕 */
+            max-width: 80%; 
             text-align: center;
         }
 
@@ -124,7 +124,7 @@
             position: relative;
             padding-bottom: 4px;
             transition: color 0.3s ease;
-            white-space: nowrap; /* 保证文字不折行 */
+            white-space: nowrap; 
         }
 
         .nav-links a::after {
@@ -170,6 +170,55 @@
             transform: scale(1.03);
         }
 
+        /* ==================== 极简滚轮指引 (右侧) ==================== */
+        #scroll-indicator {
+            position: fixed;
+            right: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .scroll-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            color: #555555;
+            text-transform: uppercase;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-dot {
+            width: 100%;
+            height: 15px;
+            background-color: #000000;
+            position: absolute;
+            top: -15px;
+            animation: scrollAnim 1.8s infinite cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        @keyframes scrollAnim {
+            0% { top: -15px; }
+            50% { top: 60px; }
+            100% { top: 60px; }
+        }
+
         /* ==================== 核心固定视口与 Canvas ==================== */
         #viewport {
             position: fixed;
@@ -177,7 +226,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            height: 100dvh; /* 动态视口高度，解决移动端 Chrome 裁切问题 */
+            height: 100dvh; 
             overflow: hidden;
         }
 
@@ -231,22 +280,21 @@
             font-weight: 500;
         }
 
-        /* ==================== 手机端适配 (重中之重) ==================== */
+        /* ==================== 手机端适配 ==================== */
         @media (max-width: 768px) {
             header {
-                padding: 16px 20px; /* 减小导航栏内边距 */
-                justify-content: flex-start; /* 居左以允许滚动 */
+                padding: 16px 20px; 
+                justify-content: flex-start; 
             }
 
             .nav-links {
-                gap: 24px; /* 减小间距 */
-                overflow-x: auto; /* 允许横向滚动 */
-                -webkit-overflow-scrolling: touch; /* 让 iOS 滚动丝滑 */
+                gap: 24px; 
+                overflow-x: auto; 
+                -webkit-overflow-scrolling: touch; 
                 width: 100%;
-                padding-bottom: 4px; /* 留出一点空间防裁切 */
+                padding-bottom: 4px; 
             }
 
-            /* 隐藏手机端导航栏的滚动条，保持美观 */
             .nav-links::-webkit-scrollbar {
                 display: none;
             }
@@ -259,7 +307,12 @@
             }
 
             .text-overlay {
-                top: 90%; /* 手机端稍微上提一点避免与底部安全区冲突 */
+                top: 90%; 
+            }
+
+            #scroll-indicator {
+                right: 16px; 
+                gap: 12px;
             }
         }
     </style>
@@ -278,15 +331,22 @@
         </div>
     </div>
 
+    <div id="scroll-indicator">
+        <span class="i18n scroll-text" data-cn="滑动探索" data-en="Scroll">Scroll</span>
+        <div class="scroll-line">
+            <div class="scroll-dot"></div>
+        </div>
+    </div>
+
     <header id="navbar">
         <nav>
             <ul class="nav-links">
-                <li><a href="#" class="i18n" data-cn="首页" data-en="Home">Home</a></li>
-                <li><a href="#" class="i18n" data-cn="电影摄影" data-en="Cinematographer">Cinematographer</a></li>
-                <li><a href="#" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
-                <li><a href="#" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
-                <li><a href="#" class="i18n" data-cn="学术研究" data-en="Research">Research</a></li>
-                <li><a href="#" class="i18n" data-cn="关于我" data-en="About Me">About Me</a></li>
+                <li><a href="your-home-link.html" class="i18n" data-cn="首页" data-en="Home">Home</a></li>
+                <li><a href="your-cinematography-link.html" class="i18n" data-cn="电影摄影" data-en="Cinematographer">Cinematographer</a></li>
+                <li><a href="your-photography-link.html" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
+                <li><a href="your-landscaping-link.html" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
+                <li><a href="your-research-link.html" class="i18n" data-cn="学术研究" data-en="Research">Research</a></li>
+                <li><a href="your-about-link.html" class="i18n" data-cn="关于我" data-en="About Me">About Me</a></li>
             </ul>
         </nav>
     </header>
@@ -297,23 +357,23 @@
         </div>
 
         <div class="text-overlay" id="text-cinematography">
-            <h1 class="i18n" data-cn="Cinematography" data-en="Cinematography">Cinematography</h1>
-            <p class="i18n" data-cn="捕捉光影与时间的流动" data-en="The Art of Sculpting Light and Time">The Art of Sculpting Light and Time</p>
+            <h1 class="i18n" data-cn="影视美学" data-en="Cinematography">Cinematography</h1>
+            <p class="i18n" data-cn="动态影像和音乐呈现视觉诗意" data-en="The Art of Sculpting Light and Time">The Art of Sculpting Light and Time</p>
         </div>
 
         <div class="text-overlay" id="text-photography">
-            <h1 class="i18n" data-cn="Photography" data-en="Photography">Photography</h1>
+            <h1 class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</h1>
             <p class="i18n" data-cn="定格永恒的叙事瞬间" data-en="Framing the Stillness of Reality">Framing the Stillness of Reality</p>
         </div>
 
         <div class="text-overlay" id="text-landscaping">
-            <h1 class="i18n" data-cn="Landscaping Design" data-en="Landscaping Design">Landscaping Design</h1>
-            <p class="i18n" data-cn="自然与建筑空间的对话" data-en="Architecting Nature and Open Spaces">Architecting Nature and Open Spaces</p>
+            <h1 class="i18n" data-cn="景观设计" data-en="Landscaping Design">Landscaping Design</h1>
+            <p class="i18n" data-cn="自然与生活美学的对话" data-en="Architecting Nature and Open Spaces">Architecting Nature and Open Spaces</p>
         </div>
 
         <div class="text-overlay" id="text-research">
-            <h1 class="i18n" data-cn="Research" data-en="Research">Research</h1>
-            <p class="i18n" data-cn="探索视觉认知的科学边界" data-en="Exploring the Boundaries of Visual Semiotics">Exploring the Boundaries of Visual Semiotics</p>
+            <h1 class="i18n" data-cn="数字媒体探索" data-en="Research">Research</h1>
+            <p class="i18n" data-cn="探索视觉艺术与科学融合的无限边界" data-en="Exploring the Boundaries of Visual Semiotics">Exploring the Boundaries of Visual Semiotics</p>
         </div>
     </main>
 
@@ -330,11 +390,12 @@
         const canvas = document.getElementById('heroCanvas');
         const ctx = canvas.getContext('2d');
         const canvasContainer = document.getElementById('canvas-container');
+        const scrollIndicator = document.getElementById('scroll-indicator');
+        const preloader = document.getElementById('preloader');
 
         function preloadImages() {
             const progressBar = document.getElementById('progressBar');
             const loaderText = document.getElementById('loaderText'); 
-            const preloader = document.getElementById('preloader');
 
             for (let i = 0; i < FRAME_COUNT; i++) {
                 const img = new Image();
@@ -348,13 +409,14 @@
                     loaderText.innerText = `${progress}%`;
 
                     if (i === 0 && img.complete) {
-                        resizeCanvas(); // 确保第一张图按正确尺寸渲染
+                        resizeCanvas(); 
                     }
 
                     if (loadedImages === FRAME_COUNT) {
                         setTimeout(() => {
                             preloader.style.opacity = '0';
                             preloader.style.visibility = 'hidden';
+                            scrollIndicator.style.opacity = '1';
                             handleScroll(); 
                         }, 500);
                     }
@@ -366,7 +428,6 @@
             }
         }
 
-        // 精确获取画布父容器的真实尺寸，修复浏览器窗口计算误差
         function resizeCanvas() {
             const rect = canvasContainer.getBoundingClientRect();
             canvas.width = rect.width;
@@ -420,6 +481,12 @@
                 requestAnimationFrame(() => renderFrame(currentFrame));
             }
 
+            if (scrollProgress > 0.02) {
+                scrollIndicator.style.opacity = '0';
+            } else if (preloader.style.visibility === 'hidden') {
+                scrollIndicator.style.opacity = '1';
+            }
+
             toggleActive(textCinematography, scrollProgress >= 0.37 && scrollProgress <= 0.42);
             toggleActive(textPhotography, scrollProgress >= 0.49 && scrollProgress <= 0.54);
             toggleActive(textLandscaping, scrollProgress >= 0.61 && scrollProgress <= 0.66);
@@ -460,7 +527,6 @@
             langBtn.innerText = currentLang === 'en' ? 'EN / 简' : '简 / EN';
         });
 
-        // 页面初始化
         resizeCanvas();
         preloadImages();
     </script>
