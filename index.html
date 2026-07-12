@@ -111,8 +111,9 @@
 
         .nav-links {
             display: flex;
-            gap: 48px;
+            gap: clamp(22px, 3vw, 48px);
             list-style: none;
+            align-items: center;
         }
 
         .nav-links a {
@@ -222,17 +223,22 @@
         /* ==================== 核心固定视口与 Canvas ==================== */
         #viewport {
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100vw;
             height: 100vh;
-            height: 100dvh; 
+            height: 100svh;
+            height: 100dvh;
             overflow: hidden;
+            background: #ffffff;
         }
 
         #canvas-container {
             width: 100%;
             height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
         }
 
         canvas {
@@ -278,6 +284,22 @@
             letter-spacing: 0.15em;
             text-transform: uppercase;
             font-weight: 500;
+        }
+
+
+        @media (max-width: 1180px) and (min-width: 769px) {
+            header {
+                padding-inline: 24px;
+            }
+
+            .nav-links {
+                gap: 22px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+                letter-spacing: 0.025em;
+            }
         }
 
         /* ==================== 手机端适配 ==================== */
@@ -345,7 +367,7 @@
                 <li><a href="Cinematography.html" class="i18n" data-cn="影视美学" data-en="Cinematographer">Cinematographer</a></li>
                 <li><a href="Photography.html" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
                 <li><a href="Landscaping.html" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
-                <li><a href="Research.html" class="i18n" data-cn="数字媒体探索" data-en="Research">Research</a></li>
+                <li><a href="Research.html" class="i18n" data-cn="数字媒体商业作品与探索" data-en="Digital Media Works & Exploration">Digital Media Applications & Exploration</a></li>
                 <li><a href="About_me.html" class="i18n" data-cn="关于我" data-en="About Me">About Me</a></li>
             </ul>
         </nav>
@@ -372,8 +394,8 @@
         </div>
 
         <div class="text-overlay" id="text-research">
-            <h1 class="i18n" data-cn="数字媒体探索" data-en="Research">Research</h1>
-            <p class="i18n" data-cn="探索视觉艺术与科学融合的无限边界" data-en="Exploring the Boundaries of Visual Semiotics">Exploring the Boundaries of Visual Semiotics</p>
+            <h1 class="i18n" data-cn="数字媒体商业作品与探索" data-en="Digital Media Works & Exploration">Digital Media Applications & Exploration</h1>
+            <p class="i18n" data-cn="探索视觉艺术与科学融合的无限边界" data-en="Exploring Commercial Applications and New Possibilities in Digital Media">Exploring Commercial Applications and New Possibilities in Digital Media</p>
         </div>
     </main>
 
@@ -385,7 +407,10 @@
         const images = [];
         let loadedImages = 0;
         let currentFrame = 0;
-        let currentLang = 'en'; 
+        let currentLang = 'en';
+        let renderWidth = window.innerWidth;
+        let renderHeight = window.innerHeight;
+        let pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
 
         const canvas = document.getElementById('heroCanvas');
         const ctx = canvas.getContext('2d');
@@ -430,33 +455,57 @@
 
         function resizeCanvas() {
             const rect = canvasContainer.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-            if (images[currentFrame] && images[currentFrame].complete) {
+            renderWidth = Math.max(1, rect.width);
+            renderHeight = Math.max(1, rect.height);
+            pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+            canvas.width = Math.round(renderWidth * pixelRatio);
+            canvas.height = Math.round(renderHeight * pixelRatio);
+            canvas.style.width = `${renderWidth}px`;
+            canvas.style.height = `${renderHeight}px`;
+
+            ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+
+            if (images[currentFrame] && images[currentFrame].complete && images[currentFrame].naturalWidth) {
                 renderFrame(currentFrame);
             }
         }
 
-        window.addEventListener('resize', resizeCanvas);
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(resizeCanvas, 80);
+        }, { passive: true });
 
-        function drawImageCover(img) {
-            const hRatio = canvas.width / img.width;
-            const vRatio = canvas.height / img.height;
-            const ratio = Math.max(hRatio, vRatio);
-            
-            const centerShift_x = (canvas.width - img.width * ratio) / 2;
-            const centerShift_y = (canvas.height - img.height * ratio) / 2;  
-            
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 
-                0, 0, img.width, img.height,
-                centerShift_x, centerShift_y, img.width * ratio, img.height * ratio
+        window.addEventListener('orientationchange', () => {
+            setTimeout(resizeCanvas, 180);
+        });
+
+        function drawImageContain(img) {
+            if (!img.naturalWidth || !img.naturalHeight) return;
+
+            const scale = Math.min(
+                renderWidth / img.naturalWidth,
+                renderHeight / img.naturalHeight
             );
+
+            const drawWidth = img.naturalWidth * scale;
+            const drawHeight = img.naturalHeight * scale;
+            const drawX = (renderWidth - drawWidth) / 2;
+            const drawY = (renderHeight - drawHeight) / 2;
+
+            ctx.clearRect(0, 0, renderWidth, renderHeight);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, renderWidth, renderHeight);
+            ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
         }
 
         function renderFrame(index) {
-            if (images[index] && images[index].complete) {
-                drawImageCover(images[index]);
+            const img = images[index];
+            if (img && img.complete && img.naturalWidth) {
+                drawImageContain(img);
             }
         }
 
