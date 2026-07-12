@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Research | Xiaoming (Marcus) Zhong</title>
+    <title>Digital Media Works & Exploration | Xiaoming (Marcus) Zhong</title>
     <!-- 引入 Playfair Display 衬线体和 Inter 无衬线体 -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -28,6 +28,10 @@
             font-family: var(--font-sans);
             overflow-x: hidden;
             line-height: 1.6;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* ==================== 顶部导航栏 ==================== */
@@ -109,18 +113,18 @@
 
         /* ==================== 页面主体布局 ==================== */
         main {
-            padding-top: 120px; 
-            padding-bottom: 80px;
-            max-width: 1400px; 
+            padding-top: 96px;
+            padding-bottom: 36px;
+            max-width: 1680px;
             margin: 0 auto;
-            width: 92%;
+            width: 94%;
         }
 
         /* 首屏 Hero 标题 */
         .hero-section {
             text-align: center;
-            margin-bottom: 80px;
-            margin-top: 60px;
+            margin-top: 32px;
+            margin-bottom: 32px;
             opacity: 0;
             animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
         }
@@ -132,7 +136,7 @@
 
         .hero-section h1 {
             font-family: var(--font-serif);
-            font-size: clamp(3rem, 5vw, 4.5rem);
+            font-size: clamp(2.4rem, 4.2vw, 4.2rem);
             font-weight: 400;
             letter-spacing: -0.02em;
             color: #000000;
@@ -143,28 +147,28 @@
             text-transform: uppercase;
             letter-spacing: 0.15em;
             color: var(--text-secondary);
-            margin-top: 16px;
+            margin-top: 8px;
         }
 
-        /* ==================== 四栏常驻展示区 ==================== */
+        /* ==================== 五栏首屏展示区 ==================== */
         .research-grid {
-            display: flex;
-            justify-content: space-between;
-            gap: 24px;
-            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: clamp(12px, 1.5vw, 24px);
+            margin-top: 18px;
             opacity: 0;
             animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
         }
 
         .research-col {
-            flex: 1;
+            min-width: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
+            padding: 20px 12px 24px;
             border-top: 1px solid #eaeaea;
             transition: all 0.5s ease;
-            cursor: default; 
+            cursor: default;
         }
 
         .research-col:hover {
@@ -173,15 +177,15 @@
 
         .col-title {
             font-family: var(--font-serif);
-            font-size: clamp(1.4rem, 1.8vw, 2rem);
+            font-size: clamp(1.05rem, 1.35vw, 1.7rem);
             font-weight: 400;
-            margin-bottom: 30px; 
+            margin-bottom: 16px; 
             text-align: center;
             color: #000000;
             transition: transform 0.5s ease;
             
             /* 修复点 1：锁定高度，强制底部对齐，防止换行挤压下方图片 */
-            min-height: 80px; 
+            min-height: 58px; 
             display: flex;
             align-items: flex-end; 
             justify-content: center;
@@ -189,9 +193,9 @@
 
         .img-wrapper {
             width: 100%;
-            aspect-ratio: 3/4; 
+            aspect-ratio: 3 / 4;
             overflow: hidden;
-            margin-bottom: 32px;
+            margin-bottom: 20px;
         }
 
         .img-wrapper img {
@@ -221,7 +225,7 @@
         /* 浏览更多按钮 (默认隐藏) */
         .view-more-btn {
             display: inline-block;
-            padding: 12px 32px;
+            padding: 10px 22px;
             font-family: var(--font-sans);
             font-size: 11px;
             text-transform: uppercase;
@@ -250,7 +254,7 @@
             text-align: center;
             padding: 40px 20px;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
-            margin-top: 100px;
+            margin-top: 48px;
         }
 
         footer p {
@@ -260,8 +264,115 @@
             font-family: var(--font-sans);
         }
 
+
+        /* 桌面端：保留正文呼吸空间，同时让五张 4:3 竖图与页脚处于首屏 */
+        @media (min-width: 769px) {
+            body {
+                height: 100vh;
+                height: 100dvh;
+                overflow: hidden;
+            }
+
+            main {
+                flex: 1;
+                min-height: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                padding-top: 88px;
+                padding-bottom: 18px;
+            }
+
+            .hero-section {
+                flex: 0 0 auto;
+                margin-top: 18px;
+                margin-bottom: 22px;
+            }
+
+            .hero-section h1 {
+                font-size: clamp(2.15rem, 3.3vw, 3.5rem);
+                line-height: 1.05;
+            }
+
+            .hero-section p {
+                margin-top: 7px;
+                font-size: 11px;
+            }
+
+            .research-grid {
+                flex: 0 0 auto;
+                align-items: start;
+                margin-top: 8px;
+            }
+
+            .research-col {
+                min-height: 0;
+                height: auto;
+                padding: 14px 10px 18px;
+            }
+
+            .col-title {
+                flex: 0 0 auto;
+                min-height: 44px;
+                margin-bottom: 12px;
+                font-size: clamp(1rem, 1.18vw, 1.45rem);
+                line-height: 1.15;
+            }
+
+            .img-wrapper {
+                flex: 0 0 auto;
+                aspect-ratio: 3 / 4;
+                margin-bottom: 14px;
+            }
+
+            .view-more-btn {
+                flex: 0 0 auto;
+                padding: 8px 17px;
+                font-size: 10px;
+            }
+
+            footer {
+                flex: 0 0 auto;
+                margin-top: 0;
+                padding: 14px 20px 16px;
+            }
+        }
+
+        /* 中等宽度桌面与笔记本：继续保持五栏，同时压缩导航和卡片间距 */
+        @media (max-width: 1180px) and (min-width: 769px) {
+            header {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+            .nav-links {
+                gap: 22px;
+            }
+            .nav-links a {
+                font-size: 12px;
+            }
+            .lang-switch {
+                right: 20px;
+            }
+            main {
+                width: 98%;
+            }
+            .research-col {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+            .view-more-btn {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+        }
+
         /* ==================== 手机端适配 ==================== */
         @media (max-width: 768px) {
+            body {
+                min-height: 100dvh;
+                height: auto;
+                overflow-y: auto;
+            }
             header {
                 padding: 16px 20px; 
                 justify-content: flex-start; 
@@ -286,8 +397,12 @@
                 margin-top: 40px;
                 margin-bottom: 40px;
             }
+            main {
+                width: 90%;
+                padding-top: 78px;
+            }
             .research-grid {
-                flex-direction: column;
+                grid-template-columns: 1fr;
                 gap: 40px;
             }
             .research-col {
@@ -322,7 +437,7 @@
                 <li><a href="Cinematography.html" class="i18n" data-cn="影视美学" data-en="Cinematography">Cinematography</a></li>
                 <li><a href="Photography.html" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
                 <li><a href="Landscaping.html" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
-                <li><a href="Research.html" class="i18n active" data-cn="数字媒体探索" data-en="Research">Research</a></li>
+                <li><a href="Research.html" class="i18n active" data-cn="数字媒体商业作品与探索" data-en="Digital Media Works & Exploration">Digital Media Works & Exploration</a></li>
                 <li><a href="About_me.html" class="i18n" data-cn="关于我" data-en="About Me">About Me</a></li>
             </ul>
         </nav>
@@ -330,8 +445,8 @@
 
     <main>
         <section class="hero-section">
-            <h1 class="i18n" data-cn="数字媒体探索" data-en="Research">Research</h1>
-            <p class="i18n" data-cn="多学科领域的商业实践与探索" data-en="Experiments & Practices in Interdisciplinary Fields">Experiments & Practices in Interdisciplinary Fields</p>
+            <h1 class="i18n" data-cn="数字媒体作品与探索" data-en="Digital Media Works & Exploration">Digital Media Works & Exploration</h1>
+            <p class="i18n" data-cn="数字媒体商业作品、实践与跨学科探索" data-en="Commercial Works, Practices & Interdisciplinary Exploration">Commercial Works, Practices & Interdisciplinary Exploration</p>
         </section>
 
         <section class="research-grid">
@@ -347,15 +462,23 @@
             <div class="research-col">
                 <h2 class="col-title i18n" data-cn="数字绘画" data-en="Digital Painting">Digital Painting</h2>
                 <div class="img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop" alt="Digital Painting">
+                    <img src="https://digitai-painting.oss-cn-hongkong.aliyuncs.com/Webp/%E9%B2%9C%E8%8A%B1%E9%9B%AA%E7%B3%95%E6%9C%89%E7%94%BB%E7%BA%B8.webp" alt="Digital Painting">
                 </div>
                 <a href="Digital_painting.html" class="view-more-btn i18n" data-cn="浏览更多" data-en="View More">View More</a>
             </div>
 
             <div class="research-col">
+                <h2 class="col-title i18n" data-cn="实体绘画" data-en="Traditional Painting">Traditional Painting</h2>
+                <div class="img-wrapper">
+                    <img src="https://traditional-painting.oss-cn-hongkong.aliyuncs.com/IMG_6192%20copy.webp" alt="Traditional Painting">
+                </div>
+                <a href="Traditional_painting.html" class="view-more-btn i18n" data-cn="浏览更多" data-en="View More">View More</a>
+            </div>
+
+            <div class="research-col">
                 <h2 class="col-title i18n" data-cn="手势控制网站" data-en="Gesture Control Website">Gesture Control Website</h2>
                 <div class="img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop" alt="Gesture Control Website">
+                    <img src="https://traditional-painting.oss-cn-hongkong.aliyuncs.com/Gesture.webp" alt="Gesture Control Website">
                 </div>
                 <a href="https://marcus0713zhong.github.io/Gesture/" class="view-more-btn i18n" data-cn="浏览更多" data-en="View More">View More</a>
             </div>
