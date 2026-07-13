@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Cinematography portfolio of Xiaoming (Marcus) Zhong — AI commercial works, traditional A/V, digital animation and everyday visual stories.">
+    <title>Cinematography | Xiaoming (Marcus) Zhong</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f4f4f2;
+            --surface-dark: #111111;
+            --text: #111111;
+            --muted: #707070;
+            --line: rgba(17, 17, 17, 0.11);
+            --white-line: rgba(255, 255, 255, 0.2);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-serif: 'Playfair Display', Georgia, 'Noto Serif SC', serif;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --header-height: 82px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        /* ==================== 固定导航 ==================== */
+        header {
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: var(--header-height);
+            padding: 22px 48px;
+            background: rgba(255, 255, 255, 0.91);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 4px;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .lang-switch {
+            position: fixed;
+            top: 22px;
+            right: 48px;
+            z-index: 1002;
+            padding: 8px 16px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+        }
+
+        .lang-switch:hover {
+            border-color: #000;
+            background: #fff;
+            transform: scale(1.03);
+        }
+
+        /* ==================== 页面标题 ==================== */
+        main {
+            width: min(94%, 1680px);
+            margin: 0 auto;
+            padding: calc(var(--header-height) + 58px) 0 96px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: end;
+            gap: 48px;
+            padding: 16px 0 48px;
+            border-bottom: 1px solid var(--line);
+            opacity: 0;
+            animation: fade-up 0.9s var(--ease) 0.08s forwards;
+        }
+
+        .hero-kicker {
+            margin-bottom: 12px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            max-width: 980px;
+            font-family: var(--font-serif);
+            font-size: clamp(3.1rem, 7vw, 7.7rem);
+            font-weight: 400;
+            line-height: 0.92;
+            letter-spacing: -0.045em;
+        }
+
+        .hero-description {
+            max-width: 470px;
+            margin-top: 25px;
+            color: var(--muted);
+            font-size: clamp(13px, 1.05vw, 16px);
+            line-height: 1.75;
+        }
+
+        .hero-index {
+            min-width: 145px;
+            padding-bottom: 8px;
+            text-align: right;
+        }
+
+        .hero-index strong {
+            display: block;
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 3vw, 3.5rem);
+            font-weight: 400;
+            line-height: 1;
+        }
+
+        .hero-index span {
+            display: block;
+            margin-top: 9px;
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+        }
+
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== 分类控制栏 ==================== */
+        .category-bar {
+            position: sticky;
+            top: var(--header-height);
+            z-index: 60;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            margin: 0 -2px 44px;
+            padding: 22px 2px 18px;
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .category-tabs {
+            display: flex;
+            align-items: center;
+            gap: clamp(18px, 2.7vw, 44px);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            position: relative;
+            flex: 0 0 auto;
+            padding: 4px 0 8px;
+            border: 0;
+            background: transparent;
+            color: #999;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.11em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .category-tab::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background: #111;
+            transform: scaleX(0);
+            transform-origin: right center;
+            transition: transform 0.4s var(--ease);
+        }
+
+        .category-tab:hover,
+        .category-tab.active {
+            color: #111;
+        }
+
+        .category-tab.active::after {
+            transform: scaleX(1);
+            transform-origin: left center;
+        }
+
+        .category-status {
+            flex: 0 0 auto;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* ==================== 四列视频网格 ==================== */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            column-gap: clamp(14px, 1.6vw, 28px);
+            row-gap: clamp(42px, 5vw, 78px);
+            min-height: 320px;
+        }
+
+        .video-card {
+            min-width: 0;
+            opacity: 0;
+            animation: card-reveal 0.68s var(--ease) forwards;
+            animation-delay: var(--delay, 0ms);
+        }
+
+        @keyframes card-reveal {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .video-preview {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border: 0;
+            background: #e9e9e7;
+            cursor: pointer;
+            isolation: isolate;
+        }
+
+        .video-preview::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.025);
+            pointer-events: none;
+            transition: border-color 0.45s ease;
+        }
+
+        .video-preview::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent 48%);
+            opacity: 0.38;
+            transition: opacity 0.55s ease;
+            pointer-events: none;
+        }
+
+        .video-preview img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            transform: scale(1.015);
+            filter: saturate(0.96) contrast(1.03);
+            transition: transform 0.85s var(--ease), filter 0.65s ease;
+        }
+
+        .play-button {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 4;
+            display: grid;
+            place-items: center;
+            width: clamp(44px, 3.8vw, 62px);
+            aspect-ratio: 1;
+            border: 1px solid rgba(255, 255, 255, 0.68);
+            border-radius: 50%;
+            background: rgba(10, 10, 10, 0.34);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+            transform: translate(-50%, -50%);
+            transition: transform 0.45s var(--ease), background 0.4s ease;
+            pointer-events: none;
+        }
+
+        .play-button svg {
+            width: 31%;
+            fill: #fff;
+            transform: translateX(8%);
+        }
+
+        .preview-number,
+        .preview-duration {
+            position: absolute;
+            bottom: 12px;
+            z-index: 4;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        .preview-number {
+            left: 14px;
+        }
+
+        .preview-duration {
+            right: 14px;
+        }
+
+        .video-preview:hover img,
+        .video-preview:focus-visible img {
+            transform: scale(1.075);
+            filter: saturate(1.08) contrast(1.06);
+        }
+
+        .video-preview:hover::after,
+        .video-preview:focus-visible::after {
+            opacity: 0.18;
+        }
+
+        .video-preview:hover::before,
+        .video-preview:focus-visible::before {
+            border-color: rgba(255, 255, 255, 0.62);
+        }
+
+        .video-preview:hover .play-button,
+        .video-preview:focus-visible .play-button {
+            background: rgba(0, 0, 0, 0.62);
+            transform: translate(-50%, -50%) scale(1.08);
+        }
+
+        .video-copy {
+            padding-top: 17px;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 8px;
+            color: #8b8b8b;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .video-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.05rem, 1.45vw, 1.55rem);
+            font-weight: 400;
+            line-height: 1.18;
+            letter-spacing: -0.012em;
+        }
+
+        .video-summary {
+            display: -webkit-box;
+            overflow: hidden;
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.65;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            padding: 90px 20px;
+            color: var(--muted);
+            text-align: center;
+            border: 1px dashed var(--line);
+        }
+
+        /* ==================== 全屏放映器 ==================== */
+        .viewer {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            display: grid;
+            place-items: center;
+            padding: 22px;
+            background: rgba(7, 7, 7, 0.965);
+            color: #fff;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.42s var(--ease), visibility 0.42s;
+        }
+
+        .viewer.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .viewer-shell {
+            position: relative;
+            width: min(92vw, 1500px);
+            height: min(93vh, 980px);
+            display: grid;
+            grid-template-rows: minmax(0, 1fr) auto;
+            overflow: hidden;
+            background: #0d0d0d;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 34px 110px rgba(0, 0, 0, 0.52);
+            transform: translateY(18px) scale(0.985);
+            transition: transform 0.48s var(--ease);
+        }
+
+        .viewer.active .viewer-shell {
+            transform: translateY(0) scale(1);
+        }
+
+        .player-stage {
+            position: relative;
+            display: grid;
+            place-items: center;
+            min-height: 0;
+            padding: clamp(64px, 6vw, 92px) clamp(54px, 6vw, 100px) 24px;
+            background:
+                radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.07), transparent 48%),
+                #080808;
+        }
+
+        .player-ratio {
+            position: relative;
+            width: min(100%, calc((100vh - 290px) * 16 / 9));
+            max-height: calc(100vh - 290px);
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 26px 80px rgba(0, 0, 0, 0.52);
+        }
+
+        .player-ratio iframe {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: 0;
+            background: #000;
+        }
+
+        .viewer-toolbar {
+            position: absolute;
+            top: 20px;
+            left: 22px;
+            right: 22px;
+            z-index: 5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .viewer-count {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .viewer-tools {
+            display: flex;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .icon-button {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.055);
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .icon-button:hover {
+            border-color: rgba(255, 255, 255, 0.54);
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.04);
+        }
+
+        .icon-button svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+        }
+
+        .viewer-arrow {
+            position: absolute;
+            top: 50%;
+            z-index: 6;
+            display: grid;
+            place-items: center;
+            width: 52px;
+            height: 72px;
+            border: 0;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.68);
+            cursor: pointer;
+            transform: translateY(-50%);
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .viewer-arrow:hover {
+            color: #fff;
+        }
+
+        .viewer-arrow svg {
+            width: 34px;
+            height: 34px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.2;
+        }
+
+        .viewer-prev {
+            left: 3px;
+        }
+
+        .viewer-prev:hover {
+            transform: translate(-4px, -50%);
+        }
+
+        .viewer-next {
+            right: 3px;
+        }
+
+        .viewer-next:hover {
+            transform: translate(4px, -50%);
+        }
+
+        .viewer-info {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(280px, 0.75fr);
+            gap: clamp(30px, 5vw, 90px);
+            align-items: start;
+            padding: clamp(24px, 2.6vw, 38px) clamp(28px, 4.5vw, 70px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: #111;
+        }
+
+        .viewer-category {
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.48);
+            font-size: 9px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .viewer-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.6rem, 3vw, 3.25rem);
+            font-weight: 400;
+            line-height: 1.04;
+            letter-spacing: -0.025em;
+        }
+
+        .viewer-description {
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 12px;
+            line-height: 1.78;
+        }
+
+        .viewer-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 18px;
+            margin-top: 16px;
+            color: rgba(255, 255, 255, 0.42);
+            font-size: 9px;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+        }
+
+        .copy-toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 4000;
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            background: rgba(17, 17, 17, 0.88);
+            color: #fff;
+            font-size: 11px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, 12px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        footer {
+            padding: 30px 20px 36px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            color: #999;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            text-align: center;
+        }
+
+        /* ==================== 响应式 ==================== */
+        @media (max-width: 1240px) {
+            header {
+                padding-inline: 28px;
+            }
+
+            .nav-links {
+                gap: 27px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .lang-switch {
+                right: 24px;
+            }
+
+        }
+
+        @media (max-width: 900px) {
+            :root {
+                --header-height: 74px;
+            }
+
+            header {
+                justify-content: flex-start;
+                min-height: var(--header-height);
+                padding: 17px 20px;
+            }
+
+            nav {
+                width: calc(100% - 86px);
+                overflow: hidden;
+            }
+
+            .nav-links {
+                width: 100%;
+                gap: 24px;
+                overflow-x: auto;
+                padding-bottom: 5px;
+                scrollbar-width: none;
+            }
+
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+
+            .lang-switch {
+                top: 16px;
+                right: 18px;
+                padding: 7px 12px;
+                font-size: 10px;
+            }
+
+            main {
+                width: 90%;
+                padding-top: calc(var(--header-height) + 34px);
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 22px;
+                padding-bottom: 36px;
+            }
+
+            .hero-index {
+                text-align: left;
+            }
+
+            .hero h1 {
+                font-size: clamp(3rem, 13vw, 6.2rem);
+            }
+
+            .category-bar {
+                align-items: flex-end;
+            }
+
+            .category-status {
+                display: none;
+            }
+
+            .video-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .viewer {
+                padding: 0;
+            }
+
+            .viewer-shell {
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
+                border: 0;
+            }
+
+            .player-stage {
+                padding: 74px 44px 20px;
+            }
+
+            .player-ratio {
+                width: 100%;
+                max-height: none;
+            }
+
+            .viewer-info {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                max-height: 38vh;
+                overflow-y: auto;
+            }
+        }
+
+        @media (max-width: 620px) {
+            main {
+                width: 92%;
+                padding-bottom: 70px;
+            }
+
+            .hero {
+                padding-top: 6px;
+                padding-bottom: 30px;
+            }
+
+            .hero-description {
+                margin-top: 18px;
+            }
+
+            .hero-index {
+                display: none;
+            }
+
+            .category-bar {
+                top: var(--header-height);
+                margin-bottom: 30px;
+                padding-block: 16px 14px;
+            }
+
+            .category-tabs {
+                gap: 24px;
+            }
+
+            .category-tab {
+                font-size: 10px;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+                row-gap: 42px;
+            }
+
+            .video-title {
+                font-size: 1.35rem;
+            }
+
+            .player-stage {
+                padding: 68px 0 8px;
+            }
+
+            .player-ratio {
+                width: 100%;
+            }
+
+            .viewer-toolbar {
+                top: 14px;
+                left: 14px;
+                right: 14px;
+            }
+
+            .icon-button {
+                width: 38px;
+                height: 38px;
+            }
+
+            .viewer-arrow {
+                top: auto;
+                bottom: 7px;
+                width: 46px;
+                height: 52px;
+                background: rgba(0, 0, 0, 0.34);
+                transform: none;
+            }
+
+            .viewer-prev {
+                left: 8px;
+            }
+
+            .viewer-next {
+                right: 8px;
+            }
+
+            .viewer-prev:hover,
+            .viewer-next:hover {
+                transform: none;
+            }
+
+            .viewer-info {
+                padding: 22px 24px 78px;
+                max-height: none;
+            }
+
+            .viewer-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="lang-switch" id="langBtn" type="button" aria-label="Switch language">EN / 简</button>
+
+    <header>
+        <nav aria-label="Primary navigation">
+            <ul class="nav-links">
+                <li><a href="index.html" class="i18n" data-cn="首页" data-en="Home">Home</a></li>
+                <li><a href="Cinematography.html" class="i18n active" data-cn="影视美学" data-en="Cinematography">Cinematography</a></li>
+                <li><a href="Photography.html" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
+                <li><a href="Landscaping.html" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
+                <li><a href="Research.html" class="i18n" data-cn="数字媒体商业作品与探索" data-en="Digital Media Works & Exploration">Digital Media Works & Exploration</a></li>
+                <li><a href="About_me.html" class="i18n" data-cn="关于我" data-en="About Me">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" aria-labelledby="pageTitle">
+            <div>
+                <p class="hero-kicker i18n" data-cn="导演 · 摄影 · 动态影像" data-en="Direction · Camera · Moving Image">Direction · Camera · Moving Image</p>
+                <h1 id="pageTitle" class="i18n" data-cn="影视美学" data-en="Cinematography">Cinematography</h1>
+                <p class="hero-description i18n"
+                   data-cn="从 AI 驱动的商业视觉、传统影视制作与数字动画，到日常影像观察。每一部作品都围绕光线、节奏、镜头语言与情绪展开。"
+                   data-en="From AI-driven commercial visuals and traditional filmmaking to digital animation and everyday observations, each work is shaped through light, rhythm, camera language and emotion.">
+                    From AI-driven commercial visuals and traditional filmmaking to digital animation and everyday observations, each work is shaped through light, rhythm, camera language and emotion.
+                </p>
+            </div>
+            <div class="hero-index" aria-hidden="true">
+                <strong id="heroTotal">16</strong>
+                <span class="i18n" data-cn="精选动态影像" data-en="Selected moving images">Selected moving images</span>
+            </div>
+        </section>
+
+        <section class="category-bar" aria-label="Video categories">
+            <div class="category-tabs" id="categoryTabs" role="tablist"></div>
+            <p class="category-status" id="categoryStatus" aria-live="polite"></p>
+        </section>
+
+        <section class="video-grid" id="videoGrid" aria-live="polite"></section>
+    </main>
+
+    <footer>
+        <p>© 2026 Xiaoming (Marcus) Zhong. All rights reserved</p>
+    </footer>
+
+    <!-- 全屏沉浸式视频放映器 -->
+    <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="viewerTitle" aria-hidden="true">
+        <div class="viewer-shell" id="viewerShell">
+            <div class="player-stage" id="playerStage">
+                <div class="viewer-toolbar">
+                    <div class="viewer-count" id="viewerCount">01 / 04</div>
+                    <div class="viewer-tools">
+                        <button class="icon-button" id="shareButton" type="button" aria-label="Copy video link" title="Copy video link">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12h8M13 8l4 4-4 4M6.5 5.5h-1A2.5 2.5 0 0 0 3 8v8a2.5 2.5 0 0 0 2.5 2.5h1"></path></svg>
+                        </button>
+                        <button class="icon-button" id="fullscreenButton" type="button" aria-label="Fullscreen player" title="Fullscreen player">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"></path></svg>
+                        </button>
+                        <button class="icon-button" id="closeViewer" type="button" aria-label="Close video" title="Close">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button class="viewer-arrow viewer-prev" id="prevVideo" type="button" aria-label="Previous video">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+                </button>
+
+                <div class="player-ratio" id="playerRatio">
+                    <iframe
+                        id="videoFrame"
+                        src=""
+                        title="Embedded video player"
+                        allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                        allowfullscreen
+                        loading="eager"
+                        referrerpolicy="strict-origin-when-cross-origin">
+                    </iframe>
+                </div>
+
+                <button class="viewer-arrow viewer-next" id="nextVideo" type="button" aria-label="Next video">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+                </button>
+            </div>
+
+            <div class="viewer-info">
+                <div>
+                    <p class="viewer-category" id="viewerCategory"></p>
+                    <h2 class="viewer-title" id="viewerTitle"></h2>
+                    <div class="viewer-meta" id="viewerMeta"></div>
+                </div>
+                <p class="viewer-description" id="viewerDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="copy-toast i18n" id="copyToast" data-cn="作品链接已复制" data-en="Video link copied">Video link copied</div>
+
+    <script>
+        /* =====================================================================
+           视频数据中心
+           ---------------------------------------------------------------------
+           后期添加新视频时，只需要复制下面任意一个对象，并修改：
+           1. category     分类：ai / traditional / animation / daily
+           2. title        中英文标题
+           3. description  中英文介绍
+           4. thumbnail    16:9 封面图链接
+           5. embedCode    直接粘贴视频平台分享出来的完整 iframe 嵌入代码
+              embedUrl     也继续兼容原来的 iframe src 链接写法
+           6. duration / year / role（均可自行修改）
+
+           推荐直接使用 embedCode，把平台提供的整段 <iframe>...</iframe> 原样粘贴进反引号中。
+           页面会自动读取 iframe 的 src，并放入本站统一设计的全屏播放器中。
+
+           新片场示例：
+           embedCode: `<iframe src="https://player.xinpianchang.com/?aid=作品ID&amp;mid=用户ID" allowfullscreen="" allow="fullscreen" frameborder="0"></iframe>`
+           ===================================================================== */
+
+        const categories = {
+            ai: {
+                cn: 'AI 商业作品',
+                en: 'AI Commercial Works'
+            },
+            traditional: {
+                cn: '传统 ATV',
+                en: 'Traditional A/V'
+            },
+            animation: {
+                cn: '数字动画',
+                en: 'Digital Animation'
+            },
+            daily: {
+                cn: '日常随拍分享',
+                en: 'Everyday Visual Stories'
+            }
+        };
+
+        const videoLibrary = [
+            {
+                id: 'ai-01',
+                category: 'ai',
+                title: { cn: '儿童教育片-北极熊和大熊猫', en: 'Pol & Pan' },
+                description: {
+                    cn: '以大熊猫和北极熊的代表形象给儿童讲述中加人民友谊。',
+                    en: 'Pol & Pan is a 2-minute, fully AI-generated clay style animation short film designed for a young audience (children). The film serves as an allegorical celebration of the enduring friendship between Canada and China. '
+                },
+                thumbnail: 'https://cinema-z.oss-cn-hongkong.aliyuncs.com/Pol.webp',
+                embedCode: `<iframe src="https://player.xinpianchang.com/?aid=13747619&amp;mid=yOBl4zL2Avx7aMg0" allowfullscreen="" allow="fullscreen" frameborder="0" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: none;"></iframe>`,
+                duration: '02:46',
+                year: '2026',
+                role: { cn: '全流程', en: 'All aspects' }
+            },
+            {
+                id: 'ai-02',
+                category: 'ai',
+                title: { cn: '海信美加区世界杯社媒广告', en: 'Hisense_USA FIFA World Cup Shorts' },
+                description: {
+                    cn: '该项目旨在借助世界杯的全球热潮，提升海信（Hisense）在北美（美国和加拿大）市场的品牌知名度与年轻受众群体的参与度。通过在 Instagram、TikTok 和 Twitter 等核心社交平台发布创意短视频、互动抽奖以及引发球迷共鸣的趣味内容，我们成功将海信的高端电视产品与极致的体育观赛体验紧密结合，大幅提升了品牌的线上曝光量与用户互动率。',
+                    en: 'This campaign leveraged the global excitement of the World Cup to boost Hisense’s brand awareness and audience engagement across the US and Canadian markets. By deploying creative short-form videos, interactive giveaways, and fan-centric content on key social platforms like Instagram, TikTok, and Twitter, we successfully connected Hisense’s premium TV products with the ultimate sports viewing experience, driving significant online impressions and community interaction.'
+                },
+                thumbnail: 'https://cinema-z.oss-cn-hongkong.aliyuncs.com/Hisense_USA%20copy.webp',
+                embedCode: `<iframe src="https://player.xinpianchang.com/?aid=13747743&amp;mid=jlyzw0zjmyOQB198" allowfullscreen="" allow="fullscreen" frameborder="0" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: none;"></iframe>`,
+                duration: '00:30',
+                year: '2026',
+                role: { cn: '全流程', en: 'All aspects' }
+            },
+            {
+                id: 'ai-03',
+                category: 'ai',
+                title: { cn: '海信世界杯墨西哥区社媒广告-严谨版', en: 'Hisense_Mexico FIFA World Cup Shorts Version A' },
+                description: {
+                    cn: '燃爆墨西哥！ 深度契合拉美球迷的狂热基因，我们用充满激情的视觉语言与“狂欢式”的社交互动点燃全网。将海信电视打造为球迷沉浸式观赛的绝对主角，彻底释放足球热情，让品牌曝光与粉丝互动量在社交平台一路狂飙！',
+                    en: 'Ignite the Fiesta! Tapping into the unrivaled passion of Mexican football fans, we fired up social media with high-energy visuals and wild, interactive content. We positioned Hisense TVs as the ultimate centerpiece for an immersive World Cup experience, skyrocketing brand reach and community engagement!'
+                },
+                thumbnail: 'https://cinema-z.oss-cn-hongkong.aliyuncs.com/4%20cop2.webp',
+                embedCode: `<iframe src="https://player.xinpianchang.com/?aid=13747765&amp;mid=v9GZQRo86Xo7WnAR" allowfullscreen="" allow="fullscreen" frameborder="0" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: none;"></iframe>`,
+                duration: '00:30',
+                year: '2026',
+                role: { cn: '全流程', en: 'All aspects' }
+            },
+            {
+                id: 'ai-04',
+                category: 'ai',
+                title: { cn: '海信世界杯墨西哥区社媒广告-网感版', en: 'Hisense_Mexico FIFA World Cup Shorts Version B' },
+                description: {
+                    cn: '燃爆墨西哥！ 深度契合拉美球迷的狂热基因，我们用充满激情的视觉语言与“狂欢式”的社交互动点燃全网。将海信电视打造为球迷沉浸式观赛的绝对主角，彻底释放足球热情，让品牌曝光与粉丝互动量在社交平台一路狂飙！',
+                    en: 'Ignite the Fiesta! Tapping into the unrivaled passion of Mexican football fans, we fired up social media with high-energy visuals and wild, interactive content. We positioned Hisense TVs as the ultimate centerpiece for an immersive World Cup experience, skyrocketing brand reach and community engagement!'
+                },
+                thumbnail: 'https://cinema-z.oss-cn-hongkong.aliyuncs.com/4%20copy.webp',
+                embedCode: `<iframe src="https://player.xinpianchang.com/?aid=13747778&amp;mid=Mnp8wWkmyWEwK0lG" allowfullscreen="" allow="fullscreen" frameborder="0" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: none;"></iframe>`,
+                duration: '0:30',
+                year: '2026',
+                role: { cn: '全流程', en: 'All aspects' }
+            },
+            {
+                id: 'ai-05',
+                category: 'ai',
+                title: { cn: 'Auto Parts汽车零件赞助视频', en: 'Auto Parts Sponsers Videos' },
+                description: {
+                    cn: '硬核呈现，精准出击！聚焦汽车的核心驱动力，通过炫酷的动态视觉特效，高亮展示不同零部件的精密结构与卓越性能。将冷冰冰的金属零件转化为充满力量感的工业美学，全方位凸显赞助品牌的专业品质与硬核实力。',
+                    en: 'Precision in Focus. This sponsorship video spotlights the core driving power of the automotive industry. By using dynamic visual effects to highlight different auto components, we showcase their intricate engineering and superior performance. The video transforms raw metal parts into a display of powerful industrial aesthetics, perfectly elevating the sponsor professional quality and hardcore capabilities.'
+                },
+                thumbnail: 'https://cinema-z.oss-cn-hongkong.aliyuncs.com/Auto.webp',
+                embedCode: `<iframe src="https://player.xinpianchang.com/?aid=13587460&amp;mid=Xl5M7nroaa67kKEg" allowfullscreen="" allow="fullscreen" frameborder="0" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: none;"></iframe>`,
+                duration: '0:30',
+                year: '2026',
+                role: { cn: '全流程', en: 'All aspects' }
+            },
+            {
+                id: 'ai-06',
+                category: 'ai',
+                title: { cn: 'WaWa柠檬水TVC', en: 'WaWa Lemonade TVC' },
+                description: {
+                    cn: '清凉一夏，瞬间唤醒！ 本支 TVC 以充满活力的视觉语言和动感节奏，生动展现了 Wawa 柠檬水的极致冰爽与酸甜。清新的画面直击味蕾，完美传递出夏日畅饮的纯粹快乐。',
+                    en: 'A splash of summer! This energetic TVC brings the icy, sweet-and-tart taste of Wawa Lemonade to life. Crisp, thirst-quenching visuals instantly awaken the senses, perfectly capturing the joy of a refreshing summer sip.'
+                },
+                thumbnail: 'https://cinema-z.oss-cn-hongkong.aliyuncs.com/Wawa.webp',
+                embedCode: `<iframe src="https://player.xinpianchang.com/?aid=13587656&amp;mid=Mnp8wWgmYVowK0lG" allowfullscreen="" allow="fullscreen" frameborder="0" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: none;"></iframe>`,
+                duration: '0:30',
+                year: '2026',
+                role: { cn: '全流程', en: 'All aspects' }
+            },
+            {
+                id: 'ai-07',
+                category: 'ai',
+                title: { cn: '末日电影预告片', en: 'Wasted Land Movie Trailer' },
+                description: {
+                    cn: '废土绝境，破晓之战！ 本支预告片以沉浸式的电影级视听，勾勒出末日世界的苍凉与残酷。紧凑的剪辑与令人窒息的悬疑氛围，完美放大了绝境中的生存挣扎与人性微光，瞬间拉满大片期待值。',
+                    en: 'Survive the wasteland! This cinematic trailer captures the gritty and desolate reality of a fallen world. With relentless pacing and a suspenseful soundscape, it magnifies the desperate struggle for survival and the last spark of human hope, leaving audiences on the edge of their seats.'
+                },
+                thumbnail: 'https://cinema-z.oss-cn-hongkong.aliyuncs.com/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-07-12%20234131.png',
+                embedCode: `<iframe src="https://player.xinpianchang.com/?aid=13587656&amp;mid=Mnp8wWgmYVowK0lG" allowfullscreen="" allow="fullscreen" frameborder="0" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: none;"></iframe>`,
+                duration: '0:30',
+                year: '2026',
+                role: { cn: '全流程', en: 'All aspects' }
+            },
+
+            {
+                id: 'traditional-01',
+                category: 'traditional',
+                title: { cn: '筋膜轴三维广告', en: 'Roller Ads' },
+                description: {
+                    cn: '科技释压，深层焕活！ 本支全三维（3D）广告以充满科技感的视觉呈现，透视解析筋膜轴的创新纹理与受力原理。通过细腻的动态建模，直观展示其精准直达深层肌肉的放松效果，完美凸显产品的专业度与高效能。',
+                    en: 'Tech-driven relief, deep recovery! This sleek 3D-animated commercial visually dissects the innovative texture and biomechanics of the fascia roller. Through high-quality dynamic simulations, it intuitively demonstrates its precise deep-tissue recovery effects, perfectly highlighting the product professional-grade efficiency.'
+                },
+                thumbnail: 'https://cinema-z.oss-cn-hongkong.aliyuncs.com/Roller.webp',
+                embedCode: `<iframe src="https://player.xinpianchang.com/?aid=13612994&amp;mid=DGPB72Klgnkwdrm5" allowfullscreen="" allow="fullscreen" frameborder="0" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: none;"></iframe>`,
+                duration: '03:18',
+                year: '2024',
+                role: { cn: '全流程', en: 'All aspects' }
+            },
+            {
+                id: 'traditional-02',
+                category: 'traditional',
+                title: { cn: '三向三角健身把手广告片', en: '3-Way Triangle Fitness Handle Commercial' },
+                description: {
+                    cn: '多维刺激，突破极限！ 本支广告片聚焦该把手的多功能与人体工学设计。通过充满力量感的训练特写与极具爆发力的动作剪辑，硬核展示其在背部及手臂肌群训练中的卓越表现，完美传递专业、高效的硬核健身体验。',
+                    en: 'Unlock your ultimate power! This energetic commercial highlights the ergonomic and versatile design of the 3-way fitness handle. Through intense workout close-ups and dynamic editing, it showcases maximum muscle activation, perfectly capturing a professional and hardcore training experience.'
+                },
+                thumbnail: 'https://cinema-z.oss-cn-hongkong.aliyuncs.com/Handle.webp',
+                embedCode: `<iframe src="https://player.xinpianchang.com/?aid=13613015&amp;mid=bKG8Qd3qKE24RJMy" allowfullscreen="" allow="fullscreen" frameborder="0" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: none;"></iframe>`,
+                duration: '01:52',
+                year: '2024',
+                role: { cn: '摄影指导 / 后期', en: 'Director of Photography / Post' }
+            },
+            {
+                id: 'traditional-03',
+                category: 'traditional',
+                title: { cn: '品牌人物访谈', en: 'Brand Interview Film' },
+                description: {
+                    cn: '以双机位访谈、环境补充镜头与品牌信息层级完成叙事，在真实表达与商业传播之间取得平衡。',
+                    en: 'A two-camera interview supported by environmental coverage and clear brand information, balancing authentic expression with commercial communication.'
+                },
+                thumbnail: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1600&q=88',
+                embedUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?rel=0&modestbranding=1',
+                duration: '04:26',
+                year: '2025',
+                role: { cn: '制片 / 摄影 / 剪辑', en: 'Production / Camera / Edit' }
+            },
+            {
+                id: 'traditional-04',
+                category: 'traditional',
+                title: { cn: '城市夜景电影练习', en: 'Urban Night Cinematography Study' },
+                description: {
+                    cn: '利用城市现有灯光、反射与运动元素进行低照度摄影练习，探索夜景画面的层次、色温和叙事方向。',
+                    en: 'A low-light cinematography study using existing urban illumination, reflections and movement to explore depth, colour temperature and narrative direction.'
+                },
+                thumbnail: 'https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1600&q=88',
+                embedUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?rel=0&modestbranding=1',
+                duration: '02:05',
+                year: '2025',
+                role: { cn: '摄影 / 调色', en: 'Cinematography / Colour' }
+            },
+
+            {
+                id: 'animation-01',
+                category: 'animation',
+                title: { cn: '三维角色动画短片', en: '3D Character Animation Short' },
+                description: {
+                    cn: '从角色表演、灯光到最终合成完成的三维动画短片，强调电影化镜头、情绪塑造与视觉连续性。',
+                    en: 'A 3D animated short developed from character performance and lighting through final compositing, with an emphasis on cinematic framing and emotional continuity.'
+                },
+                thumbnail: 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?auto=format&fit=crop&w=1600&q=88',
+                embedUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?rel=0&modestbranding=1',
+                duration: '02:44',
+                year: '2025',
+                role: { cn: '灯光 / 动画 / 合成', en: 'Lighting / Animation / Compositing' }
+            },
+            {
+                id: 'animation-02',
+                category: 'animation',
+                title: { cn: '环境叙事动画', en: 'Environment Storytelling Animation' },
+                description: {
+                    cn: '以空间氛围、镜头路径和光线变化推动叙事，将三维环境从展示场景转化为具有情绪曲线的动态空间。',
+                    en: 'An environment-driven animation where atmosphere, camera path and evolving light transform a 3D scene into a moving space with an emotional arc.'
+                },
+                thumbnail: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1600&q=88',
+                embedUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?rel=0&modestbranding=1',
+                duration: '01:36',
+                year: '2025',
+                role: { cn: '环境 / 灯光 / 镜头', en: 'Environment / Lighting / Camera' }
+            },
+            {
+                id: 'animation-03',
+                category: 'animation',
+                title: { cn: '动态图形品牌片头', en: 'Motion Identity Title Sequence' },
+                description: {
+                    cn: '以字体、几何运动和声音节拍构建的动态图形片头系统，可延展至品牌视频、栏目包装和社交媒体内容。',
+                    en: 'A motion identity system built through typography, geometric movement and sound rhythm, adaptable to brand films, title packages and social content.'
+                },
+                thumbnail: 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1600&q=88',
+                embedUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?rel=0&modestbranding=1',
+                duration: '00:35',
+                year: '2025',
+                role: { cn: '设计 / 动效 / 声音', en: 'Design / Motion / Sound' }
+            },
+            {
+                id: 'animation-04',
+                category: 'animation',
+                title: { cn: '材质与光线动态实验', en: 'Material and Light Motion Study' },
+                description: {
+                    cn: '通过材质变化、光线运动与微距镜头探索抽象视觉叙事，适合作为片头、转场或品牌视觉资产。',
+                    en: 'An abstract visual study of evolving materials, moving light and macro cinematography, designed for titles, transitions or brand assets.'
+                },
+                thumbnail: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1600&q=88',
+                embedUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?rel=0&modestbranding=1',
+                duration: '00:48',
+                year: '2025',
+                role: { cn: '视觉开发 / 三维 / 合成', en: 'Visual Development / 3D / Compositing' }
+            },
+
+            {
+                id: 'daily-01',
+                category: 'daily',
+                title: { cn: '多伦多街头影像日记', en: 'Toronto Street Visual Diary' },
+                description: {
+                    cn: '以轻量化设备记录城市中的光线、人物与偶然时刻，保持观察的直接性与现场节奏。',
+                    en: 'A lightweight visual diary capturing light, people and accidental moments across Toronto while preserving immediacy and location rhythm.'
+                },
+                thumbnail: 'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?auto=format&fit=crop&w=1600&q=88',
+                embedUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?rel=0&modestbranding=1',
+                duration: '01:16',
+                year: '2026',
+                role: { cn: '拍摄 / 剪辑', en: 'Camera / Edit' }
+            },
+            {
+                id: 'daily-02',
+                category: 'daily',
+                title: { cn: '湖边黄昏随拍', en: 'Lakeside Dusk Study' },
+                description: {
+                    cn: '围绕黄昏自然光、风与水面运动展开的短篇观察，通过克制剪辑保留安静而连续的时间感。',
+                    en: 'A short observation of dusk light, wind and water, using restrained editing to preserve a quiet and continuous sense of time.'
+                },
+                thumbnail: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=88',
+                embedUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?rel=0&modestbranding=1',
+                duration: '00:54',
+                year: '2026',
+                role: { cn: '摄影 / 调色', en: 'Cinematography / Colour' }
+            },
+            {
+                id: 'daily-03',
+                category: 'daily',
+                title: { cn: '雨天城市切片', en: 'Rainy City Fragments' },
+                description: {
+                    cn: '从车窗、玻璃反射与街道路面中提取城市片段，利用环境声音与非线性剪辑组合日常情绪。',
+                    en: 'City fragments collected through windows, reflections and wet streets, assembled with ambient sound and nonlinear editing into an everyday mood.'
+                },
+                thumbnail: 'https://images.unsplash.com/photo-1519692933481-e162a57d6721?auto=format&fit=crop&w=1600&q=88',
+                embedUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?rel=0&modestbranding=1',
+                duration: '01:08',
+                year: '2026',
+                role: { cn: '拍摄 / 声音 / 剪辑', en: 'Camera / Sound / Edit' }
+            },
+            {
+                id: 'daily-04',
+                category: 'daily',
+                title: { cn: '旅途中的动态明信片', en: 'Moving Postcard from a Journey' },
+                description: {
+                    cn: '把旅途中的空间、人物和短暂动作整理成一张动态明信片，强调真实体验而非传统旅行记录。',
+                    en: 'Spaces, people and passing gestures from a journey assembled as a moving postcard, prioritizing lived experience over conventional travel coverage.'
+                },
+                thumbnail: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1600&q=88',
+                embedUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?rel=0&modestbranding=1',
+                duration: '01:32',
+                year: '2026',
+                role: { cn: '导演 / 摄影 / 剪辑', en: 'Direction / Camera / Edit' }
+            }
+        ];
+
+        const state = {
+            language: 'en',
+            category: 'ai',
+            currentCategoryItems: [],
+            currentIndex: 0,
+            lastFocusedElement: null
+        };
+
+        const elements = {
+            langBtn: document.getElementById('langBtn'),
+            tabs: document.getElementById('categoryTabs'),
+            status: document.getElementById('categoryStatus'),
+            grid: document.getElementById('videoGrid'),
+            heroTotal: document.getElementById('heroTotal'),
+            viewer: document.getElementById('viewer'),
+            viewerShell: document.getElementById('viewerShell'),
+            playerStage: document.getElementById('playerStage'),
+            playerRatio: document.getElementById('playerRatio'),
+            frame: document.getElementById('videoFrame'),
+            viewerCount: document.getElementById('viewerCount'),
+            viewerCategory: document.getElementById('viewerCategory'),
+            viewerTitle: document.getElementById('viewerTitle'),
+            viewerDescription: document.getElementById('viewerDescription'),
+            viewerMeta: document.getElementById('viewerMeta'),
+            prev: document.getElementById('prevVideo'),
+            next: document.getElementById('nextVideo'),
+            close: document.getElementById('closeViewer'),
+            fullscreen: document.getElementById('fullscreenButton'),
+            share: document.getElementById('shareButton'),
+            toast: document.getElementById('copyToast')
+        };
+
+        const playIcon = `
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8.5 5.8v12.4L18.8 12 8.5 5.8Z"></path>
+            </svg>`;
+
+        function localize(value) {
+            if (typeof value === 'string') return value;
+            return value?.[state.language] ?? '';
+        }
+
+        function pad(number) {
+            return String(number).padStart(2, '0');
+        }
+
+        function getItemsForCategory(category) {
+            return videoLibrary.filter(item => item.category === category);
+        }
+
+        function renderTabs() {
+            elements.tabs.innerHTML = '';
+
+            Object.entries(categories).forEach(([key, label]) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `category-tab${state.category === key ? ' active' : ''}`;
+                button.setAttribute('role', 'tab');
+                button.setAttribute('aria-selected', state.category === key ? 'true' : 'false');
+                button.dataset.category = key;
+                button.textContent = localize(label);
+                button.addEventListener('click', () => setCategory(key));
+                elements.tabs.appendChild(button);
+            });
+        }
+
+        function renderGrid() {
+            state.currentCategoryItems = getItemsForCategory(state.category);
+            elements.grid.innerHTML = '';
+
+            if (!state.currentCategoryItems.length) {
+                const empty = document.createElement('div');
+                empty.className = 'empty-state';
+                empty.textContent = state.language === 'cn' ? '该分类暂时没有作品。' : 'No works have been added to this category yet.';
+                elements.grid.appendChild(empty);
+                return;
+            }
+
+            state.currentCategoryItems.forEach((item, index) => {
+                const article = document.createElement('article');
+                article.className = 'video-card';
+                article.style.setProperty('--delay', `${Math.min(index * 75, 450)}ms`);
+
+                const preview = document.createElement('button');
+                preview.type = 'button';
+                preview.className = 'video-preview';
+                preview.setAttribute('aria-label', `${state.language === 'cn' ? '播放' : 'Play'}: ${localize(item.title)}`);
+                preview.innerHTML = `
+                    <img src="${item.thumbnail}" alt="${escapeHTML(localize(item.title))}" loading="lazy" decoding="async">
+                    <span class="play-button">${playIcon}</span>
+                    <span class="preview-number">${pad(index + 1)}</span>
+                    <span class="preview-duration">${escapeHTML(item.duration || '')}</span>`;
+                preview.addEventListener('click', () => openViewer(index, preview));
+
+                const copy = document.createElement('div');
+                copy.className = 'video-copy';
+                copy.innerHTML = `
+                    <div class="video-meta">
+                        <span>${escapeHTML(item.year || '')}</span>
+                        <span>${escapeHTML(localize(item.role))}</span>
+                    </div>
+                    <h2 class="video-title">${escapeHTML(localize(item.title))}</h2>
+                    <p class="video-summary">${escapeHTML(localize(item.description))}</p>`;
+
+                article.append(preview, copy);
+                elements.grid.appendChild(article);
+            });
+
+            updateCategoryStatus();
+        }
+
+        function updateCategoryStatus() {
+            const count = state.currentCategoryItems.length;
+            const label = localize(categories[state.category]);
+            elements.status.textContent = state.language === 'cn'
+                ? `${label} · ${pad(count)} 部作品`
+                : `${label} · ${pad(count)} works`;
+        }
+
+        function setCategory(category, options = {}) {
+            if (!categories[category]) return;
+
+            state.category = category;
+            renderTabs();
+            renderGrid();
+
+            if (!options.preserveScroll) {
+                const top = document.querySelector('.category-bar').offsetTop - parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height'));
+                window.scrollTo({ top, behavior: 'smooth' });
+            }
+
+            if (!options.skipHash) {
+                history.replaceState(null, '', `#${category}`);
+            }
+        }
+
+        function openViewer(index, triggerElement) {
+            if (!state.currentCategoryItems[index]) return;
+
+            state.currentIndex = index;
+            state.lastFocusedElement = triggerElement || document.activeElement;
+            elements.viewer.classList.add('active');
+            elements.viewer.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+            updateViewer({ autoplay: true });
+            elements.close.focus({ preventScroll: true });
+        }
+
+        function closeViewer() {
+            elements.viewer.classList.remove('active');
+            elements.viewer.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+            elements.frame.src = '';
+            history.replaceState(null, '', `#${state.category}`);
+
+            if (state.lastFocusedElement) {
+                state.lastFocusedElement.focus({ preventScroll: true });
+            }
+        }
+
+        function updateViewer({ autoplay = false } = {}) {
+            const item = state.currentCategoryItems[state.currentIndex];
+            if (!item) return;
+
+            const total = state.currentCategoryItems.length;
+            elements.viewerCount.textContent = `${pad(state.currentIndex + 1)} / ${pad(total)}`;
+            elements.viewerCategory.textContent = localize(categories[item.category]);
+            elements.viewerTitle.textContent = localize(item.title);
+            elements.viewerDescription.textContent = localize(item.description);
+            elements.viewerMeta.innerHTML = `
+                <span>${escapeHTML(item.year || '')}</span>
+                <span>${escapeHTML(item.duration || '')}</span>
+                <span>${escapeHTML(localize(item.role))}</span>`;
+
+            elements.frame.title = localize(item.title);
+
+            // 同时支持：
+            // 1. embedCode: 完整的 <iframe>...</iframe> 分享代码
+            // 2. embedUrl: 仅播放器 src 地址（兼容旧数据）
+            const playerUrl = getEmbedUrl(item);
+            elements.frame.src = autoplay ? addAutoplay(playerUrl) : playerUrl;
+            history.replaceState(null, '', `#${item.category}/${item.id}`);
+        }
+
+        function getEmbedUrl(item) {
+            const source = String(item.embedCode || item.embedUrl || '').trim();
+            if (!source) return '';
+
+            // 用户可以直接粘贴视频平台提供的完整 iframe 代码。
+            // 这里只提取 src，避免平台代码中的尺寸与样式破坏本站播放器布局。
+            if (source.startsWith('<iframe')) {
+                const template = document.createElement('template');
+                template.innerHTML = source;
+                const iframe = template.content.querySelector('iframe');
+                return iframe?.getAttribute('src') || '';
+            }
+
+            return source;
+        }
+
+        function addAutoplay(url) {
+            if (!url) return '';
+            const separator = url.includes('?') ? '&' : '?';
+            return `${url}${separator}autoplay=1`;
+        }
+
+        function showNext() {
+            if (!state.currentCategoryItems.length) return;
+            state.currentIndex = (state.currentIndex + 1) % state.currentCategoryItems.length;
+            updateViewer({ autoplay: true });
+        }
+
+        function showPrevious() {
+            if (!state.currentCategoryItems.length) return;
+            state.currentIndex = (state.currentIndex - 1 + state.currentCategoryItems.length) % state.currentCategoryItems.length;
+            updateViewer({ autoplay: true });
+        }
+
+        function switchLanguage() {
+            state.language = state.language === 'en' ? 'cn' : 'en';
+            document.documentElement.lang = state.language === 'cn' ? 'zh-CN' : 'en';
+
+            document.querySelectorAll('.i18n').forEach(element => {
+                const translated = element.dataset[state.language];
+                if (translated) element.textContent = translated;
+            });
+
+            elements.langBtn.textContent = state.language === 'en' ? 'EN / 简' : '简 / EN';
+            renderTabs();
+            renderGrid();
+
+            if (elements.viewer.classList.contains('active')) {
+                updateViewer({ autoplay: false });
+            }
+        }
+
+        async function toggleFullscreen() {
+            try {
+                if (!document.fullscreenElement) {
+                    await elements.playerRatio.requestFullscreen();
+                } else {
+                    await document.exitFullscreen();
+                }
+            } catch (error) {
+                console.warn('Fullscreen is not available in this browser.', error);
+            }
+        }
+
+        async function copyCurrentLink() {
+            const item = state.currentCategoryItems[state.currentIndex];
+            if (!item) return;
+
+            const url = new URL(window.location.href);
+            url.hash = `${item.category}/${item.id}`;
+
+            try {
+                await navigator.clipboard.writeText(url.toString());
+            } catch (error) {
+                const input = document.createElement('textarea');
+                input.value = url.toString();
+                input.style.position = 'fixed';
+                input.style.opacity = '0';
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                input.remove();
+            }
+
+            elements.toast.classList.add('show');
+            clearTimeout(copyCurrentLink.timeoutId);
+            copyCurrentLink.timeoutId = setTimeout(() => elements.toast.classList.remove('show'), 1800);
+        }
+
+        function escapeHTML(value = '') {
+            return String(value)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function handleInitialHash() {
+            const raw = window.location.hash.replace('#', '');
+            if (!raw) return;
+
+            const [category, id] = raw.split('/');
+            if (!categories[category]) return;
+
+            setCategory(category, { preserveScroll: true, skipHash: true });
+
+            if (id) {
+                const index = state.currentCategoryItems.findIndex(item => item.id === id);
+                if (index >= 0) {
+                    openViewer(index);
+                }
+            }
+        }
+
+        /* 键盘操作：ESC 关闭；左右方向键切换；Tab 保持在弹窗控制范围内 */
+        document.addEventListener('keydown', event => {
+            if (!elements.viewer.classList.contains('active')) return;
+
+            if (event.key === 'Escape') closeViewer();
+            if (event.key === 'ArrowRight') showNext();
+            if (event.key === 'ArrowLeft') showPrevious();
+
+            if (event.key === 'Tab') {
+                const focusable = elements.viewer.querySelectorAll('button:not([disabled]), iframe');
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            }
+        });
+
+        /* 点击黑色背景关闭；点击播放器和信息区域不会关闭 */
+        elements.viewer.addEventListener('click', event => {
+            if (event.target === elements.viewer) closeViewer();
+        });
+
+        /* 手机触控左右滑动切换作品 */
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        elements.playerStage.addEventListener('touchstart', event => {
+            const touch = event.changedTouches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        }, { passive: true });
+
+        elements.playerStage.addEventListener('touchend', event => {
+            const touch = event.changedTouches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+
+            if (Math.abs(deltaX) > 65 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                deltaX < 0 ? showNext() : showPrevious();
+            }
+        }, { passive: true });
+
+        elements.langBtn.addEventListener('click', switchLanguage);
+        elements.close.addEventListener('click', closeViewer);
+        elements.next.addEventListener('click', showNext);
+        elements.prev.addEventListener('click', showPrevious);
+        elements.fullscreen.addEventListener('click', toggleFullscreen);
+        elements.share.addEventListener('click', copyCurrentLink);
+
+        /* 初始化 */
+        elements.heroTotal.textContent = pad(videoLibrary.length);
+        renderTabs();
+        renderGrid();
+        handleInitialHash();
+    </script>
+</body>
+</html>
