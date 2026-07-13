@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Photography portfolio of Xiaoming (Marcus) Zhong — pets, portraits, landscapes, events, everyday life, light studies and mobile photography.">
+    <meta name="description" content="Photography portfolio of Xiaoming (Marcus) Zhong — pets, portraits, landscapes, events, everyday life, light studies, plants and mobile photography.">
     <title>Photography | Xiaoming (Marcus) Zhong</title>
-    <!-- Data build: 2026-07-13 URL repair — 29 pets / 180 portraits -->
+    <!-- Data build: 2026-07-13 — 20 pets / 180 portraits / 42 landscapes / 20 events / Plants category added -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -891,9 +891,9 @@
                 <p class="hero-kicker i18n" data-cn="光线 · 瞬间 · 情绪" data-en="Light · Moment · Emotion">Light · Moment · Emotion</p>
                 <h1 id="pageTitle" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</h1>
                 <p class="hero-description i18n"
-                   data-cn="从宠物、人像、风光与活动记录，到日常生活、光线研究和手机摄影。每一张照片都在真实瞬间、视觉秩序与情绪表达之间寻找平衡。"
-                   data-en="From pets, portraits, landscapes and events to everyday life, studies of light and mobile photography, each image searches for a balance between authentic moments, visual order and emotional expression.">
-                    From pets, portraits, landscapes and events to everyday life, studies of light and mobile photography, each image searches for a balance between authentic moments, visual order and emotional expression.
+                   data-cn="从宠物、人像、风光与活动记录，到日常生活、光线研究、植物和手机摄影。每一张照片都在真实瞬间、视觉秩序与情绪表达之间寻找平衡。"
+                   data-en="From pets, portraits, landscapes and events to everyday life, studies of light, plants and mobile photography, each image searches for a balance between authentic moments, visual order and emotional expression.">
+                    From pets, portraits, landscapes and events to everyday life, studies of light, plants and mobile photography, each image searches for a balance between authentic moments, visual order and emotional expression.
                 </p>
             </div>
             <div class="hero-index" aria-hidden="true">
@@ -944,7 +944,7 @@
            后期添加新照片时，只需要复制 photoLibrary 中任意一个对象，并修改：
 
            1. id        每张照片的唯一名称，不要重复
-           2. category  分类：pet / portrait / landscape / event / life / light / mobile
+           2. category  分类：pet / portrait / landscape / event / life / light / plant / mobile
            3. src       高清照片链接
            4. thumb     可选：缩略图链接；不填写时自动使用 src
            5. title     中英文标题
@@ -974,6 +974,7 @@
             event: { cn: '活动', en: 'Events' },
             life: { cn: '生活', en: 'Everyday Life' },
             light: { cn: '光线', en: 'Light Studies' },
+            plant: { cn: '植物', en: 'Plants' },
             mobile: { cn: '手机摄影', en: 'Mobile Photography' }
         };
 
@@ -1183,24 +1184,70 @@
             { id: 'portrait-180', category: 'portrait', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/portrait_Webp/%E7%BB%84%E5%90%88%E6%A1%86%E6%9E%B61%20%E6%8B%B7%E8%B4%9D%20copy.webp', title: { cn: '人像摄影 180', en: 'Portrait Photography 180' }, alt: { cn: '人像摄影作品 180', en: 'portrait photography work 180' } },
 
             // ==================== 风光 Landscapes ====================
-            { id: 'landscape-01', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-01/1600/1600', title: { cn: '风光摄影 01', en: 'Landscape 01' }, alt: { cn: '风光摄影占位作品一', en: 'Landscape photography placeholder image one' }, year: '2026', location: { cn: '安大略', en: 'Ontario' } },
-            { id: 'landscape-02', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-02/1600/1600', title: { cn: '风光摄影 02', en: 'Landscape 02' }, alt: { cn: '风光摄影占位作品二', en: 'Landscape photography placeholder image two' }, year: '2026', location: { cn: '安大略', en: 'Ontario' } },
-            { id: 'landscape-03', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-03/1600/1600', title: { cn: '风光摄影 03', en: 'Landscape 03' }, alt: { cn: '风光摄影占位作品三', en: 'Landscape photography placeholder image three' }, year: '2026', location: { cn: '加拿大', en: 'Canada' } },
-            { id: 'landscape-04', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-04/1600/1600', title: { cn: '风光摄影 04', en: 'Landscape 04' }, alt: { cn: '风光摄影占位作品四', en: 'Landscape photography placeholder image four' }, year: '2026', location: { cn: '加拿大', en: 'Canada' } },
-            { id: 'landscape-05', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-05/1600/1600', title: { cn: '风光摄影 05', en: 'Landscape 05' }, alt: { cn: '风光摄影占位作品五', en: 'Landscape photography placeholder image five' }, year: '2025', location: { cn: '安大略', en: 'Ontario' } },
-            { id: 'landscape-06', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-06/1600/1600', title: { cn: '风光摄影 06', en: 'Landscape 06' }, alt: { cn: '风光摄影占位作品六', en: 'Landscape photography placeholder image six' }, year: '2025', location: { cn: '安大略', en: 'Ontario' } },
-            { id: 'landscape-07', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-07/1600/1600', title: { cn: '风光摄影 07', en: 'Landscape 07' }, alt: { cn: '风光摄影占位作品七', en: 'Landscape photography placeholder image seven' }, year: '2025', location: { cn: '加拿大', en: 'Canada' } },
-            { id: 'landscape-08', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-08/1600/1600', title: { cn: '风光摄影 08', en: 'Landscape 08' }, alt: { cn: '风光摄影占位作品八', en: 'Landscape photography placeholder image eight' }, year: '2025', location: { cn: '加拿大', en: 'Canada' } },
+            { id: "landscape-01", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/01_%E8%87%AA%E7%84%B6%E5%8D%9A%E7%89%A9%E9%A6%86%E8%9A%82%E8%9A%81%20copy.webp", title: { cn: "风光摄影 01", en: "Landscape Photography 01" }, alt: { cn: "风光摄影作品 01", en: "landscape photography work 01" } },
+            { id: "landscape-02", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/02_911%E7%BA%AA%E5%BF%B5%E5%90%83%20copy.webp", title: { cn: "风光摄影 02", en: "Landscape Photography 02" }, alt: { cn: "风光摄影作品 02", en: "landscape photography work 02" } },
+            { id: "landscape-03", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/03%E4%B8%96%E8%B4%B8%E4%B8%AD%E5%BF%83%E9%81%97%E5%9D%80%E6%A0%91%E5%BD%B1%20copy.webp", title: { cn: "风光摄影 03", en: "Landscape Photography 03" }, alt: { cn: "风光摄影作品 03", en: "landscape photography work 03" } },
+            { id: "landscape-04", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/04_%E9%98%B3%E5%85%89%E4%B8%8B%E7%9A%84%E5%A2%99%E9%AC%BC%E8%84%B8%E7%94%BB%20copy.webp", title: { cn: "风光摄影 04", en: "Landscape Photography 04" }, alt: { cn: "风光摄影作品 04", en: "landscape photography work 04" } },
+            { id: "landscape-05", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/05_%E8%87%AA%E7%94%B1%E5%A5%B3%E7%A5%9E%E4%B8%89%E7%BB%84%E5%9B%BE%20copy.webp", title: { cn: "风光摄影 05", en: "Landscape Photography 05" }, alt: { cn: "风光摄影作品 05", en: "landscape photography work 05" } },
+            { id: "landscape-06", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/06_NYPD%E5%AE%88%E6%8A%A4%E8%A1%97%E9%81%93%20copy.webp", title: { cn: "风光摄影 06", en: "Landscape Photography 06" }, alt: { cn: "风光摄影作品 06", en: "landscape photography work 06" } },
+            { id: "landscape-07", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/07_%E5%85%A8%E5%8F%8D%E5%85%89%E5%BB%BA%E7%AD%91%20copy.webp", title: { cn: "风光摄影 07", en: "Landscape Photography 07" }, alt: { cn: "风光摄影作品 07", en: "landscape photography work 07" } },
+            { id: "landscape-08", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/08%E8%80%81%E8%8C%8E%E7%94%9F%E8%8A%B1%20copy.webp", title: { cn: "风光摄影 08", en: "Landscape Photography 08" }, alt: { cn: "风光摄影作品 08", en: "landscape photography work 08" } },
+            { id: "landscape-09", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/09%E6%97%B6%E4%BB%A3%E5%B9%BF%E5%9C%BA%20copy.webp", title: { cn: "风光摄影 09", en: "Landscape Photography 09" }, alt: { cn: "风光摄影作品 09", en: "landscape photography work 09" } },
+            { id: "landscape-10", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/10_%E5%B0%8F%E7%8B%97%E9%92%A5%E5%8C%99%E6%89%A3%20copy.webp", title: { cn: "风光摄影 10", en: "Landscape Photography 10" }, alt: { cn: "风光摄影作品 10", en: "landscape photography work 10" } },
+            { id: "landscape-11", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/11%E5%9F%8E%E5%B8%82%E7%BB%BF%E6%B4%B2%20copy.webp", title: { cn: "风光摄影 11", en: "Landscape Photography 11" }, alt: { cn: "风光摄影作品 11", en: "landscape photography work 11" } },
+            { id: "landscape-12", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/12_%E9%98%B3%E5%85%89%E8%A7%82%E6%99%AF%E5%8F%B0%20copy.webp", title: { cn: "风光摄影 12", en: "Landscape Photography 12" }, alt: { cn: "风光摄影作品 12", en: "landscape photography work 12" } },
+            { id: "landscape-13", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/13_%E6%9C%80%E7%BE%8E%E5%8E%95%E6%89%80%20copy.webp", title: { cn: "风光摄影 13", en: "Landscape Photography 13" }, alt: { cn: "风光摄影作品 13", en: "landscape photography work 13" } },
+            { id: "landscape-14", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/14%E6%95%B0%E5%AD%97%E5%AA%92%E4%BD%93%E5%8D%9A%E7%89%A9%E9%A6%86%20copy.webp", title: { cn: "风光摄影 14", en: "Landscape Photography 14" }, alt: { cn: "风光摄影作品 14", en: "landscape photography work 14" } },
+            { id: "landscape-15", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/15_%E4%B8%AD%E5%A4%AE%E5%85%AC%E5%9B%AD%20%E8%89%BA%E6%9C%AF%E5%AE%B6%20copy.webp", title: { cn: "风光摄影 15", en: "Landscape Photography 15" }, alt: { cn: "风光摄影作品 15", en: "landscape photography work 15" } },
+            { id: "landscape-16", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/16%E7%89%A9%E8%B4%A8%E4%B8%8E%E7%88%B1%E6%83%85%20copy.webp", title: { cn: "风光摄影 16", en: "Landscape Photography 16" }, alt: { cn: "风光摄影作品 16", en: "landscape photography work 16" } },
+            { id: "landscape-17", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/17_%E9%87%8C%E5%A0%A1%E8%BF%9C%E7%9C%BA%20copy.webp", title: { cn: "风光摄影 17", en: "Landscape Photography 17" }, alt: { cn: "风光摄影作品 17", en: "landscape photography work 17" } },
+            { id: "landscape-18", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/18_%E6%B3%95%E6%8B%89%E7%9B%9B%20copy.webp", title: { cn: "风光摄影 18", en: "Landscape Photography 18" }, alt: { cn: "风光摄影作品 18", en: "landscape photography work 18" } },
+            { id: "landscape-19", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A1543%20-%20Copy%20copy.webp", title: { cn: "风光摄影 19", en: "Landscape Photography 19" }, alt: { cn: "风光摄影作品 19", en: "landscape photography work 19" } },
+            { id: "landscape-20", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A1613%20copy.webp", title: { cn: "风光摄影 20", en: "Landscape Photography 20" }, alt: { cn: "风光摄影作品 20", en: "landscape photography work 20" } },
+            { id: "landscape-21", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A1733%20copy.webp", title: { cn: "风光摄影 21", en: "Landscape Photography 21" }, alt: { cn: "风光摄影作品 21", en: "landscape photography work 21" } },
+            { id: "landscape-22", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A1789%20copy.webp", title: { cn: "风光摄影 22", en: "Landscape Photography 22" }, alt: { cn: "风光摄影作品 22", en: "landscape photography work 22" } },
+            { id: "landscape-23", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A1827%20copy.webp", title: { cn: "风光摄影 23", en: "Landscape Photography 23" }, alt: { cn: "风光摄影作品 23", en: "landscape photography work 23" } },
+            { id: "landscape-24", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A4792-Edit%20copy.webp", title: { cn: "风光摄影 24", en: "Landscape Photography 24" }, alt: { cn: "风光摄影作品 24", en: "landscape photography work 24" } },
+            { id: "landscape-25", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A4796-Edit%20copy.webp", title: { cn: "风光摄影 25", en: "Landscape Photography 25" }, alt: { cn: "风光摄影作品 25", en: "landscape photography work 25" } },
+            { id: "landscape-26", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A4806-Edit%20copy.webp", title: { cn: "风光摄影 26", en: "Landscape Photography 26" }, alt: { cn: "风光摄影作品 26", en: "landscape photography work 26" } },
+            { id: "landscape-27", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A4820-Edit%20copy.webp", title: { cn: "风光摄影 27", en: "Landscape Photography 27" }, alt: { cn: "风光摄影作品 27", en: "landscape photography work 27" } },
+            { id: "landscape-28", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A4834-Edit%20copy.webp", title: { cn: "风光摄影 28", en: "Landscape Photography 28" }, alt: { cn: "风光摄影作品 28", en: "landscape photography work 28" } },
+            { id: "landscape-29", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A4843-Edit%20copy.webp", title: { cn: "风光摄影 29", en: "Landscape Photography 29" }, alt: { cn: "风光摄影作品 29", en: "landscape photography work 29" } },
+            { id: "landscape-30", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A4846-Edit%20copy.webp", title: { cn: "风光摄影 30", en: "Landscape Photography 30" }, alt: { cn: "风光摄影作品 30", en: "landscape photography work 30" } },
+            { id: "landscape-31", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A4854-Edit%20copy.webp", title: { cn: "风光摄影 31", en: "Landscape Photography 31" }, alt: { cn: "风光摄影作品 31", en: "landscape photography work 31" } },
+            { id: "landscape-32", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A5384-Edit%20copy.webp", title: { cn: "风光摄影 32", en: "Landscape Photography 32" }, alt: { cn: "风光摄影作品 32", en: "landscape photography work 32" } },
+            { id: "landscape-33", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A5386-Edit%20copy.webp", title: { cn: "风光摄影 33", en: "Landscape Photography 33" }, alt: { cn: "风光摄影作品 33", en: "landscape photography work 33" } },
+            { id: "landscape-34", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A5396-Edit%20copy.webp", title: { cn: "风光摄影 34", en: "Landscape Photography 34" }, alt: { cn: "风光摄影作品 34", en: "landscape photography work 34" } },
+            { id: "landscape-35", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A5409-Edit%20copy.webp", title: { cn: "风光摄影 35", en: "Landscape Photography 35" }, alt: { cn: "风光摄影作品 35", en: "landscape photography work 35" } },
+            { id: "landscape-36", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A5451-Edit-2%20copy.webp", title: { cn: "风光摄影 36", en: "Landscape Photography 36" }, alt: { cn: "风光摄影作品 36", en: "landscape photography work 36" } },
+            { id: "landscape-37", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A5452-Edit%20copy.webp", title: { cn: "风光摄影 37", en: "Landscape Photography 37" }, alt: { cn: "风光摄影作品 37", en: "landscape photography work 37" } },
+            { id: "landscape-38", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A5462-Edit%20copy.webp", title: { cn: "风光摄影 38", en: "Landscape Photography 38" }, alt: { cn: "风光摄影作品 38", en: "landscape photography work 38" } },
+            { id: "landscape-39", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A5464-Edit%20copy.webp", title: { cn: "风光摄影 39", en: "Landscape Photography 39" }, alt: { cn: "风光摄影作品 39", en: "landscape photography work 39" } },
+            { id: "landscape-40", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/334A7096%20copy.webp", title: { cn: "风光摄影 40", en: "Landscape Photography 40" }, alt: { cn: "风光摄影作品 40", en: "landscape photography work 40" } },
+            { id: "landscape-41", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/IMG_4343%20copy.webp", title: { cn: "风光摄影 41", en: "Landscape Photography 41" }, alt: { cn: "风光摄影作品 41", en: "landscape photography work 41" } },
+            { id: "landscape-42", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/IMG_4369%20copy.webp", title: { cn: "风光摄影 42", en: "Landscape Photography 42" }, alt: { cn: "风光摄影作品 42", en: "landscape photography work 42" } },
 
             // ==================== 活动 Events ====================
-            { id: 'event-01', category: 'event', src: 'https://picsum.photos/seed/marcus-event-01/1600/1600', title: { cn: '活动记录 01', en: 'Event Story 01' }, alt: { cn: '活动摄影占位作品一', en: 'Event photography placeholder image one' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
-            { id: 'event-02', category: 'event', src: 'https://picsum.photos/seed/marcus-event-02/1600/1600', title: { cn: '活动记录 02', en: 'Event Story 02' }, alt: { cn: '活动摄影占位作品二', en: 'Event photography placeholder image two' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
-            { id: 'event-03', category: 'event', src: 'https://picsum.photos/seed/marcus-event-03/1600/1600', title: { cn: '活动记录 03', en: 'Event Story 03' }, alt: { cn: '活动摄影占位作品三', en: 'Event photography placeholder image three' }, year: '2026', location: { cn: '奥克维尔', en: 'Oakville' } },
-            { id: 'event-04', category: 'event', src: 'https://picsum.photos/seed/marcus-event-04/1600/1600', title: { cn: '活动记录 04', en: 'Event Story 04' }, alt: { cn: '活动摄影占位作品四', en: 'Event photography placeholder image four' }, year: '2026', location: { cn: '奥克维尔', en: 'Oakville' } },
-            { id: 'event-05', category: 'event', src: 'https://picsum.photos/seed/marcus-event-05/1600/1600', title: { cn: '活动记录 05', en: 'Event Story 05' }, alt: { cn: '活动摄影占位作品五', en: 'Event photography placeholder image five' }, year: '2025', location: { cn: '多伦多', en: 'Toronto' } },
-            { id: 'event-06', category: 'event', src: 'https://picsum.photos/seed/marcus-event-06/1600/1600', title: { cn: '活动记录 06', en: 'Event Story 06' }, alt: { cn: '活动摄影占位作品六', en: 'Event photography placeholder image six' }, year: '2025', location: { cn: '多伦多', en: 'Toronto' } },
-            { id: 'event-07', category: 'event', src: 'https://picsum.photos/seed/marcus-event-07/1600/1600', title: { cn: '活动记录 07', en: 'Event Story 07' }, alt: { cn: '活动摄影占位作品七', en: 'Event photography placeholder image seven' }, year: '2025', location: { cn: '汉密尔顿', en: 'Hamilton' } },
-            { id: 'event-08', category: 'event', src: 'https://picsum.photos/seed/marcus-event-08/1600/1600', title: { cn: '活动记录 08', en: 'Event Story 08' }, alt: { cn: '活动摄影占位作品八', en: 'Event photography placeholder image eight' }, year: '2025', location: { cn: '汉密尔顿', en: 'Hamilton' } },
+            { id: "event-01", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/1%20copy.webp", title: { cn: "活动记录 01", en: "Event Photography 01" }, alt: { cn: "活动记录作品 01", en: "event photography work 01" } },
+            { id: "event-02", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/10%20copy.webp", title: { cn: "活动记录 02", en: "Event Photography 02" }, alt: { cn: "活动记录作品 02", en: "event photography work 02" } },
+            { id: "event-03", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/11%20copy.webp", title: { cn: "活动记录 03", en: "Event Photography 03" }, alt: { cn: "活动记录作品 03", en: "event photography work 03" } },
+            { id: "event-04", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/12%20copy.webp", title: { cn: "活动记录 04", en: "Event Photography 04" }, alt: { cn: "活动记录作品 04", en: "event photography work 04" } },
+            { id: "event-05", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/13%20copy.webp", title: { cn: "活动记录 05", en: "Event Photography 05" }, alt: { cn: "活动记录作品 05", en: "event photography work 05" } },
+            { id: "event-06", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/14.%20copy.webp", title: { cn: "活动记录 06", en: "Event Photography 06" }, alt: { cn: "活动记录作品 06", en: "event photography work 06" } },
+            { id: "event-07", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/2%20copy.webp", title: { cn: "活动记录 07", en: "Event Photography 07" }, alt: { cn: "活动记录作品 07", en: "event photography work 07" } },
+            { id: "event-08", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/3%20copy.webp", title: { cn: "活动记录 08", en: "Event Photography 08" }, alt: { cn: "活动记录作品 08", en: "event photography work 08" } },
+            { id: "event-09", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/33.webp", title: { cn: "活动记录 09", en: "Event Photography 09" }, alt: { cn: "活动记录作品 09", en: "event photography work 09" } },
+            { id: "event-10", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/334A6281%20copy.webp", title: { cn: "活动记录 10", en: "Event Photography 10" }, alt: { cn: "活动记录作品 10", en: "event photography work 10" } },
+            { id: "event-11", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/334A6286%20copy.webp", title: { cn: "活动记录 11", en: "Event Photography 11" }, alt: { cn: "活动记录作品 11", en: "event photography work 11" } },
+            { id: "event-12", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/334A6290%20copy.webp", title: { cn: "活动记录 12", en: "Event Photography 12" }, alt: { cn: "活动记录作品 12", en: "event photography work 12" } },
+            { id: "event-13", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/334A6294%20copy.webp", title: { cn: "活动记录 13", en: "Event Photography 13" }, alt: { cn: "活动记录作品 13", en: "event photography work 13" } },
+            { id: "event-14", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/334A6307%20copy.webp", title: { cn: "活动记录 14", en: "Event Photography 14" }, alt: { cn: "活动记录作品 14", en: "event photography work 14" } },
+            { id: "event-15", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/4%20copy.webp", title: { cn: "活动记录 15", en: "Event Photography 15" }, alt: { cn: "活动记录作品 15", en: "event photography work 15" } },
+            { id: "event-16", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/5%20copy.webp", title: { cn: "活动记录 16", en: "Event Photography 16" }, alt: { cn: "活动记录作品 16", en: "event photography work 16" } },
+            { id: "event-17", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/6%20copy.webp", title: { cn: "活动记录 17", en: "Event Photography 17" }, alt: { cn: "活动记录作品 17", en: "event photography work 17" } },
+            { id: "event-18", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/7%20copy.webp", title: { cn: "活动记录 18", en: "Event Photography 18" }, alt: { cn: "活动记录作品 18", en: "event photography work 18" } },
+            { id: "event-19", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/8%20copy.webp", title: { cn: "活动记录 19", en: "Event Photography 19" }, alt: { cn: "活动记录作品 19", en: "event photography work 19" } },
+            { id: "event-20", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/9%20copy.webp", title: { cn: "活动记录 20", en: "Event Photography 20" }, alt: { cn: "活动记录作品 20", en: "event photography work 20" } },
 
             // ==================== 生活 Everyday Life ====================
             { id: 'life-01', category: 'life', src: 'https://picsum.photos/seed/marcus-life-01/1600/1600', title: { cn: '生活切片 01', en: 'Everyday Fragment 01' }, alt: { cn: '生活摄影占位作品一', en: 'Everyday life photography placeholder image one' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
@@ -1221,6 +1268,9 @@
             { id: 'light-06', category: 'light', src: 'https://picsum.photos/seed/marcus-light-06/1600/1600', title: { cn: '光线研究 06', en: 'Light Study 06' }, alt: { cn: '光线摄影占位作品六', en: 'Light study placeholder image six' }, year: '2025', location: { cn: '工作室', en: 'Studio' } },
             { id: 'light-07', category: 'light', src: 'https://picsum.photos/seed/marcus-light-07/1600/1600', title: { cn: '光线研究 07', en: 'Light Study 07' }, alt: { cn: '光线摄影占位作品七', en: 'Light study placeholder image seven' }, year: '2025', location: { cn: '奥克维尔', en: 'Oakville' } },
             { id: 'light-08', category: 'light', src: 'https://picsum.photos/seed/marcus-light-08/1600/1600', title: { cn: '光线研究 08', en: 'Light Study 08' }, alt: { cn: '光线摄影占位作品八', en: 'Light study placeholder image eight' }, year: '2025', location: { cn: '奥克维尔', en: 'Oakville' } },
+
+            // ==================== 植物 Plants ====================
+            // 暂未添加植物图片。后续可在此处加入 category: 'plant' 的照片对象。
 
             // ==================== 手机摄影 Mobile Photography ====================
             { id: 'mobile-01', category: 'mobile', src: 'https://picsum.photos/seed/marcus-mobile-01/1600/1600', title: { cn: '手机摄影 01', en: 'Mobile Photograph 01' }, alt: { cn: '手机摄影占位作品一', en: 'Mobile photography placeholder image one' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
