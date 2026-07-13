@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Photography portfolio of Xiaoming (Marcus) Zhong — pets, portraits, landscapes, events, everyday life, light studies and mobile photography.">
+    <title>Photography | Xiaoming (Marcus) Zhong</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f4f4f2;
+            --text: #111111;
+            --muted: #707070;
+            --line: rgba(17, 17, 17, 0.11);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-serif: 'Playfair Display', Georgia, 'Noto Serif SC', serif;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --header-height: 82px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+        }
+
+        body.lightbox-open {
+            overflow: hidden;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        /* ==================== 固定导航 ==================== */
+        header {
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: var(--header-height);
+            padding: 22px 48px;
+            background: rgba(255, 255, 255, 0.91);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 4px;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .lang-switch {
+            position: fixed;
+            top: 22px;
+            right: 48px;
+            z-index: 1002;
+            padding: 8px 16px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+        }
+
+        .lang-switch:hover {
+            border-color: #000;
+            background: #fff;
+            transform: scale(1.03);
+        }
+
+        /* ==================== 页面标题 ==================== */
+        main {
+            width: min(96%, 1920px);
+            margin: 0 auto;
+            padding: calc(var(--header-height) + 58px) 0 92px;
+        }
+
+        .hero {
+            position: relative;
+            isolation: isolate;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 48px;
+            min-height: clamp(350px, 33vw, 520px);
+            overflow: hidden;
+            padding: clamp(42px, 5vw, 76px) 1% clamp(46px, 5vw, 72px);
+            border-bottom: 1px solid var(--line);
+            background: #fff;
+            opacity: 0;
+            animation: fade-up 0.9s var(--ease) 0.08s forwards;
+        }
+
+        .hero-content,
+        .hero-index {
+            position: relative;
+            z-index: 4;
+        }
+
+        /* 分类悬停时随机切换的横幅摄影作品。两层图片交叉淡入，避免闪白。 */
+        .hero-media {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            background: #fff;
+        }
+
+        .hero-media::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: linear-gradient(
+                90deg,
+                #fff 0%,
+                rgba(255, 255, 255, 0.99) 20%,
+                rgba(255, 255, 255, 0.95) 35%,
+                rgba(255, 255, 255, 0.76) 49%,
+                rgba(255, 255, 255, 0.34) 66%,
+                rgba(255, 255, 255, 0.08) 86%,
+                rgba(255, 255, 255, 0.14) 100%
+            );
+        }
+
+        .hero-media::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.42), transparent 28%, transparent 72%, rgba(255, 255, 255, 0.7)),
+                linear-gradient(90deg, transparent 70%, rgba(255, 255, 255, 0.1));
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: min(72%, 1320px);
+            height: 100%;
+            object-fit: contain;
+            object-position: right center;
+            opacity: 0;
+            filter: saturate(0.88) contrast(0.98);
+            transform: scale(1.018);
+            transition:
+                opacity 0.82s var(--ease),
+                transform 1.25s var(--ease),
+                filter 0.82s ease;
+            will-change: opacity, transform;
+        }
+
+        .hero-image.active {
+            opacity: 0.25; /* 约 75% 透明，保持画面克制，不抢主体 */
+            transform: scale(1);
+            filter: saturate(0.94) contrast(1.01);
+        }
+
+        .hero-kicker {
+            margin-bottom: 12px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            max-width: 980px;
+            font-family: var(--font-serif);
+            font-size: clamp(3.1rem, 7vw, 7.7rem);
+            font-weight: 400;
+            line-height: 0.92;
+            letter-spacing: -0.045em;
+        }
+
+        .hero-description {
+            max-width: 570px;
+            margin-top: 25px;
+            color: var(--muted);
+            font-size: clamp(13px, 1.05vw, 16px);
+            line-height: 1.75;
+        }
+
+        .hero-index {
+            min-width: 150px;
+            padding-bottom: 8px;
+            text-align: right;
+        }
+
+        .hero-index strong {
+            display: block;
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 3vw, 3.5rem);
+            font-weight: 400;
+            line-height: 1;
+        }
+
+        .hero-index span {
+            display: block;
+            margin-top: 9px;
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+        }
+
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== 分类控制栏 ==================== */
+        .category-bar {
+            position: sticky;
+            top: var(--header-height);
+            z-index: 60;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            margin: 0 1% 34px;
+            padding: 22px 0 18px;
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .category-tabs {
+            display: flex;
+            align-items: center;
+            gap: clamp(18px, 2.35vw, 42px);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            position: relative;
+            flex: 0 0 auto;
+            padding: 4px 0 8px;
+            border: 0;
+            background: transparent;
+            color: #999;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.11em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .category-tab::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background: #111;
+            transform: scaleX(0);
+            transform-origin: right center;
+            transition: transform 0.4s var(--ease);
+        }
+
+        .category-tab:hover,
+        .category-tab.active {
+            color: #111;
+        }
+
+        .category-tab.active::after {
+            transform: scaleX(1);
+            transform-origin: left center;
+        }
+
+        .category-status {
+            flex: 0 0 auto;
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* ==================== Digital Painting 式正方形画廊 ==================== */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(8, minmax(0, 1fr));
+            gap: clamp(7px, 0.7vw, 13px);
+            min-height: 280px;
+            padding: 0 1%;
+            perspective: 1200px;
+        }
+
+        .gallery-item {
+            position: relative;
+            min-width: 0;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            border: 0;
+            background: var(--surface);
+            cursor: zoom-in;
+            isolation: isolate;
+            transform-origin: center;
+            animation: tile-reveal 0.62s var(--ease) both;
+            animation-delay: var(--reveal-delay, 0ms);
+            transition: transform 0.45s var(--ease), box-shadow 0.45s ease;
+            will-change: transform;
+        }
+
+        @keyframes tile-reveal {
+            from {
+                opacity: 0.82;
+                transform: translateY(14px) scale(0.965);
+                filter: brightness(1.08);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: brightness(1);
+            }
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.025);
+            pointer-events: none;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: -75%;
+            width: 48%;
+            height: 160%;
+            z-index: 3;
+            background: linear-gradient(
+                105deg,
+                transparent 15%,
+                rgba(255, 255, 255, 0.08) 35%,
+                rgba(255, 255, 255, 0.38) 50%,
+                rgba(255, 255, 255, 0.08) 65%,
+                transparent 85%
+            );
+            pointer-events: none;
+            transform: translateX(0) skewX(-18deg);
+            transition: transform 0.82s var(--ease);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            opacity: 1;
+            filter: saturate(1.04) contrast(1.03);
+            transform: scale(1.015);
+            backface-visibility: hidden;
+            transition: transform 0.75s var(--ease), filter 0.65s ease;
+            will-change: transform, filter;
+        }
+
+        .gallery-item:hover,
+        .gallery-item:focus-visible {
+            z-index: 5;
+            transform: translateY(-5px) scale(1.018);
+            box-shadow: 0 16px 34px rgba(0, 0, 0, 0.16);
+            outline: none;
+        }
+
+        .gallery-item:hover::before,
+        .gallery-item:focus-visible::before {
+            border-color: rgba(255, 255, 255, 0.62);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+        }
+
+        .gallery-item:hover::after,
+        .gallery-item:focus-visible::after {
+            transform: translateX(390%) skewX(-18deg);
+        }
+
+        .gallery-item:hover img,
+        .gallery-item:focus-visible img {
+            filter: saturate(1.12) contrast(1.06);
+            transform: scale(1.10);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            padding: 90px 20px;
+            color: var(--muted);
+            text-align: center;
+            border: 1px dashed var(--line);
+        }
+
+        /* ==================== 沉浸式全屏画廊 ==================== */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.975);
+            color: var(--text);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: opacity 0.45s var(--ease), visibility 0.45s;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .lightbox-stage {
+            position: relative;
+            width: min(88vw, 1680px);
+            height: 88vh;
+            height: 88dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.10);
+            opacity: 0;
+            transform: scale(0.965);
+            transition: opacity 0.3s ease, transform 0.5s var(--ease);
+        }
+
+        .lightbox.active .lightbox-image.loaded {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .lightbox-toolbar {
+            position: fixed;
+            top: 28px;
+            left: 38px;
+            right: 38px;
+            z-index: 4;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .lightbox-count {
+            color: #777;
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .close-button {
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            border: 1px solid rgba(17, 17, 17, 0.14);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--text);
+            cursor: pointer;
+            pointer-events: auto;
+            transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+        }
+
+        .close-button:hover {
+            border-color: rgba(17, 17, 17, 0.5);
+            background: #fff;
+            transform: scale(1.05);
+        }
+
+        .close-button svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+        }
+
+        .lightbox-arrow {
+            position: fixed;
+            top: 50%;
+            z-index: 5;
+            display: grid;
+            place-items: center;
+            width: 68px;
+            height: 96px;
+            border: 0;
+            background: transparent;
+            color: rgba(17, 17, 17, 0.58);
+            cursor: pointer;
+            transform: translateY(-50%);
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .lightbox-arrow:hover {
+            color: #111;
+        }
+
+        .lightbox-arrow svg {
+            width: 36px;
+            height: 36px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.2;
+        }
+
+        .lightbox-prev {
+            left: 10px;
+        }
+
+        .lightbox-prev:hover {
+            transform: translate(-5px, -50%);
+        }
+
+        .lightbox-next {
+            right: 10px;
+        }
+
+        .lightbox-next:hover {
+            transform: translate(5px, -50%);
+        }
+
+        .lightbox-caption {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            z-index: 4;
+            max-width: min(80vw, 760px);
+            color: #777;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-align: center;
+            text-transform: uppercase;
+            transform: translateX(-50%);
+        }
+
+        footer {
+            margin-top: 84px;
+            padding: 30px 20px 36px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            color: #999;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            text-align: center;
+        }
+
+        /* ==================== 响应式 ==================== */
+        @media (max-width: 1500px) {
+            .gallery-grid {
+                grid-template-columns: repeat(8, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 1240px) {
+            header {
+                padding-inline: 28px;
+            }
+
+            .nav-links {
+                gap: 27px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .lang-switch {
+                right: 24px;
+            }
+
+            .category-tab {
+                font-size: 10px;
+            }
+
+            /* 桌面与横屏设备继续保持每行 8 格 */
+            .gallery-grid {
+                grid-template-columns: repeat(8, minmax(0, 1fr));
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            :root {
+                --header-height: 74px;
+            }
+
+            header {
+                justify-content: flex-start;
+                min-height: var(--header-height);
+                padding: 17px 20px;
+            }
+
+            nav {
+                width: calc(100% - 86px);
+                overflow: hidden;
+            }
+
+            .nav-links {
+                width: 100%;
+                gap: 24px;
+                overflow-x: auto;
+                padding-bottom: 5px;
+                scrollbar-width: none;
+            }
+
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+
+            .lang-switch {
+                top: 16px;
+                right: 18px;
+                padding: 7px 12px;
+                font-size: 10px;
+            }
+
+            main {
+                width: 94%;
+                padding-top: calc(var(--header-height) + 34px);
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 22px;
+                min-height: clamp(360px, 58vw, 500px);
+                padding-bottom: 36px;
+            }
+
+            .hero-image {
+                width: 82%;
+                object-position: right center;
+            }
+
+            .hero-media::before {
+                background: linear-gradient(
+                    90deg,
+                    #fff 0%,
+                    rgba(255, 255, 255, 0.98) 28%,
+                    rgba(255, 255, 255, 0.82) 52%,
+                    rgba(255, 255, 255, 0.22) 82%,
+                    rgba(255, 255, 255, 0.12) 100%
+                );
+            }
+
+            .hero-index {
+                text-align: left;
+            }
+
+            .hero h1 {
+                font-size: clamp(3rem, 13vw, 6.2rem);
+            }
+
+            .category-status {
+                display: none;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 620px) {
+            main {
+                width: 96%;
+                padding-bottom: 60px;
+            }
+
+            .hero {
+                min-height: 390px;
+                padding: 34px 2% 32px;
+            }
+
+            .hero-image {
+                top: auto;
+                bottom: 0;
+                width: 100%;
+                height: 72%;
+                object-position: right bottom;
+            }
+
+            .hero-image.active {
+                opacity: 0.18;
+            }
+
+            .hero-media::before {
+                background: linear-gradient(
+                    180deg,
+                    #fff 0%,
+                    rgba(255, 255, 255, 0.98) 38%,
+                    rgba(255, 255, 255, 0.75) 62%,
+                    rgba(255, 255, 255, 0.26) 100%
+                );
+            }
+
+            .hero-description {
+                margin-top: 18px;
+            }
+
+            .hero-index {
+                display: none;
+            }
+
+            .category-bar {
+                margin: 0 2% 24px;
+                padding-block: 16px 14px;
+            }
+
+            .category-tabs {
+                gap: 24px;
+            }
+
+            .category-tab {
+                font-size: 10px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+                padding: 0 2%;
+            }
+
+            .lightbox-stage {
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
+                padding: 70px 46px 66px;
+            }
+
+            .lightbox-toolbar {
+                top: 16px;
+                left: 18px;
+                right: 18px;
+            }
+
+            .lightbox-arrow {
+                width: 46px;
+                height: 74px;
+            }
+
+            .lightbox-prev {
+                left: 0;
+            }
+
+            .lightbox-next {
+                right: 0;
+            }
+
+            .lightbox-caption {
+                bottom: 18px;
+                max-width: 78vw;
+                font-size: 9px;
+            }
+
+            footer {
+                margin-top: 58px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="lang-switch" id="langBtn" type="button" aria-label="Switch language">EN / 简</button>
+
+    <header>
+        <nav aria-label="Primary navigation">
+            <ul class="nav-links">
+                <li><a href="index.html" class="i18n" data-cn="首页" data-en="Home">Home</a></li>
+                <li><a href="Cinematography.html" class="i18n" data-cn="影视美学" data-en="Cinematography">Cinematography</a></li>
+                <li><a href="Photography.html" class="i18n active" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
+                <li><a href="Landscaping.html" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
+                <li><a href="Research.html" class="i18n" data-cn="数字媒体商业作品与探索" data-en="Digital Media Works & Exploration">Digital Media Works & Exploration</a></li>
+                <li><a href="About_me.html" class="i18n" data-cn="关于我" data-en="About Me">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="heroBanner" aria-labelledby="pageTitle">
+            <div class="hero-media" id="heroMedia" aria-hidden="true">
+                <img class="hero-image active" id="heroImageA" src="" alt="">
+                <img class="hero-image" id="heroImageB" src="" alt="">
+            </div>
+            <div class="hero-content">
+                <p class="hero-kicker i18n" data-cn="光线 · 瞬间 · 情绪" data-en="Light · Moment · Emotion">Light · Moment · Emotion</p>
+                <h1 id="pageTitle" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</h1>
+                <p class="hero-description i18n"
+                   data-cn="从宠物、人像、风光与活动记录，到日常生活、光线研究和手机摄影。每一张照片都在真实瞬间、视觉秩序与情绪表达之间寻找平衡。"
+                   data-en="From pets, portraits, landscapes and events to everyday life, studies of light and mobile photography, each image searches for a balance between authentic moments, visual order and emotional expression.">
+                    From pets, portraits, landscapes and events to everyday life, studies of light and mobile photography, each image searches for a balance between authentic moments, visual order and emotional expression.
+                </p>
+            </div>
+            <div class="hero-index" aria-hidden="true">
+                <strong id="heroTotal">56</strong>
+                <span class="i18n" data-cn="精选摄影作品" data-en="Selected photographs">Selected photographs</span>
+            </div>
+        </section>
+
+        <section class="category-bar" aria-label="Photography categories">
+            <div class="category-tabs" id="categoryTabs" role="tablist"></div>
+            <p class="category-status" id="categoryStatus" aria-live="polite"></p>
+        </section>
+
+        <section class="gallery-grid" id="galleryGrid" aria-live="polite"></section>
+    </main>
+
+    <footer>
+        <p>© 2026 Xiaoming (Marcus) Zhong. All rights reserved</p>
+    </footer>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightboxCaption" aria-hidden="true">
+        <div class="lightbox-toolbar">
+            <div class="lightbox-count" id="lightboxCount">01 / 08</div>
+            <button class="close-button" id="closeLightbox" type="button" aria-label="Close image" title="Close">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+            </button>
+        </div>
+
+        <button class="lightbox-arrow lightbox-prev" id="prevImage" type="button" aria-label="Previous image">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+        </button>
+
+        <div class="lightbox-stage" id="lightboxStage">
+            <img class="lightbox-image" id="lightboxImage" src="" alt="">
+        </div>
+
+        <button class="lightbox-arrow lightbox-next" id="nextImage" type="button" aria-label="Next image">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </button>
+
+        <p class="lightbox-caption" id="lightboxCaption"></p>
+    </div>
+
+    <script>
+        /* =====================================================================
+           摄影作品数据中心
+           ---------------------------------------------------------------------
+           后期添加新照片时，只需要复制 photoLibrary 中任意一个对象，并修改：
+
+           1. id        每张照片的唯一名称，不要重复
+           2. category  分类：pet / portrait / landscape / event / life / light / mobile
+           3. src       高清照片链接
+           4. thumb     可选：缩略图链接；不填写时自动使用 src
+           5. title     中英文标题
+           6. alt       中英文图片说明，便于无障碍访问与搜索引擎识别
+           7. year      可选：拍摄年份
+           8. location  可选：拍摄地点
+
+           示例：
+           {
+               id: 'pet-09',
+               category: 'pet',
+               src: 'https://你的图片地址.webp',
+               title: { cn: '作品名称', en: 'Photo Title' },
+               alt: { cn: '照片内容说明', en: 'Description of the photograph' },
+               year: '2026',
+               location: { cn: '多伦多', en: 'Toronto' }
+           }
+
+           当前图片是可直接替换的占位图。页面会自动完成分类、计数、网格生成、
+           图片懒加载、全屏浏览、键盘切换和手机左右滑动。
+           ===================================================================== */
+
+        const categories = {
+            pet: { cn: '宠物', en: 'Pets' },
+            portrait: { cn: '人像', en: 'Portraits' },
+            landscape: { cn: '风光', en: 'Landscapes' },
+            event: { cn: '活动', en: 'Events' },
+            life: { cn: '生活', en: 'Everyday Life' },
+            light: { cn: '光线', en: 'Light Studies' },
+            mobile: { cn: '手机摄影', en: 'Mobile Photography' }
+        };
+
+        const photoLibrary = [
+            // ==================== 宠物 Pets ====================
+            { id: 'pet-01', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/03%20copy.webp', title: { cn: '宠物摄影 01', en: 'Pet Photography 01' }, alt: { cn: '宠物摄影作品 01', en: 'Pet photography work 01' } },
+            { id: 'pet-02', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/1%20%283%29%20copy%202.webp', title: { cn: '宠物摄影 02', en: 'Pet Photography 02' }, alt: { cn: '宠物摄影作品 02', en: 'Pet photography work 02' } },
+            { id: 'pet-03', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/1%20%284%29%20copy.webp', title: { cn: '宠物摄影 03', en: 'Pet Photography 03' }, alt: { cn: '宠物摄影作品 03', en: 'Pet photography work 03' } },
+            { id: 'pet-04', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/1%20%285%29%20copy.webp', title: { cn: '宠物摄影 04', en: 'Pet Photography 04' }, alt: { cn: '宠物摄影作品 04', en: 'Pet photography work 04' } },
+            { id: 'pet-05', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/1-1%20copy.webp', title: { cn: '宠物摄影 05', en: 'Pet Photography 05' }, alt: { cn: '宠物摄影作品 05', en: 'Pet photography work 05' } },
+            { id: 'pet-06', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/15%20copy.webp', title: { cn: '宠物摄影 06', en: 'Pet Photography 06' }, alt: { cn: '宠物摄影作品 06', en: 'Pet photography work 06' } },
+            { id: 'pet-07', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/17%20copy.webp', title: { cn: '宠物摄影 07', en: 'Pet Photography 07' }, alt: { cn: '宠物摄影作品 07', en: 'Pet photography work 07' } },
+            { id: 'pet-08', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/2%20%283%29%20copy.webp', title: { cn: '宠物摄影 08', en: 'Pet Photography 08' }, alt: { cn: '宠物摄影作品 08', en: 'Pet photography work 08' } },
+            { id: 'pet-09', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/2%20%284%29%20copy.webp', title: { cn: '宠物摄影 09', en: 'Pet Photography 09' }, alt: { cn: '宠物摄影作品 09', en: 'Pet photography work 09' } },
+            { id: 'pet-10', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/2-1%20copy.webp', title: { cn: '宠物摄影 10', en: 'Pet Photography 10' }, alt: { cn: '宠物摄影作品 10', en: 'Pet photography work 10' } },
+            { id: 'pet-11', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/3%20%282%29%20copy.webp', title: { cn: '宠物摄影 11', en: 'Pet Photography 11' }, alt: { cn: '宠物摄影作品 11', en: 'Pet photography work 11' } },
+            { id: 'pet-12', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/3%20%283%29%20copy.webp', title: { cn: '宠物摄影 12', en: 'Pet Photography 12' }, alt: { cn: '宠物摄影作品 12', en: 'Pet photography work 12' } },
+            { id: 'pet-13', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/3%20%284%29%20copy.webp', title: { cn: '宠物摄影 13', en: 'Pet Photography 13' }, alt: { cn: '宠物摄影作品 13', en: 'Pet photography work 13' } },
+            { id: 'pet-14', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/3%20-final%20copy.webp', title: { cn: '宠物摄影 14', en: 'Pet Photography 14' }, alt: { cn: '宠物摄影作品 14', en: 'Pet photography work 14' } },
+            { id: 'pet-15', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/4-1%20copy.webp', title: { cn: '宠物摄影 15', en: 'Pet Photography 15' }, alt: { cn: '宠物摄影作品 15', en: 'Pet photography work 15' } },
+            { id: 'pet-16', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/5%20copy.webp', title: { cn: '宠物摄影 16', en: 'Pet Photography 16' }, alt: { cn: '宠物摄影作品 16', en: 'Pet photography work 16' } },
+            { id: 'pet-17', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/7-food%20copy.webp', title: { cn: '宠物摄影 17', en: 'Pet Photography 17' }, alt: { cn: '宠物摄影作品 17', en: 'Pet photography work 17' } },
+            { id: 'pet-18', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/9%20%282%29%20copy.webp', title: { cn: '宠物摄影 18', en: 'Pet Photography 18' }, alt: { cn: '宠物摄影作品 18', en: 'Pet photography work 18' } },
+            { id: 'pet-19', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/aaa3%20copy.webp', title: { cn: '宠物摄影 19', en: 'Pet Photography 19' }, alt: { cn: '宠物摄影作品 19', en: 'Pet photography work 19' } },
+            { id: 'pet-20', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/%E5%8D%81%E4%BA%94%E5%8A%A0%E7%AD%BE%E5%90%8D%20copy.webp', title: { cn: '宠物摄影 20', en: 'Pet Photography 20' }, alt: { cn: '宠物摄影作品 20', en: 'Pet photography work 20' } },
+
+            // ==================== 人像 Portraits ====================
+            // 注意：本次上传的 Portraits.csv 与 Pets.csv 完全相同且均指向 /Pets/，为避免误覆盖，暂保留原人像链接。
+            { id: 'portrait-01', category: 'portrait', src: 'https://picsum.photos/seed/marcus-portrait-01/1600/1600', title: { cn: '人像研究 01', en: 'Portrait Study 01' }, alt: { cn: '人像摄影占位作品一', en: 'Portrait photography placeholder image one' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'portrait-02', category: 'portrait', src: 'https://picsum.photos/seed/marcus-portrait-02/1600/1600', title: { cn: '人像研究 02', en: 'Portrait Study 02' }, alt: { cn: '人像摄影占位作品二', en: 'Portrait photography placeholder image two' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'portrait-03', category: 'portrait', src: 'https://picsum.photos/seed/marcus-portrait-03/1600/1600', title: { cn: '人像研究 03', en: 'Portrait Study 03' }, alt: { cn: '人像摄影占位作品三', en: 'Portrait photography placeholder image three' }, year: '2026', location: { cn: '奥克维尔', en: 'Oakville' } },
+            { id: 'portrait-04', category: 'portrait', src: 'https://picsum.photos/seed/marcus-portrait-04/1600/1600', title: { cn: '人像研究 04', en: 'Portrait Study 04' }, alt: { cn: '人像摄影占位作品四', en: 'Portrait photography placeholder image four' }, year: '2026', location: { cn: '奥克维尔', en: 'Oakville' } },
+            { id: 'portrait-05', category: 'portrait', src: 'https://picsum.photos/seed/marcus-portrait-05/1600/1600', title: { cn: '人像研究 05', en: 'Portrait Study 05' }, alt: { cn: '人像摄影占位作品五', en: 'Portrait photography placeholder image five' }, year: '2025', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'portrait-06', category: 'portrait', src: 'https://picsum.photos/seed/marcus-portrait-06/1600/1600', title: { cn: '人像研究 06', en: 'Portrait Study 06' }, alt: { cn: '人像摄影占位作品六', en: 'Portrait photography placeholder image six' }, year: '2025', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'portrait-07', category: 'portrait', src: 'https://picsum.photos/seed/marcus-portrait-07/1600/1600', title: { cn: '人像研究 07', en: 'Portrait Study 07' }, alt: { cn: '人像摄影占位作品七', en: 'Portrait photography placeholder image seven' }, year: '2025', location: { cn: '万锦', en: 'Markham' } },
+            { id: 'portrait-08', category: 'portrait', src: 'https://picsum.photos/seed/marcus-portrait-08/1600/1600', title: { cn: '人像研究 08', en: 'Portrait Study 08' }, alt: { cn: '人像摄影占位作品八', en: 'Portrait photography placeholder image eight' }, year: '2025', location: { cn: '万锦', en: 'Markham' } },
+
+            // ==================== 风光 Landscapes ====================
+            { id: 'landscape-01', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-01/1600/1600', title: { cn: '风光摄影 01', en: 'Landscape 01' }, alt: { cn: '风光摄影占位作品一', en: 'Landscape photography placeholder image one' }, year: '2026', location: { cn: '安大略', en: 'Ontario' } },
+            { id: 'landscape-02', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-02/1600/1600', title: { cn: '风光摄影 02', en: 'Landscape 02' }, alt: { cn: '风光摄影占位作品二', en: 'Landscape photography placeholder image two' }, year: '2026', location: { cn: '安大略', en: 'Ontario' } },
+            { id: 'landscape-03', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-03/1600/1600', title: { cn: '风光摄影 03', en: 'Landscape 03' }, alt: { cn: '风光摄影占位作品三', en: 'Landscape photography placeholder image three' }, year: '2026', location: { cn: '加拿大', en: 'Canada' } },
+            { id: 'landscape-04', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-04/1600/1600', title: { cn: '风光摄影 04', en: 'Landscape 04' }, alt: { cn: '风光摄影占位作品四', en: 'Landscape photography placeholder image four' }, year: '2026', location: { cn: '加拿大', en: 'Canada' } },
+            { id: 'landscape-05', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-05/1600/1600', title: { cn: '风光摄影 05', en: 'Landscape 05' }, alt: { cn: '风光摄影占位作品五', en: 'Landscape photography placeholder image five' }, year: '2025', location: { cn: '安大略', en: 'Ontario' } },
+            { id: 'landscape-06', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-06/1600/1600', title: { cn: '风光摄影 06', en: 'Landscape 06' }, alt: { cn: '风光摄影占位作品六', en: 'Landscape photography placeholder image six' }, year: '2025', location: { cn: '安大略', en: 'Ontario' } },
+            { id: 'landscape-07', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-07/1600/1600', title: { cn: '风光摄影 07', en: 'Landscape 07' }, alt: { cn: '风光摄影占位作品七', en: 'Landscape photography placeholder image seven' }, year: '2025', location: { cn: '加拿大', en: 'Canada' } },
+            { id: 'landscape-08', category: 'landscape', src: 'https://picsum.photos/seed/marcus-landscape-08/1600/1600', title: { cn: '风光摄影 08', en: 'Landscape 08' }, alt: { cn: '风光摄影占位作品八', en: 'Landscape photography placeholder image eight' }, year: '2025', location: { cn: '加拿大', en: 'Canada' } },
+
+            // ==================== 活动 Events ====================
+            { id: 'event-01', category: 'event', src: 'https://picsum.photos/seed/marcus-event-01/1600/1600', title: { cn: '活动记录 01', en: 'Event Story 01' }, alt: { cn: '活动摄影占位作品一', en: 'Event photography placeholder image one' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'event-02', category: 'event', src: 'https://picsum.photos/seed/marcus-event-02/1600/1600', title: { cn: '活动记录 02', en: 'Event Story 02' }, alt: { cn: '活动摄影占位作品二', en: 'Event photography placeholder image two' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'event-03', category: 'event', src: 'https://picsum.photos/seed/marcus-event-03/1600/1600', title: { cn: '活动记录 03', en: 'Event Story 03' }, alt: { cn: '活动摄影占位作品三', en: 'Event photography placeholder image three' }, year: '2026', location: { cn: '奥克维尔', en: 'Oakville' } },
+            { id: 'event-04', category: 'event', src: 'https://picsum.photos/seed/marcus-event-04/1600/1600', title: { cn: '活动记录 04', en: 'Event Story 04' }, alt: { cn: '活动摄影占位作品四', en: 'Event photography placeholder image four' }, year: '2026', location: { cn: '奥克维尔', en: 'Oakville' } },
+            { id: 'event-05', category: 'event', src: 'https://picsum.photos/seed/marcus-event-05/1600/1600', title: { cn: '活动记录 05', en: 'Event Story 05' }, alt: { cn: '活动摄影占位作品五', en: 'Event photography placeholder image five' }, year: '2025', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'event-06', category: 'event', src: 'https://picsum.photos/seed/marcus-event-06/1600/1600', title: { cn: '活动记录 06', en: 'Event Story 06' }, alt: { cn: '活动摄影占位作品六', en: 'Event photography placeholder image six' }, year: '2025', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'event-07', category: 'event', src: 'https://picsum.photos/seed/marcus-event-07/1600/1600', title: { cn: '活动记录 07', en: 'Event Story 07' }, alt: { cn: '活动摄影占位作品七', en: 'Event photography placeholder image seven' }, year: '2025', location: { cn: '汉密尔顿', en: 'Hamilton' } },
+            { id: 'event-08', category: 'event', src: 'https://picsum.photos/seed/marcus-event-08/1600/1600', title: { cn: '活动记录 08', en: 'Event Story 08' }, alt: { cn: '活动摄影占位作品八', en: 'Event photography placeholder image eight' }, year: '2025', location: { cn: '汉密尔顿', en: 'Hamilton' } },
+
+            // ==================== 生活 Everyday Life ====================
+            { id: 'life-01', category: 'life', src: 'https://picsum.photos/seed/marcus-life-01/1600/1600', title: { cn: '生活切片 01', en: 'Everyday Fragment 01' }, alt: { cn: '生活摄影占位作品一', en: 'Everyday life photography placeholder image one' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'life-02', category: 'life', src: 'https://picsum.photos/seed/marcus-life-02/1600/1600', title: { cn: '生活切片 02', en: 'Everyday Fragment 02' }, alt: { cn: '生活摄影占位作品二', en: 'Everyday life photography placeholder image two' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'life-03', category: 'life', src: 'https://picsum.photos/seed/marcus-life-03/1600/1600', title: { cn: '生活切片 03', en: 'Everyday Fragment 03' }, alt: { cn: '生活摄影占位作品三', en: 'Everyday life photography placeholder image three' }, year: '2026', location: { cn: '奥克维尔', en: 'Oakville' } },
+            { id: 'life-04', category: 'life', src: 'https://picsum.photos/seed/marcus-life-04/1600/1600', title: { cn: '生活切片 04', en: 'Everyday Fragment 04' }, alt: { cn: '生活摄影占位作品四', en: 'Everyday life photography placeholder image four' }, year: '2026', location: { cn: '奥克维尔', en: 'Oakville' } },
+            { id: 'life-05', category: 'life', src: 'https://picsum.photos/seed/marcus-life-05/1600/1600', title: { cn: '生活切片 05', en: 'Everyday Fragment 05' }, alt: { cn: '生活摄影占位作品五', en: 'Everyday life photography placeholder image five' }, year: '2025', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'life-06', category: 'life', src: 'https://picsum.photos/seed/marcus-life-06/1600/1600', title: { cn: '生活切片 06', en: 'Everyday Fragment 06' }, alt: { cn: '生活摄影占位作品六', en: 'Everyday life photography placeholder image six' }, year: '2025', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'life-07', category: 'life', src: 'https://picsum.photos/seed/marcus-life-07/1600/1600', title: { cn: '生活切片 07', en: 'Everyday Fragment 07' }, alt: { cn: '生活摄影占位作品七', en: 'Everyday life photography placeholder image seven' }, year: '2025', location: { cn: '万锦', en: 'Markham' } },
+            { id: 'life-08', category: 'life', src: 'https://picsum.photos/seed/marcus-life-08/1600/1600', title: { cn: '生活切片 08', en: 'Everyday Fragment 08' }, alt: { cn: '生活摄影占位作品八', en: 'Everyday life photography placeholder image eight' }, year: '2025', location: { cn: '万锦', en: 'Markham' } },
+
+            // ==================== 光线 Light Studies ====================
+            { id: 'light-01', category: 'light', src: 'https://picsum.photos/seed/marcus-light-01/1600/1600', title: { cn: '光线研究 01', en: 'Light Study 01' }, alt: { cn: '光线摄影占位作品一', en: 'Light study placeholder image one' }, year: '2026', location: { cn: '工作室', en: 'Studio' } },
+            { id: 'light-02', category: 'light', src: 'https://picsum.photos/seed/marcus-light-02/1600/1600', title: { cn: '光线研究 02', en: 'Light Study 02' }, alt: { cn: '光线摄影占位作品二', en: 'Light study placeholder image two' }, year: '2026', location: { cn: '工作室', en: 'Studio' } },
+            { id: 'light-03', category: 'light', src: 'https://picsum.photos/seed/marcus-light-03/1600/1600', title: { cn: '光线研究 03', en: 'Light Study 03' }, alt: { cn: '光线摄影占位作品三', en: 'Light study placeholder image three' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'light-04', category: 'light', src: 'https://picsum.photos/seed/marcus-light-04/1600/1600', title: { cn: '光线研究 04', en: 'Light Study 04' }, alt: { cn: '光线摄影占位作品四', en: 'Light study placeholder image four' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'light-05', category: 'light', src: 'https://picsum.photos/seed/marcus-light-05/1600/1600', title: { cn: '光线研究 05', en: 'Light Study 05' }, alt: { cn: '光线摄影占位作品五', en: 'Light study placeholder image five' }, year: '2025', location: { cn: '工作室', en: 'Studio' } },
+            { id: 'light-06', category: 'light', src: 'https://picsum.photos/seed/marcus-light-06/1600/1600', title: { cn: '光线研究 06', en: 'Light Study 06' }, alt: { cn: '光线摄影占位作品六', en: 'Light study placeholder image six' }, year: '2025', location: { cn: '工作室', en: 'Studio' } },
+            { id: 'light-07', category: 'light', src: 'https://picsum.photos/seed/marcus-light-07/1600/1600', title: { cn: '光线研究 07', en: 'Light Study 07' }, alt: { cn: '光线摄影占位作品七', en: 'Light study placeholder image seven' }, year: '2025', location: { cn: '奥克维尔', en: 'Oakville' } },
+            { id: 'light-08', category: 'light', src: 'https://picsum.photos/seed/marcus-light-08/1600/1600', title: { cn: '光线研究 08', en: 'Light Study 08' }, alt: { cn: '光线摄影占位作品八', en: 'Light study placeholder image eight' }, year: '2025', location: { cn: '奥克维尔', en: 'Oakville' } },
+
+            // ==================== 手机摄影 Mobile Photography ====================
+            { id: 'mobile-01', category: 'mobile', src: 'https://picsum.photos/seed/marcus-mobile-01/1600/1600', title: { cn: '手机摄影 01', en: 'Mobile Photograph 01' }, alt: { cn: '手机摄影占位作品一', en: 'Mobile photography placeholder image one' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'mobile-02', category: 'mobile', src: 'https://picsum.photos/seed/marcus-mobile-02/1600/1600', title: { cn: '手机摄影 02', en: 'Mobile Photograph 02' }, alt: { cn: '手机摄影占位作品二', en: 'Mobile photography placeholder image two' }, year: '2026', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'mobile-03', category: 'mobile', src: 'https://picsum.photos/seed/marcus-mobile-03/1600/1600', title: { cn: '手机摄影 03', en: 'Mobile Photograph 03' }, alt: { cn: '手机摄影占位作品三', en: 'Mobile photography placeholder image three' }, year: '2026', location: { cn: '奥克维尔', en: 'Oakville' } },
+            { id: 'mobile-04', category: 'mobile', src: 'https://picsum.photos/seed/marcus-mobile-04/1600/1600', title: { cn: '手机摄影 04', en: 'Mobile Photograph 04' }, alt: { cn: '手机摄影占位作品四', en: 'Mobile photography placeholder image four' }, year: '2026', location: { cn: '奥克维尔', en: 'Oakville' } },
+            { id: 'mobile-05', category: 'mobile', src: 'https://picsum.photos/seed/marcus-mobile-05/1600/1600', title: { cn: '手机摄影 05', en: 'Mobile Photograph 05' }, alt: { cn: '手机摄影占位作品五', en: 'Mobile photography placeholder image five' }, year: '2025', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'mobile-06', category: 'mobile', src: 'https://picsum.photos/seed/marcus-mobile-06/1600/1600', title: { cn: '手机摄影 06', en: 'Mobile Photograph 06' }, alt: { cn: '手机摄影占位作品六', en: 'Mobile photography placeholder image six' }, year: '2025', location: { cn: '多伦多', en: 'Toronto' } },
+            { id: 'mobile-07', category: 'mobile', src: 'https://picsum.photos/seed/marcus-mobile-07/1600/1600', title: { cn: '手机摄影 07', en: 'Mobile Photograph 07' }, alt: { cn: '手机摄影占位作品七', en: 'Mobile photography placeholder image seven' }, year: '2025', location: { cn: '汉密尔顿', en: 'Hamilton' } },
+            { id: 'mobile-08', category: 'mobile', src: 'https://picsum.photos/seed/marcus-mobile-08/1600/1600', title: { cn: '手机摄影 08', en: 'Mobile Photograph 08' }, alt: { cn: '手机摄影占位作品八', en: 'Mobile photography placeholder image eight' }, year: '2025', location: { cn: '汉密尔顿', en: 'Hamilton' } }
+        ];
+
+        const state = {
+            language: 'en',
+            category: 'pet',
+            currentItems: [],
+            currentIndex: 0,
+            lastFocusedElement: null,
+            heroLayer: 0,
+            heroPhotoId: null,
+            heroCategory: null,
+            heroRequestId: 0
+        };
+
+        const elements = {
+            langBtn: document.getElementById('langBtn'),
+            tabs: document.getElementById('categoryTabs'),
+            status: document.getElementById('categoryStatus'),
+            grid: document.getElementById('galleryGrid'),
+            heroTotal: document.getElementById('heroTotal'),
+            heroBanner: document.getElementById('heroBanner'),
+            heroMedia: document.getElementById('heroMedia'),
+            heroImages: [document.getElementById('heroImageA'), document.getElementById('heroImageB')],
+            categoryBar: document.querySelector('.category-bar'),
+            lightbox: document.getElementById('lightbox'),
+            stage: document.getElementById('lightboxStage'),
+            image: document.getElementById('lightboxImage'),
+            count: document.getElementById('lightboxCount'),
+            caption: document.getElementById('lightboxCaption'),
+            prev: document.getElementById('prevImage'),
+            next: document.getElementById('nextImage'),
+            close: document.getElementById('closeLightbox')
+        };
+
+        function localize(value) {
+            if (typeof value === 'string') return value;
+            return value?.[state.language] ?? '';
+        }
+
+        function pad(number) {
+            return String(number).padStart(2, '0');
+        }
+
+        function escapeHTML(value = '') {
+            return String(value)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function getItemsForCategory(category) {
+            return photoLibrary.filter(item => item.category === category);
+        }
+
+        function getRandomHeroItem(category) {
+            const items = getItemsForCategory(category);
+            if (!items.length) return null;
+
+            const alternatives = items.filter(item => item.id !== state.heroPhotoId);
+            const pool = alternatives.length ? alternatives : items;
+            return pool[Math.floor(Math.random() * pool.length)];
+        }
+
+        function showHeroCategoryImage(category) {
+            const item = getRandomHeroItem(category);
+            if (!item || !elements.heroImages.length) return;
+
+            const nextLayer = state.heroLayer === 0 ? 1 : 0;
+            const incoming = elements.heroImages[nextLayer];
+            const outgoing = elements.heroImages[state.heroLayer];
+            const source = item.src || item.thumb;
+            if (!source) return;
+
+            const requestId = ++state.heroRequestId;
+            const loader = new Image();
+            loader.onload = () => {
+                if (requestId !== state.heroRequestId) return;
+                incoming.src = source;
+                incoming.classList.add('active');
+                outgoing.classList.remove('active');
+                state.heroLayer = nextLayer;
+                state.heroPhotoId = item.id;
+                state.heroCategory = category;
+            };
+            loader.src = source;
+        }
+
+        function restoreActiveCategoryHero() {
+            if (state.heroCategory !== state.category) {
+                showHeroCategoryImage(state.category);
+            }
+        }
+
+        function renderTabs() {
+            elements.tabs.innerHTML = '';
+
+            Object.entries(categories).forEach(([key, label]) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `category-tab${state.category === key ? ' active' : ''}`;
+                button.setAttribute('role', 'tab');
+                button.setAttribute('aria-selected', state.category === key ? 'true' : 'false');
+                button.dataset.category = key;
+                button.textContent = localize(label);
+                button.addEventListener('mouseenter', () => showHeroCategoryImage(key));
+                button.addEventListener('focus', () => showHeroCategoryImage(key));
+                button.addEventListener('click', () => setCategory(key));
+                elements.tabs.appendChild(button);
+            });
+        }
+
+        function renderGallery() {
+            state.currentItems = getItemsForCategory(state.category);
+            elements.grid.innerHTML = '';
+
+            if (!state.currentItems.length) {
+                const empty = document.createElement('div');
+                empty.className = 'empty-state';
+                empty.textContent = state.language === 'cn'
+                    ? '该分类暂时没有照片。'
+                    : 'No photographs have been added to this category yet.';
+                elements.grid.appendChild(empty);
+                updateCategoryStatus();
+                return;
+            }
+
+            state.currentItems.forEach((item, index) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'gallery-item';
+                button.style.setProperty('--reveal-delay', `${Math.min((index % 16) * 18, 270)}ms`);
+                button.setAttribute('aria-label', `${state.language === 'cn' ? '查看' : 'View'}: ${localize(item.title)}`);
+                button.addEventListener('click', () => openLightbox(index, button));
+
+                const img = document.createElement('img');
+                img.src = item.thumb || item.src;
+                img.alt = localize(item.alt) || localize(item.title);
+                img.decoding = 'async';
+                img.loading = index < 16 ? 'eager' : 'lazy';
+                if (index < 8) img.fetchPriority = 'high';
+
+                button.appendChild(img);
+                elements.grid.appendChild(button);
+            });
+
+            updateCategoryStatus();
+        }
+
+        function updateCategoryStatus() {
+            const count = state.currentItems.length;
+            const label = localize(categories[state.category]);
+            elements.status.textContent = state.language === 'cn'
+                ? `${label} · ${pad(count)} 张照片`
+                : `${label} · ${pad(count)} photographs`;
+        }
+
+        function setCategory(category, options = {}) {
+            if (!categories[category]) return;
+
+            state.category = category;
+            renderTabs();
+            renderGallery();
+            showHeroCategoryImage(category);
+
+            if (!options.preserveScroll) {
+                const categoryBar = document.querySelector('.category-bar');
+                const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height'), 10);
+                const top = categoryBar.offsetTop - headerHeight;
+                window.scrollTo({ top, behavior: 'smooth' });
+            }
+
+            if (!options.skipHash) {
+                history.replaceState(null, '', `#${category}`);
+            }
+        }
+
+        function openLightbox(index, triggerElement) {
+            if (!state.currentItems[index]) return;
+
+            state.currentIndex = index;
+            state.lastFocusedElement = triggerElement || document.activeElement;
+            updateLightbox();
+            elements.lightbox.classList.add('active');
+            elements.lightbox.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('lightbox-open');
+            elements.close.focus({ preventScroll: true });
+        }
+
+        function closeLightbox() {
+            elements.lightbox.classList.remove('active');
+            elements.lightbox.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('lightbox-open');
+            elements.image.src = '';
+            elements.image.classList.remove('loaded');
+            history.replaceState(null, '', `#${state.category}`);
+
+            if (state.lastFocusedElement) {
+                state.lastFocusedElement.focus({ preventScroll: true });
+            }
+        }
+
+        function updateLightbox() {
+            const item = state.currentItems[state.currentIndex];
+            if (!item) return;
+
+            elements.count.textContent = `${pad(state.currentIndex + 1)} / ${pad(state.currentItems.length)}`;
+
+            const captionParts = [
+                localize(categories[item.category]),
+                localize(item.title),
+                item.year,
+                localize(item.location)
+            ].filter(Boolean);
+
+            elements.caption.textContent = captionParts.join(' · ');
+            elements.image.classList.remove('loaded');
+            elements.image.alt = localize(item.alt) || localize(item.title);
+
+            const nextSrc = item.src;
+            const loader = new Image();
+            loader.onload = () => {
+                elements.image.src = nextSrc;
+                requestAnimationFrame(() => elements.image.classList.add('loaded'));
+            };
+            loader.onerror = () => {
+                elements.image.src = item.thumb || nextSrc;
+                requestAnimationFrame(() => elements.image.classList.add('loaded'));
+            };
+            loader.src = nextSrc;
+
+            preloadAdjacentImages();
+            history.replaceState(null, '', `#${item.category}/${item.id}`);
+        }
+
+        function preloadAdjacentImages() {
+            if (state.currentItems.length < 2) return;
+
+            const nextIndex = (state.currentIndex + 1) % state.currentItems.length;
+            const prevIndex = (state.currentIndex - 1 + state.currentItems.length) % state.currentItems.length;
+
+            [nextIndex, prevIndex].forEach(index => {
+                const preload = new Image();
+                preload.src = state.currentItems[index].src;
+            });
+        }
+
+        function showNext() {
+            if (!state.currentItems.length) return;
+            state.currentIndex = (state.currentIndex + 1) % state.currentItems.length;
+            updateLightbox();
+        }
+
+        function showPrevious() {
+            if (!state.currentItems.length) return;
+            state.currentIndex = (state.currentIndex - 1 + state.currentItems.length) % state.currentItems.length;
+            updateLightbox();
+        }
+
+        function switchLanguage() {
+            state.language = state.language === 'en' ? 'cn' : 'en';
+            document.documentElement.lang = state.language === 'cn' ? 'zh-CN' : 'en';
+
+            document.querySelectorAll('.i18n').forEach(element => {
+                const translated = element.dataset[state.language];
+                if (translated) element.textContent = translated;
+            });
+
+            elements.langBtn.textContent = state.language === 'en' ? 'EN / 简' : '简 / EN';
+            renderTabs();
+            renderGallery();
+
+            if (elements.lightbox.classList.contains('active')) {
+                updateLightbox();
+            }
+        }
+
+        function handleInitialHash() {
+            const raw = window.location.hash.replace('#', '');
+            if (!raw) return;
+
+            const [category, id] = raw.split('/');
+            if (!categories[category]) return;
+
+            setCategory(category, { preserveScroll: true, skipHash: true });
+
+            if (id) {
+                const index = state.currentItems.findIndex(item => item.id === id);
+                if (index >= 0) openLightbox(index);
+            }
+        }
+
+        document.addEventListener('keydown', event => {
+            if (!elements.lightbox.classList.contains('active')) return;
+
+            if (event.key === 'Escape') closeLightbox();
+            if (event.key === 'ArrowRight') showNext();
+            if (event.key === 'ArrowLeft') showPrevious();
+
+            if (event.key === 'Tab') {
+                const focusable = [elements.close, elements.prev, elements.next];
+                const currentPosition = focusable.indexOf(document.activeElement);
+
+                if (event.shiftKey && currentPosition === 0) {
+                    event.preventDefault();
+                    focusable[focusable.length - 1].focus();
+                } else if (!event.shiftKey && currentPosition === focusable.length - 1) {
+                    event.preventDefault();
+                    focusable[0].focus();
+                }
+            }
+        });
+
+        elements.lightbox.addEventListener('click', event => {
+            if (event.target === elements.lightbox || event.target === elements.stage) {
+                closeLightbox();
+            }
+        });
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        elements.stage.addEventListener('touchstart', event => {
+            const touch = event.changedTouches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        }, { passive: true });
+
+        elements.stage.addEventListener('touchend', event => {
+            const touch = event.changedTouches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+
+            if (Math.abs(deltaX) > 65 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                deltaX < 0 ? showNext() : showPrevious();
+            }
+        }, { passive: true });
+
+        elements.langBtn.addEventListener('click', switchLanguage);
+        elements.categoryBar.addEventListener('mouseleave', restoreActiveCategoryHero);
+        elements.categoryBar.addEventListener('focusout', event => {
+            if (!elements.categoryBar.contains(event.relatedTarget)) restoreActiveCategoryHero();
+        });
+        elements.close.addEventListener('click', closeLightbox);
+        elements.next.addEventListener('click', showNext);
+        elements.prev.addEventListener('click', showPrevious);
+
+        elements.heroTotal.textContent = pad(photoLibrary.length);
+        renderTabs();
+        renderGallery();
+        handleInitialHash();
+        showHeroCategoryImage(state.category);
+    </script>
+</body>
+</html>
