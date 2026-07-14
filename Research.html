@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Digital Media Works & Exploration | Xiaoming (Marcus) Zhong</title>
+    <!-- 引入 Playfair Display 衬线体和 Inter 无衬线体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ==================== 基础样式与字体 ==================== */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #111111;
+            --text-secondary: #666666;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-serif: 'Playfair Display', "Georgia", "Noto Serif SC", serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==================== 顶部导航栏 ==================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            padding: 24px 48px;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(240, 240, 240, 0.9); 
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 48px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            position: relative;
+            padding-bottom: 4px;
+            transition: color 0.3s ease;
+            white-space: nowrap; 
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0%;
+            height: 1px;
+            background-color: var(--text-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* 语言切换按钮 */
+        .lang-switch {
+            position: fixed;
+            top: 22px;
+            right: 48px;
+            z-index: 1001; 
+            background: none;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            border-radius: 100px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .lang-switch:hover {
+            border-color: #000000;
+            background-color: #ffffff;
+            transform: scale(1.03);
+        }
+
+        /* ==================== 页面主体布局 ==================== */
+        main {
+            padding-top: 96px;
+            padding-bottom: 36px;
+            max-width: 1680px;
+            margin: 0 auto;
+            width: 94%;
+        }
+
+        /* 首屏 Hero 标题 */
+        .hero-section {
+            text-align: center;
+            margin-top: 32px;
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-section h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(2.4rem, 4.2vw, 4.2rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            color: #000000;
+        }
+
+        .hero-section p {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        /* ==================== 五栏首屏展示区 ==================== */
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: clamp(12px, 1.5vw, 24px);
+            margin-top: 18px;
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+        }
+
+        .research-col {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 12px 24px;
+            border-top: 1px solid #eaeaea;
+            transition: all 0.5s ease;
+            cursor: default;
+        }
+
+        .research-col:hover {
+            background-color: #fafafa;
+        }
+
+        .col-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.05rem, 1.35vw, 1.7rem);
+            font-weight: 400;
+            margin-bottom: 16px; 
+            text-align: center;
+            color: #000000;
+            transition: transform 0.5s ease;
+            
+            /* 修复点 1：锁定高度，强制底部对齐，防止换行挤压下方图片 */
+            min-height: 58px; 
+            display: flex;
+            align-items: flex-end; 
+            justify-content: center;
+        }
+
+        .img-wrapper {
+            display: block;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            margin-bottom: 20px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .img-wrapper:focus-visible {
+            outline: 2px solid #111111;
+            outline-offset: 4px;
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            
+            /* 修复点 2：默认透明度调低至 20% */
+            opacity: 0.2; 
+            filter: grayscale(40%);
+            transform: scale(1);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* 悬停时的交互状态 */
+        .research-col:hover .img-wrapper img {
+            opacity: 1; 
+            filter: grayscale(0%);
+            transform: scale(1.05); 
+        }
+
+        .research-col:hover .col-title {
+            transform: translateY(-5px); 
+        }
+
+        /* 浏览更多按钮 (默认隐藏) */
+        .view-more-btn {
+            display: inline-block;
+            padding: 10px 22px;
+            font-family: var(--font-sans);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #111111;
+            border: 1px solid #111111;
+            text-decoration: none;
+            background: transparent;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .research-col:hover .view-more-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .view-more-btn:hover {
+            background-color: #111111 !important;
+            color: #ffffff !important;
+        }
+
+        /* ==================== 页脚 ==================== */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            margin-top: 48px;
+        }
+
+        footer p {
+            font-size: 12px;
+            color: #999999;
+            letter-spacing: 0.05em;
+            font-family: var(--font-sans);
+        }
+
+
+        /* 桌面端：保留正文呼吸空间，同时让五张 4:3 竖图与页脚处于首屏 */
+        @media (min-width: 769px) {
+            body {
+                height: 100vh;
+                height: 100dvh;
+                overflow: hidden;
+            }
+
+            main {
+                flex: 1;
+                min-height: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                padding-top: 88px;
+                padding-bottom: 18px;
+            }
+
+            .hero-section {
+                flex: 0 0 auto;
+                margin-top: 18px;
+                margin-bottom: 22px;
+            }
+
+            .hero-section h1 {
+                font-size: clamp(2.15rem, 3.3vw, 3.5rem);
+                line-height: 1.05;
+            }
+
+            .hero-section p {
+                margin-top: 7px;
+                font-size: 11px;
+            }
+
+            .research-grid {
+                flex: 0 0 auto;
+                align-items: start;
+                margin-top: 8px;
+            }
+
+            .research-col {
+                min-height: 0;
+                height: auto;
+                padding: 14px 10px 18px;
+            }
+
+            .col-title {
+                flex: 0 0 auto;
+                min-height: 44px;
+                margin-bottom: 12px;
+                font-size: clamp(1rem, 1.18vw, 1.45rem);
+                line-height: 1.15;
+            }
+
+            .img-wrapper {
+                flex: 0 0 auto;
+                aspect-ratio: 3 / 4;
+                margin-bottom: 14px;
+            }
+
+            .view-more-btn {
+                flex: 0 0 auto;
+                padding: 8px 17px;
+                font-size: 10px;
+            }
+
+            footer {
+                flex: 0 0 auto;
+                margin-top: 0;
+                padding: 14px 20px 16px;
+            }
+        }
+
+        /* 中等宽度桌面与笔记本：继续保持五栏，同时压缩导航和卡片间距 */
+        @media (max-width: 1180px) and (min-width: 769px) {
+            header {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+            .nav-links {
+                gap: 22px;
+            }
+            .nav-links a {
+                font-size: 12px;
+            }
+            .lang-switch {
+                right: 20px;
+            }
+            main {
+                width: 98%;
+            }
+            .research-col {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+            .view-more-btn {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+        }
+
+        /* ==================== 手机端适配 ==================== */
+        @media (max-width: 768px) {
+            body {
+                min-height: 100dvh;
+                height: auto;
+                overflow-y: auto;
+            }
+            header {
+                padding: 16px 20px; 
+                justify-content: flex-start; 
+            }
+            .nav-links {
+                gap: 24px; 
+                overflow-x: auto; 
+                -webkit-overflow-scrolling: touch; 
+                width: 100%;
+                padding-bottom: 4px; 
+            }
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+            .lang-switch {
+                top: 14px;
+                right: 20px;
+                padding: 6px 12px;
+                font-size: 10px;
+            }
+            .hero-section {
+                margin-top: 40px;
+                margin-bottom: 40px;
+            }
+            main {
+                width: 90%;
+                padding-top: 78px;
+            }
+            .research-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .research-col {
+                border-top: none;
+                border-bottom: 1px solid #eaeaea;
+                padding: 0 0 40px 0;
+            }
+            .col-title {
+                min-height: auto; /* 手机端上下排列，不再需要强制对齐 */
+                margin-bottom: 24px;
+            }
+            /* 手机端没有鼠标悬停，图片直接 100% 显示 */
+            .img-wrapper img {
+                opacity: 1; 
+                filter: grayscale(0%);
+            }
+            .view-more-btn {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="lang-switch" id="langBtn">EN / 简</button>
+
+    <header id="navbar">
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html" class="i18n" data-cn="首页" data-en="Home">Home</a></li>
+                <li><a href="Cinematography.html" class="i18n" data-cn="影视美学" data-en="Cinematography">Cinematography</a></li>
+                <li><a href="Photography.html" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
+                <li><a href="Landscaping.html" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
+                <li><a href="Research.html" class="i18n active" data-cn="数字媒体商业作品与探索" data-en="Digital Media Works & Exploration">Digital Media Works & Exploration</a></li>
+                <li><a href="About_me.html" class="i18n" data-cn="关于我" data-en="About Me">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <h1 class="i18n" data-cn="数字媒体作品与探索" data-en="Digital Media Works & Exploration">Digital Media Works & Exploration</h1>
+            <p class="i18n" data-cn="数字媒体商业作品、实践与跨学科探索" data-en="Commercial Works, Practices & Interdisciplinary Exploration">Commercial Works, Practices & Interdisciplinary Exploration</p>
+        </section>
+
+        <section class="research-grid">
+            
+            <div class="research-col">
+                <h2 class="col-title i18n" data-cn="平面设计" data-en="Graphic Design">Graphic Design</h2>
+                <a href="Graphic_design.html" class="img-wrapper" aria-label="Open Graphic Design">
+                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=800&auto=format&fit=crop" alt="Graphic Design">
+                </a>
+                <a href="Graphic_design.html" class="view-more-btn i18n" data-cn="浏览更多" data-en="View More">View More</a>
+            </div>
+
+            <div class="research-col">
+                <h2 class="col-title i18n" data-cn="数字绘画" data-en="Digital Painting">Digital Painting</h2>
+                <a href="Digital_painting.html" class="img-wrapper" aria-label="Open Digital Painting">
+                    <img src="https://digitai-painting.oss-cn-hongkong.aliyuncs.com/Webp/%E9%B2%9C%E8%8A%B1%E9%9B%AA%E7%B3%95%E6%9C%89%E7%94%BB%E7%BA%B8.webp" alt="Digital Painting">
+                </a>
+                <a href="Digital_painting.html" class="view-more-btn i18n" data-cn="浏览更多" data-en="View More">View More</a>
+            </div>
+
+            <div class="research-col">
+                <h2 class="col-title i18n" data-cn="实体绘画" data-en="Traditional Painting">Traditional Painting</h2>
+                <a href="Traditional_painting.html" class="img-wrapper" aria-label="Open Traditional Painting">
+                    <img src="https://traditional-painting.oss-cn-hongkong.aliyuncs.com/IMG_6192%20copy.webp" alt="Traditional Painting">
+                </a>
+                <a href="Traditional_painting.html" class="view-more-btn i18n" data-cn="浏览更多" data-en="View More">View More</a>
+            </div>
+
+            <div class="research-col">
+                <h2 class="col-title i18n" data-cn="手势控制网站" data-en="Gesture Control Website">Gesture Control Website</h2>
+                <a href="https://marcus0713zhong.github.io/Gesture/" class="img-wrapper" aria-label="Open Gesture Control Website">
+                    <img src="https://traditional-painting.oss-cn-hongkong.aliyuncs.com/Gesture.webp" alt="Gesture Control Website">
+                </a>
+                <a href="https://marcus0713zhong.github.io/Gesture/" class="view-more-btn i18n" data-cn="浏览更多" data-en="View More">View More</a>
+            </div>
+
+            <div class="research-col">
+                <h2 class="col-title i18n" data-cn="网站建站" data-en="Web Development">Web Development</h2>
+                <a href="https://zxm3332872-glitch.github.io/MetroPets/" class="img-wrapper" aria-label="Open Web Development">
+                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop" alt="Web Development">
+                </a>
+                <a href="https://zxm3332872-glitch.github.io/MetroPets/" class="view-more-btn i18n" data-cn="浏览更多" data-en="View More">View More</a>
+            </div>
+
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Xiaoming (Marcus) Zhong. All rights reserved</p>
+    </footer>
+
+    <script>
+        const langBtn = document.getElementById('langBtn');
+        const i18nElements = document.querySelectorAll('.i18n');
+        let currentLang = 'en'; 
+
+        langBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+            
+            i18nElements.forEach(el => {
+                const targetText = el.getAttribute(`data-${currentLang}`);
+                if (targetText) {
+                    el.innerHTML = targetText;
+                }
+            });
+            langBtn.innerText = currentLang === 'en' ? 'EN / 简' : '简 / EN';
+        });
+    </script>
+</body>
+</html>
