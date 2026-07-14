@@ -61,6 +61,7 @@
             position: relative;
             padding-bottom: 4px;
             transition: color 0.3s ease;
+            white-space: nowrap;
         }
 
         .nav-links a::after {
@@ -107,11 +108,11 @@
 
         /* ==================== 页面主体布局 ==================== */
         main {
-            padding-top: 120px; 
+            padding-top: 120px;
             padding-bottom: 80px;
-            max-width: 1400px; 
+            max-width: 1920px;
             margin: 0 auto;
-            width: 92%;
+            width: 96%;
         }
 
         /* 顶部动作栏 (返回按钮 + 标题) */
@@ -162,19 +163,74 @@
         /* ==================== 动态图片网格 (Gallery Grid) ==================== */
         .gallery-grid {
             display: grid;
-            /* 自动响应式排版：桌面端3列，平板2列，手机1列 */
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 32px;
-            opacity: 0;
-            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+            /* 默认中等屏幕布局；横屏桌面端会在下方媒体查询中固定为每行 10 格 */
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 12px;
+            opacity: 1; /* 不再让整个画廊等待淡入，打开页面即可看到大量作品 */
+            perspective: 1200px;
         }
 
         .gallery-item {
             position: relative;
-            aspect-ratio: 4/5; /* 统一高级画幅 */
+            aspect-ratio: 1 / 1; /* 每个画廊单元固定为正方形 */
             overflow: hidden;
             cursor: zoom-in; /* 提示可点击放大 */
             background-color: #f5f5f5;
+            isolation: isolate;
+            transform-origin: center;
+            animation: tileReveal 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation-delay: var(--reveal-delay, 0ms);
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.45s ease;
+            will-change: transform;
+        }
+
+        /* 快速显现：始终保持作品可见，只加入轻微的位移与聚焦感 */
+        @keyframes tileReveal {
+            from {
+                opacity: 0.82;
+                transform: translateY(14px) scale(0.965);
+                filter: brightness(1.08);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: brightness(1);
+            }
+        }
+
+        /* 方格边缘的细微高光 */
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.025);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        /* 悬停时快速掠过的光线，不遮挡作品本身 */
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: -75%;
+            width: 48%;
+            height: 160%;
+            z-index: 3;
+            pointer-events: none;
+            background: linear-gradient(
+                105deg,
+                transparent 15%,
+                rgba(255, 255, 255, 0.08) 35%,
+                rgba(255, 255, 255, 0.38) 50%,
+                rgba(255, 255, 255, 0.08) 65%,
+                transparent 85%
+            );
+            transform: translateX(0) skewX(-18deg);
+            transition: transform 0.82s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .gallery-item img {
@@ -182,19 +238,86 @@
             height: 100%;
             object-fit: cover;
             display: block;
-            opacity: 0.8;
-            filter: grayscale(30%);
-            transform: scale(1.02); /* 默认微小放大，预留收缩空间 */
-            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), 
-                        filter 0.8s ease, 
-                        opacity 0.8s ease;
+            opacity: 1; /* 原来为 0.8，是画面发淡的主要原因之一 */
+            filter: saturate(1.05) contrast(1.03); /* 恢复并轻微加强作品颜色层次 */
+            transform: scale(1.015);
+            backface-visibility: hidden;
+            transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.65s ease;
+            will-change: transform, filter;
         }
 
-        /* 鼠标滑过：方格内最大化显示效果 */
+
+        /* 视频项目：网格中仍显示封面图，并用播放按钮提示可播放 */
+        .gallery-item.video-item {
+            cursor: pointer;
+        }
+
+        .video-play-badge {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 4;
+            width: clamp(34px, 3.2vw, 52px);
+            height: clamp(34px, 3.2vw, 52px);
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            border-radius: 50%;
+            background: rgba(10, 10, 10, 0.42);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(8px);
+            transform: translate(-50%, -50%) scale(0.92);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        background-color 0.4s ease;
+            pointer-events: none;
+        }
+
+        .video-play-badge svg {
+            width: 42%;
+            height: 42%;
+            fill: #ffffff;
+            transform: translateX(5%);
+        }
+
+        .gallery-item.video-item:hover .video-play-badge {
+            background: rgba(0, 0, 0, 0.62);
+            transform: translate(-50%, -50%) scale(1.06);
+        }
+
+        /* 鼠标滑过：轻微抬升、景深放大和光扫动画 */
+        .gallery-item:hover {
+            z-index: 5;
+            transform: translateY(-5px) scale(1.018);
+            box-shadow: 0 16px 34px rgba(0, 0, 0, 0.16);
+        }
+
+        .gallery-item:hover::before {
+            border-color: rgba(255, 255, 255, 0.62);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+        }
+
+        .gallery-item:hover::after {
+            transform: translateX(390%) skewX(-18deg);
+        }
+
         .gallery-item:hover img {
             opacity: 1;
-            filter: grayscale(0%);
-            transform: scale(1.12); /* 极致放大 */
+            filter: saturate(1.12) contrast(1.06);
+            transform: scale(1.10);
+        }
+
+        /* 尊重系统的减少动态效果设置 */
+        @media (prefers-reduced-motion: reduce) {
+            .gallery-item {
+                animation: none;
+                transition: none;
+            }
+
+            .gallery-item::after,
+            .gallery-item img {
+                transition: none;
+            }
         }
 
         /* ==================== 沉浸式全屏画廊 (Lightbox) ==================== */
@@ -239,6 +362,34 @@
         }
 
         .lightbox.active img {
+            transform: scale(1);
+        }
+
+
+        /* 在线视频播放器：仅当当前项目为视频时显示 */
+        .lightbox-video {
+            display: none;
+            width: min(85vw, 142.22vh);
+            height: min(47.8125vw, 80vh);
+            border: 0;
+            background: #000000;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+            opacity: 0;
+            transform: scale(0.965);
+            transition: opacity 0.35s ease,
+                        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .lightbox.video-mode #lightboxImage {
+            display: none;
+        }
+
+        .lightbox.video-mode .lightbox-video {
+            display: block;
+        }
+
+        .lightbox.video-mode.active .lightbox-video {
+            opacity: 1;
             transform: scale(1);
         }
 
@@ -296,6 +447,14 @@
             font-family: var(--font-sans);
         }
 
+        /* ==================== 横屏桌面端：每行固定 10 格 ==================== */
+        @media (min-width: 1024px) and (orientation: landscape) {
+            .gallery-grid {
+                grid-template-columns: repeat(10, minmax(0, 1fr));
+                gap: 12px;
+            }
+        }
+
         /* ==================== 手机端适配 ==================== */
         @media (max-width: 768px) {
             header { padding: 16px 20px; justify-content: flex-start; }
@@ -324,17 +483,18 @@
         <nav>
             <ul class="nav-links">
                 <li><a href="index.html" class="i18n" data-cn="首页" data-en="Home">Home</a></li>
-                <li><a href="graphic-design.html" class="i18n active" data-cn="影视美学" data-en="Cinematography">Cinematographer</a></li>
+                <li><a href="Cinematography.html" class="i18n" data-cn="影视美学" data-en="Cinematography">Cinematographer</a></li>
                 <li><a href="Photography.html" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
                 <li><a href="Landscaping.html" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
-                <li><a href="Research.html" class="i18n" data-cn="数字媒体探索" data-en="Research">Research</a></li>
+                <!-- 重点：在此页面中，Research 菜单保持高亮指示当前大栏目 -->
+                <li><a href="Research.html" class="i18n active" data-cn="数字媒体商业作品与探索" data-en="Digital Media Works & Exploration">Digital Media Works & Exploration</a></li>
                 <li><a href="About_me.html" class="i18n" data-cn="关于我" data-en="About Me">About Me</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <!-- 页面头部：返回按钮 + 标题 -->
+        <!-- 页面头部：返回按钮 + 平面设计标题 -->
         <div class="page-header">
             <!-- 核心交互：返回到 Research.html -->
             <a href="Research.html" class="back-btn i18n" data-cn="← 返回探索" data-en="← Back to Research">← Back to Research</a>
@@ -360,8 +520,19 @@
                 <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"></path></svg>
             </button>
             
-            <!-- 大图展示区 -->
+            <!-- 图片展示区 -->
             <img id="lightboxImage" src="" alt="">
+
+            <!-- 在线视频展示区：src 会在点击视频项目时由 JS 动态写入 -->
+            <iframe
+                id="lightboxVideo"
+                class="lightbox-video"
+                src=""
+                title="Online video player"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen
+                frameborder="0">
+            </iframe>
             
             <!-- 右箭头 -->
             <button class="lightbox-btn btn-next" id="nextImage">
@@ -370,23 +541,44 @@
         </div>
     </div>
 
-    <footer>
-        <p>© 2026 Xiaoming (Marcus) Zhong. All rights reserved[cite: 1]</p>
+    <footer>    
+        <p>© 2026 Xiaoming (Marcus) Zhong. All rights reserved</p>
     </footer>
 
     <script>
         /* =================================================================
-           【设计核心】数据驱动的画廊系统 (后期修改只需更改这里！)
+           【设计核心】数据驱动的平面设计作品画廊系统
            ================================================================= */
         const galleryData = [
-            // 你只需要在这里无限往下添加 { src: '你的图片链接' } 即可！
-            // 系统会自动生成缩略图方格，并自动加入左右滑动的全屏画廊中。
-            { src: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop' },
-            { src: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000&auto=format&fit=crop' },
-            { src: 'https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1000&auto=format&fit=crop' },
-            { src: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?q=80&w=1000&auto=format&fit=crop' },
-            { src: 'https://images.unsplash.com/photo-1620061427848-18e385ea4f84?q=80&w=1000&auto=format&fit=crop' },
-            { src: 'https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=1000&auto=format&fit=crop' }
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/0001Logo2%E6%88%90%E5%93%81%EF%BC%88%E5%8D%8E%E8%A5%BF%E9%99%A2%E5%B9%BF%E5%B7%9E%E5%88%86%E9%99%A2%EF%BC%89%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/ChatGPT%20Image%202026%E5%B9%B47%E6%9C%8814%E6%97%A5%2000_04_12%20%281%29%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/ChatGPT%20Image%202026%E5%B9%B47%E6%9C%8814%E6%97%A5%2000_04_12%20%282%29%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/ChatGPT%20Image%202026%E5%B9%B47%E6%9C%8814%E6%97%A5%2000_12_08%20%282%29%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/ChatGPT%20Image%202026%E5%B9%B47%E6%9C%8814%E6%97%A5%2000_12_37%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/ChatGPT%20Image%202026%E5%B9%B47%E6%9C%8814%E6%97%A5%2000_16_50%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/ChatGPT%20Image%202026%E5%B9%B47%E6%9C%8814%E6%97%A5%2000_18_34%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/ChatGPT%20Image%202026%E5%B9%B47%E6%9C%8814%E6%97%A5%2000_29_48%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/ChatGPT%20Image%202026%E5%B9%B47%E6%9C%8814%E6%97%A5%2000_32_00%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/ChatGPT%20Image%202026%E5%B9%B47%E6%9C%8814%E6%97%A5%2000_42_34%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/ChatGPT%20Image%202026%E5%B9%B47%E6%9C%8814%E6%97%A5%2000_46_02%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/IMG_2442%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/V2%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E4%B8%89%E6%AC%BE%E5%AF%8C%E9%82%A6logo0625%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E5%85%83%E6%97%A6MDS%E8%AE%BE%E8%AE%A13%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E5%90%8D%E7%89%87%E6%A0%B7%E6%9C%BA3%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E5%9B%BE%E7%89%87_20260714003406_11_57%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E5%9B%BE%E7%89%87_20260714003427_12_57%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-07-13%20234947%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-07-13%20235131%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-07-14%20004017%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240606180825%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240606180918%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240606180922%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240606180927%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E6%88%90%E7%89%87%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E6%96%B0%E6%A0%B7%E6%9C%BA%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E6%A0%B7%E6%9C%BAP1%20%E6%8B%B7%E8%B4%9D%20copy.webp" },
+            { src: "https://digital-media-works.oss-cn-hongkong.aliyuncs.com/Graphic_Webp/%E9%82%80%E8%AF%B7%E5%87%BDv2%E6%9C%80%E7%BB%88%E4%BD%BF%E7%94%A8%E7%89%88-%E8%8B%B1%E6%96%87%20copy.webp" }
         ];
 
         /* ==================== 1. 自动生成图片网格 ==================== */
@@ -394,21 +586,41 @@
         
         galleryData.forEach((item, index) => {
             const div = document.createElement('div');
-            div.className = 'gallery-item';
+            div.className = item.type === 'video' ? 'gallery-item video-item' : 'gallery-item';
+
+            // 动画延迟最多约 0.27 秒，形成横向波浪感，但不会阻碍观众快速浏览作品。
+            div.style.setProperty('--reveal-delay', `${(index % 20) * 14}ms`);
+
             // 点击方格时，打开对应序号的全屏图片
             div.onclick = () => openLightbox(index);
             
             const img = document.createElement('img');
             img.src = item.src;
-            img.loading = "lazy"; // 提高网页加载性能
+            img.alt = `Graphic design work ${index + 1}`;
+            img.decoding = 'async';
+
+            // 首屏前两行优先加载，其余作品继续懒加载，兼顾“第一眼看到很多”和页面性能。
+            img.loading = index < 20 ? 'eager' : 'lazy';
+            if (index < 10) img.fetchPriority = 'high';
             
             div.appendChild(img);
+
+            if (item.type === 'video') {
+                const playBadge = document.createElement('span');
+                playBadge.className = 'video-play-badge';
+                playBadge.setAttribute('aria-hidden', 'true');
+                playBadge.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>';
+                div.appendChild(playBadge);
+                div.setAttribute('aria-label', 'Play video');
+            }
+
             galleryContainer.appendChild(div);
         });
 
         /* ==================== 2. 全屏画廊 (Lightbox) 交互逻辑 ==================== */
         const lightbox = document.getElementById('lightbox');
         const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxVideo = document.getElementById('lightboxVideo');
         let currentIndex = 0;
 
         function openLightbox(index) {
@@ -421,25 +633,42 @@
         function closeLightbox() {
             lightbox.classList.remove('active');
             document.body.style.overflow = ''; // 解除滚动锁定
+
+            // 清空播放器地址，确保关闭后视频立即停止播放。
+            lightboxVideo.src = '';
+            lightbox.classList.remove('video-mode');
         }
 
         function updateLightboxImage() {
-            // 切换图片时，增加一个透明度微小的过渡会更高级
+            const item = galleryData[currentIndex];
+
+            // 每次切换前先停止上一条视频，避免声音继续播放。
+            lightboxVideo.src = '';
+
+            if (item.type === 'video') {
+                lightbox.classList.add('video-mode');
+                lightboxImage.style.opacity = '0';
+                lightboxVideo.src = item.embed;
+                return;
+            }
+
+            lightbox.classList.remove('video-mode');
             lightboxImage.style.opacity = '0';
+
+            // 图片切换保留轻微淡入过渡。
             setTimeout(() => {
-                lightboxImage.src = galleryData[currentIndex].src;
+                lightboxImage.src = item.src;
+                lightboxImage.alt = `Graphic design work ${currentIndex + 1}`;
                 lightboxImage.style.opacity = '1';
             }, 150);
         }
 
         function showNext() {
-            // 循环逻辑：到了最后一张，下一张变成第一张
             currentIndex = (currentIndex + 1) % galleryData.length;
             updateLightboxImage();
         }
 
         function showPrev() {
-            // 循环逻辑：到了第一张，上一张变成最后一张
             currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
             updateLightboxImage();
         }
