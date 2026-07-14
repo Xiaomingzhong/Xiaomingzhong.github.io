@@ -304,36 +304,59 @@
 
         /* ==================== 手机端适配 ==================== */
         @media (max-width: 768px) {
+            /*
+             * 导航栏使用两列、三行布局。
+             * 顶部预留语言按钮的位置，避免按钮遮挡导航文字。
+             */
             header {
-                padding: 16px 20px; 
-                justify-content: flex-start; 
+                padding: 52px 12px 14px;
+                justify-content: center;
+            }
+
+            header nav {
+                width: 100%;
             }
 
             .nav-links {
-                gap: 24px; 
-                overflow-x: auto; 
-                -webkit-overflow-scrolling: touch; 
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px 10px;
                 width: 100%;
-                padding-bottom: 4px; 
+                overflow: visible;
+                padding: 0;
             }
 
-            .nav-links::-webkit-scrollbar {
-                display: none;
+            .nav-links li {
+                min-width: 0;
+            }
+
+            .nav-links a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 32px;
+                padding: 6px 8px;
+                font-size: 10px;
+                line-height: 1.25;
+                letter-spacing: 0.02em;
+                text-align: center;
+                white-space: normal;
+                overflow-wrap: anywhere;
             }
 
             .lang-switch {
-                top: 14px;
-                right: 20px;
+                top: 12px;
+                right: 12px;
                 padding: 6px 12px;
                 font-size: 10px;
             }
 
             .text-overlay {
-                top: 90%; 
+                top: 90%;
             }
 
             #scroll-indicator {
-                right: 16px; 
+                right: 16px;
                 gap: 12px;
             }
         }
@@ -364,7 +387,7 @@
         <nav>
             <ul class="nav-links">
                 <li><a href="your-home-link.html" class="i18n" data-cn="首页" data-en="Home">Home</a></li>
-                <li><a href="Cinematography.html" class="i18n" data-cn="影视美学" data-en="Cinematography">Cinematographer</a></li>
+                <li><a href="Cinematography.html" class="i18n" data-cn="影视美学" data-en="Cinematography">Cinematography</a></li>
                 <li><a href="Photography.html" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</a></li>
                 <li><a href="Landscaping.html" class="i18n" data-cn="景观设计" data-en="Landscaping">Landscaping</a></li>
                 <li><a href="Research.html" class="i18n" data-cn="数字媒体商业作品与探索" data-en="Digital Media Works & Exploration">Digital Media Applications & Exploration</a></li>
@@ -483,13 +506,24 @@
             setTimeout(resizeCanvas, 180);
         });
 
-        function drawImageContain(img) {
+        function drawImageResponsive(img) {
             if (!img.naturalWidth || !img.naturalHeight) return;
 
-            const scale = Math.min(
-                renderWidth / img.naturalWidth,
-                renderHeight / img.naturalHeight
-            );
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+            /*
+             * 电脑端继续使用 contain，完整显示画面。
+             * 手机端使用 cover，让画面铺满整个视口并自动裁切，消除上下留白。
+             */
+            const scale = isMobile
+                ? Math.max(
+                    renderWidth / img.naturalWidth,
+                    renderHeight / img.naturalHeight
+                )
+                : Math.min(
+                    renderWidth / img.naturalWidth,
+                    renderHeight / img.naturalHeight
+                );
 
             const drawWidth = img.naturalWidth * scale;
             const drawHeight = img.naturalHeight * scale;
@@ -505,7 +539,7 @@
         function renderFrame(index) {
             const img = images[index];
             if (img && img.complete && img.naturalWidth) {
-                drawImageContain(img);
+                drawImageResponsive(img);
             }
         }
 
