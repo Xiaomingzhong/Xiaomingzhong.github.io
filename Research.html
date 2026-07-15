@@ -432,6 +432,70 @@
                 transform: translateY(0);
             }
         }
+    
+
+        /* ==================== 手机端双行完整导航（统一修复） ==================== */
+        @media (max-width: 768px) {
+            header {
+                justify-content: center !important;
+                align-items: flex-end !important;
+                min-height: 112px !important;
+                padding: 42px 14px 12px !important;
+            }
+
+            header nav {
+                width: 100% !important;
+                overflow: visible !important;
+            }
+
+            .nav-links {
+                width: 100% !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                align-items: center !important;
+                column-gap: 14px !important;
+                row-gap: 8px !important;
+                overflow: visible !important;
+                padding: 0 !important;
+            }
+
+            .nav-links li {
+                flex: 0 0 auto !important;
+            }
+
+            .nav-links a {
+                padding-bottom: 2px !important;
+                font-size: 10px !important;
+                letter-spacing: 0.025em !important;
+                white-space: nowrap !important;
+            }
+
+            .lang-switch {
+                top: 8px !important;
+                right: 12px !important;
+                padding: 6px 11px !important;
+                font-size: 9px !important;
+            }
+
+            main {
+                padding-top: 146px !important;
+            }
+        }
+
+        /* 较窄手机继续保持两行，不让长英文栏目挤到第三行 */
+        @media (max-width: 360px) {
+            .nav-links {
+                column-gap: 9px !important;
+                row-gap: 7px !important;
+            }
+
+            .nav-links a {
+                font-size: 9px !important;
+                letter-spacing: 0 !important;
+            }
+        }
+
     </style>
 </head>
 <body>
