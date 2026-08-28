@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Photography portfolio of Xiaoming (Marcus) Zhong — pets, portraits, landscapes, events, everyday life, light studies, plants and mobile photography.">
+    <meta name="description" content="Photography portfolio of Xiaoming (Marcus) Zhong — pets, portraits, landscapes, product photography, events, everyday life, light studies, plants and mobile photography.">
     <title>Photography | Xiaoming (Marcus) Zhong</title>
     <!-- Data build: 2026-07-16 — mobile photography URLs updated from CSV (37 images) -->
 
@@ -444,6 +444,44 @@
             will-change: transform, filter;
         }
 
+
+        /* Pets 分类中的视频作品：缩略图保持摄影网格尺寸，中央播放键沿用 Cinematography 的视觉语言。 */
+        .gallery-item.is-video {
+            cursor: pointer;
+        }
+
+        .gallery-play-button {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 5;
+            display: grid;
+            place-items: center;
+            width: clamp(42px, 3.6vw, 58px);
+            aspect-ratio: 1;
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            border-radius: 50%;
+            background: rgba(10, 10, 10, 0.38);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transform: translate(-50%, -50%);
+            transition: transform 0.45s var(--ease), background 0.4s ease;
+            pointer-events: none;
+        }
+
+        .gallery-play-button svg {
+            width: 31%;
+            fill: #fff;
+            transform: translateX(8%);
+        }
+
+        .gallery-item.is-video:hover .gallery-play-button,
+        .gallery-item.is-video:focus-visible .gallery-play-button {
+            background: rgba(0, 0, 0, 0.66);
+            transform: translate(-50%, -50%) scale(1.08);
+        }
+
         .gallery-item:hover,
         .gallery-item:focus-visible {
             z-index: 5;
@@ -524,6 +562,50 @@
         .lightbox.active .lightbox-image.loaded {
             opacity: 1;
             transform: scale(1);
+        }
+
+
+        .lightbox-video {
+            display: none;
+            width: min(88vw, 1500px);
+            max-width: 100%;
+            aspect-ratio: 16 / 9;
+            border: 0;
+            background: #000;
+            box-shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
+        }
+
+        /* 视频打开时切换成 Cinematography 风格的深色站内播放器。 */
+        .lightbox.video-mode {
+            background: rgba(7, 7, 7, 0.965);
+            color: #fff;
+        }
+
+        .lightbox.video-mode .lightbox-image {
+            display: none;
+        }
+
+        .lightbox.video-mode .lightbox-video {
+            display: block;
+        }
+
+        .lightbox.video-mode .lightbox-count,
+        .lightbox.video-mode .lightbox-caption {
+            color: rgba(255, 255, 255, 0.62);
+        }
+
+        .lightbox.video-mode .close-button {
+            border-color: rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+
+        .lightbox.video-mode .lightbox-arrow {
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .lightbox.video-mode .lightbox-arrow:hover {
+            color: #fff;
         }
 
         .lightbox-toolbar {
@@ -960,8 +1042,8 @@
                 <h1 id="pageTitle" class="i18n" data-cn="摄影艺术" data-en="Photography">Photography</h1>
                 <p class="hero-description i18n"
                    data-cn="从宠物、人像、风光与活动记录，到日常生活、光线研究、植物和手机摄影。每一张照片都在真实瞬间、视觉秩序与情绪表达之间寻找平衡。"
-                   data-en="From pets, portraits, landscapes and events to everyday life, studies of light, plants and mobile photography, each image searches for a balance between authentic moments, visual order and emotional expression.">
-                    From pets, portraits, landscapes and events to everyday life, studies of light, plants and mobile photography, each image searches for a balance between authentic moments, visual order and emotional expression.
+                   data-en="From pets, portraits, landscapes, product photography and events to everyday life, studies of light, plants and mobile photography, each image searches for a balance between authentic moments, visual order and emotional expression.">
+                    From pets, portraits, landscapes, product photography and events to everyday life, studies of light, plants and mobile photography, each image searches for a balance between authentic moments, visual order and emotional expression.
                 </p>
             </div>
             <div class="hero-index" aria-hidden="true">
@@ -996,6 +1078,15 @@
 
         <div class="lightbox-stage" id="lightboxStage">
             <img class="lightbox-image" id="lightboxImage" src="" alt="">
+            <iframe
+                class="lightbox-video"
+                id="lightboxVideo"
+                src=""
+                title="Embedded video player"
+                allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                allowfullscreen
+                referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
         </div>
 
         <button class="lightbox-arrow lightbox-next" id="nextImage" type="button" aria-label="Next image">
@@ -1012,7 +1103,7 @@
            后期添加新照片时，只需要复制 photoLibrary 中任意一个对象，并修改：
 
            1. id        每张照片的唯一名称，不要重复
-           2. category  分类：pet / portrait / landscape / event / life / light / plant / mobile
+           2. category  分类：pet / portrait / landscape / product / event / life / light / plant / mobile
            3. src       高清照片链接
            4. thumb     可选：缩略图链接；不填写时自动使用 src
            5. title     中英文标题
@@ -1039,6 +1130,7 @@
             pet: { cn: '宠物', en: 'Pets' },
             portrait: { cn: '人像', en: 'Portraits' },
             landscape: { cn: '风光', en: 'Landscapes' },
+            product: { cn: '产品', en: 'Product' },
             event: { cn: '活动', en: 'Events' },
             life: { cn: '生活', en: 'Everyday Life' },
             light: { cn: '光线', en: 'Light Studies' },
@@ -1048,6 +1140,16 @@
 
         const photoLibrary = [
             // ==================== 宠物 Pets ====================
+            {
+                id: 'pet-video-01',
+                category: 'pet',
+                mediaType: 'video',
+                title: { cn: '宠物摄影视频', en: 'Pet Photography Film' },
+                alt: { cn: '宠物摄影视频作品', en: 'Pet photography video work' },
+                thumb: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/%E5%B0%81%E9%9D%A2%20copy.webp',
+                embedUrl: 'https://player.xinpianchang.com/?aid=13799520&mid=KdRx7bZ1jPd7b2N3',
+                sourceUrl: 'https://www.xinpianchang.com/a13799520?from=webShare&channel=copyLink'
+            },
                        { id: 'pet-01', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/03%20copy.webp', title: { cn: '宠物摄影 01', en: 'Pet Photography 01' }, alt: { cn: '宠物摄影作品 01', en: 'Pet photography work 01' } },
             { id: 'pet-02', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/1%20%283%29%20copy%202.webp', title: { cn: '宠物摄影 02', en: 'Pet Photography 02' }, alt: { cn: '宠物摄影作品 02', en: 'Pet photography work 02' } },
             { id: 'pet-03', category: 'pet', src: 'https://photography-m.oss-cn-hongkong.aliyuncs.com/Pets/1%20%284%29%20copy.webp', title: { cn: '宠物摄影 03', en: 'Pet Photography 03' }, alt: { cn: '宠物摄影作品 03', en: 'Pet photography work 03' } },
@@ -1310,6 +1412,19 @@
             { id: "landscape-41", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/IMG_4343%20copy.webp", title: { cn: "风光摄影 41", en: "Landscape Photography 41" }, alt: { cn: "风光摄影作品 41", en: "landscape photography work 41" } },
             { id: "landscape-42", category: "landscape", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Landscape_Webp/IMG_4369%20copy.webp", title: { cn: "风光摄影 42", en: "Landscape Photography 42" }, alt: { cn: "风光摄影作品 42", en: "landscape photography work 42" } },
 
+            // ==================== 产品 Product ====================
+            { id: "product-01", category: "product", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Product/%E6%A3%89%E5%B1%8B%E5%90%88%E6%88%902%20copy.webp", title: { cn: "产品摄影 01", en: "Product Photography 01" }, alt: { cn: "产品摄影作品 01", en: "product photography work 01" } },
+            { id: "product-02", category: "product", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Product/%E6%A3%89%E5%B1%8B%E5%90%88%E6%88%90%20copy.webp", title: { cn: "产品摄影 02", en: "Product Photography 02" }, alt: { cn: "产品摄影作品 02", en: "product photography work 02" } },
+            { id: "product-03", category: "product", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Product/P1%20copy.webp", title: { cn: "产品摄影 03", en: "Product Photography 03" }, alt: { cn: "产品摄影作品 03", en: "product photography work 03" } },
+            { id: "product-04", category: "product", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Product/d43caa06-01ea-4c03-9190-c1a9755695c1%20copy.webp", title: { cn: "产品摄影 04", en: "Product Photography 04" }, alt: { cn: "产品摄影作品 04", en: "product photography work 04" } },
+            { id: "product-05", category: "product", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Product/ChatGPT%20Image%202026%E5%B9%B48%E6%9C%8828%E6%97%A5%2014_58_29%20copy.webp", title: { cn: "产品摄影 05", en: "Product Photography 05" }, alt: { cn: "产品摄影作品 05", en: "product photography work 05" } },
+            { id: "product-06", category: "product", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Product/ChatGPT%20Image%202026%E5%B9%B48%E6%9C%8828%E6%97%A5%2014_32_48%20copy.webp", title: { cn: "产品摄影 06", en: "Product Photography 06" }, alt: { cn: "产品摄影作品 06", en: "product photography work 06" } },
+            { id: "product-07", category: "product", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Product/cf3a622e-9f4e-46eb-a7ae-6e169dbf5b6f%20copy.webp", title: { cn: "产品摄影 07", en: "Product Photography 07" }, alt: { cn: "产品摄影作品 07", en: "product photography work 07" } },
+            { id: "product-08", category: "product", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Product/a5e5ca03-9407-46a1-a80a-3bc716eb9c55%20copy.webp", title: { cn: "产品摄影 08", en: "Product Photography 08" }, alt: { cn: "产品摄影作品 08", en: "product photography work 08" } },
+            { id: "product-09", category: "product", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Product/999.webp", title: { cn: "产品摄影 09", en: "Product Photography 09" }, alt: { cn: "产品摄影作品 09", en: "product photography work 09" } },
+            { id: "product-10", category: "product", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Product/111.webp", title: { cn: "产品摄影 10", en: "Product Photography 10" }, alt: { cn: "产品摄影作品 10", en: "product photography work 10" } },
+            { id: "product-11", category: "product", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/Product/81d7583d-23a0-4811-b9d3-12cebf2ec1c0%20copy.webp", title: { cn: "产品摄影 11", en: "Product Photography 11" }, alt: { cn: "产品摄影作品 11", en: "product photography work 11" } },
+
             // ==================== 活动 Events ====================
             { id: "event-01", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/1%20copy.webp", title: { cn: "活动记录 01", en: "Event Photography 01" }, alt: { cn: "活动记录作品 01", en: "event photography work 01" } },
             { id: "event-02", category: "event", src: "https://photography-m.oss-cn-hongkong.aliyuncs.com/event_webp/10%20copy.webp", title: { cn: "活动记录 02", en: "Event Photography 02" }, alt: { cn: "活动记录作品 02", en: "event photography work 02" } },
@@ -1420,6 +1535,7 @@
             lightbox: document.getElementById('lightbox'),
             stage: document.getElementById('lightboxStage'),
             image: document.getElementById('lightboxImage'),
+            video: document.getElementById('lightboxVideo'),
             count: document.getElementById('lightboxCount'),
             caption: document.getElementById('lightboxCaption'),
             prev: document.getElementById('prevImage'),
@@ -1525,9 +1641,14 @@
             state.currentItems.forEach((item, index) => {
                 const button = document.createElement('button');
                 button.type = 'button';
-                button.className = 'gallery-item';
+                button.className = `gallery-item${item.mediaType === 'video' ? ' is-video' : ''}`;
                 button.style.setProperty('--reveal-delay', `${Math.min((index % 16) * 18, 270)}ms`);
-                button.setAttribute('aria-label', `${state.language === 'cn' ? '查看' : 'View'}: ${localize(item.title)}`);
+                button.setAttribute(
+                    'aria-label',
+                    `${item.mediaType === 'video'
+                        ? (state.language === 'cn' ? '播放' : 'Play')
+                        : (state.language === 'cn' ? '查看' : 'View')}: ${localize(item.title)}`
+                );
                 button.addEventListener('click', () => openLightbox(index, button));
 
                 const img = document.createElement('img');
@@ -1539,6 +1660,15 @@
                 if (index < 8) img.fetchPriority = 'high';
 
                 button.appendChild(img);
+
+                if (item.mediaType === 'video') {
+                    const play = document.createElement('span');
+                    play.className = 'gallery-play-button';
+                    play.setAttribute('aria-hidden', 'true');
+                    play.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 7.6v8.8L16.3 12 9 7.6Z"></path></svg>';
+                    button.appendChild(play);
+                }
+
                 elements.grid.appendChild(button);
             });
 
@@ -1549,8 +1679,8 @@
             const count = state.currentItems.length;
             const label = localize(categories[state.category]);
             elements.status.textContent = state.language === 'cn'
-                ? `${label} · ${pad(count)} 张照片`
-                : `${label} · ${pad(count)} photographs`;
+                ? `${label} · ${pad(count)} 部作品`
+                : `${label} · ${pad(count)} works`;
         }
 
         function setCategory(category, options = {}) {
@@ -1591,6 +1721,8 @@
             document.body.classList.remove('lightbox-open');
             elements.image.src = '';
             elements.image.classList.remove('loaded');
+            elements.video.src = '';
+            elements.lightbox.classList.remove('video-mode');
             history.replaceState(null, '', `#${state.category}`);
 
             if (state.lastFocusedElement) {
@@ -1604,7 +1736,7 @@
 
             elements.count.textContent = `${pad(state.currentIndex + 1)} / ${pad(state.currentItems.length)}`;
 
-            // 全屏画廊不显示单张图片名称，只保留分类、年份和地点等辅助信息。
+            const isVideo = item.mediaType === 'video';
             const captionParts = [
                 localize(categories[item.category]),
                 item.year,
@@ -1613,23 +1745,39 @@
 
             elements.caption.textContent = captionParts.join(' · ');
             elements.image.classList.remove('loaded');
-            elements.image.alt = localize(item.alt) || localize(item.title);
 
-            const nextSrc = item.src;
-            const loader = new Image();
-            loader.referrerPolicy = 'no-referrer';
-            loader.onload = () => {
-                elements.image.src = nextSrc;
-                requestAnimationFrame(() => elements.image.classList.add('loaded'));
-            };
-            loader.onerror = () => {
-                elements.image.src = item.thumb || nextSrc;
-                requestAnimationFrame(() => elements.image.classList.add('loaded'));
-            };
-            loader.src = nextSrc;
+            if (isVideo) {
+                elements.lightbox.classList.add('video-mode');
+                elements.image.src = '';
+                elements.video.title = localize(item.title) || 'Embedded video player';
+                elements.video.src = addAutoplay(item.embedUrl || item.sourceUrl || '');
+            } else {
+                elements.lightbox.classList.remove('video-mode');
+                elements.video.src = '';
+                elements.image.alt = localize(item.alt) || localize(item.title);
+
+                const nextSrc = item.src;
+                const loader = new Image();
+                loader.referrerPolicy = 'no-referrer';
+                loader.onload = () => {
+                    elements.image.src = nextSrc;
+                    requestAnimationFrame(() => elements.image.classList.add('loaded'));
+                };
+                loader.onerror = () => {
+                    elements.image.src = item.thumb || nextSrc;
+                    requestAnimationFrame(() => elements.image.classList.add('loaded'));
+                };
+                loader.src = nextSrc;
+            }
 
             preloadAdjacentImages();
             history.replaceState(null, '', `#${item.category}/${item.id}`);
+        }
+
+        function addAutoplay(url) {
+            if (!url) return '';
+            const separator = url.includes('?') ? '&' : '?';
+            return `${url}${separator}autoplay=1`;
         }
 
         function preloadAdjacentImages() {
@@ -1639,9 +1787,12 @@
             const prevIndex = (state.currentIndex - 1 + state.currentItems.length) % state.currentItems.length;
 
             [nextIndex, prevIndex].forEach(index => {
+                const adjacent = state.currentItems[index];
+                if (!adjacent || adjacent.mediaType === 'video' || !adjacent.src) return;
+
                 const preload = new Image();
                 preload.referrerPolicy = 'no-referrer';
-                preload.src = state.currentItems[index].src;
+                preload.src = adjacent.src;
             });
         }
 
