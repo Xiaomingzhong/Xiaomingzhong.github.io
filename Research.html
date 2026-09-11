@@ -150,10 +150,10 @@
             margin-top: 8px;
         }
 
-        /* ==================== 五栏首屏展示区 ==================== */
+        /* ==================== 六栏首屏展示区 ==================== */
         .research-grid {
             display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
+            grid-template-columns: repeat(6, minmax(0, 1fr));
             gap: clamp(12px, 1.5vw, 24px);
             margin-top: 18px;
             opacity: 0;
@@ -273,7 +273,7 @@
         }
 
 
-        /* 桌面端：保留正文呼吸空间，同时让五张 4:3 竖图与页脚处于首屏 */
+        /* 桌面端：保留正文呼吸空间，同时让六张 4:3 竖图与页脚处于首屏 */
         @media (min-width: 769px) {
             body {
                 height: 100vh;
@@ -346,7 +346,7 @@
             }
         }
 
-        /* 中等宽度桌面与笔记本：继续保持五栏，同时压缩导航和卡片间距 */
+        /* 中等宽度桌面与笔记本：继续保持六栏，同时压缩导航和卡片间距 */
         @media (max-width: 1180px) and (min-width: 769px) {
             header {
                 padding-left: 24px;
@@ -545,6 +545,14 @@
                     <img src="https://traditional-painting.oss-cn-hongkong.aliyuncs.com/IMG_6192%20copy.webp" alt="Traditional Painting">
                 </a>
                 <a href="Traditional_painting.html" class="view-more-btn i18n" data-cn="浏览更多" data-en="View More">View More</a>
+            </div>
+
+            <div class="research-col">
+                <h2 class="col-title i18n" data-cn="美式手语学习网站" data-en="ASL Learning Website">ASL Learning Website</h2>
+                <a href="Asl.html" class="img-wrapper" aria-label="Open ASL Learning Website">
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800&auto=format&fit=crop" alt="ASL Learning Website">
+                </a>
+                <a href="Asl.html" class="view-more-btn i18n" data-cn="浏览更多" data-en="View More">View More</a>
             </div>
 
             <div class="research-col">
