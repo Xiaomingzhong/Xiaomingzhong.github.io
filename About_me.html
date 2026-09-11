@@ -216,6 +216,29 @@
             transform: translateY(0);
         }
 
+
+        /* ==================== 页面底部图片 ==================== */
+        .final-image-section {
+            width: 100%;
+            margin-top: -20px;
+            margin-bottom: 80px;
+            overflow: hidden;
+        }
+
+        .final-image-section img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            filter: grayscale(20%);
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+        }
+
+        .final-image-section:hover img {
+            transform: scale(1.02);
+            filter: grayscale(0%);
+        }
+
         /* ==================== 页脚 ==================== */
         footer {
             text-align: center;
@@ -395,6 +418,12 @@
                    <strong>Bachelor of Computer Fine Arts</strong> | Guangzhou University
                 </p>
             </div>
+        </section>
+
+
+        <!-- 页面底部图片 -->
+        <section class="final-image-section reveal">
+            <img src="https://abouttme.oss-cn-hongkong.aliyuncs.com/buisiness.webp" alt="Business and creative practice">
         </section>
     </main>
 
