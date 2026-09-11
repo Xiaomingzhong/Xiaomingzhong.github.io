@@ -1,0 +1,3137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f3efe6" />
+  <meta
+    name="description"
+    content="SIGN V0.3.1 — interactive ASL handshape practice prototype designed and developed by Marcus Zhong."
+  />
+  <title>SIGN V0.3.1 — Personal Practice</title>
+
+  <style>
+    :root{
+      --bg:#f3efe6;
+      --surface:#fffdf7;
+      --surface-2:#f8f5ec;
+      --ink:#171714;
+      --muted:#6f7068;
+      --line:rgba(23,23,20,.12);
+      --line-strong:rgba(23,23,20,.22);
+      --accent:#ff5d3d;
+      --accent-soft:#ffe2da;
+      --success:#247a52;
+      --success-soft:#dff2e7;
+      --warning:#a86b1e;
+      --shadow:0 30px 100px rgba(25,22,16,.10);
+      --shadow-strong:0 38px 130px rgba(12,11,9,.24);
+      --r-xl:40px;
+      --r-lg:28px;
+      --r-md:20px;
+      --max:1260px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 89% 5%,rgba(255,93,61,.10),transparent 28%),
+        radial-gradient(circle at 8% 88%,rgba(36,122,82,.08),transparent 29%),
+        var(--bg);
+      font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    body.no-scroll{overflow:hidden}
+    button,input{font:inherit}
+    button{border:0}
+    a{color:inherit}
+
+    .page{width:min(calc(100% - 40px),var(--max));margin:0 auto}
+
+    .site-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:26px 0;
+    }
+
+    .brand{
+      display:inline-flex;align-items:center;gap:12px;
+      font-weight:950;letter-spacing:-.045em;font-size:1.16rem;
+    }
+
+    .brand-mark{
+      width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+      background:var(--ink);color:var(--bg);font-size:.88rem;letter-spacing:0;
+    }
+
+    .header-actions{display:flex;align-items:center;gap:10px}
+
+    .text-link{
+      color:var(--muted);text-decoration:none;font-size:.91rem;padding:10px 2px;
+    }
+    .text-link:hover{color:var(--ink)}
+
+    .sound-btn,.icon-btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:7px;
+      min-width:42px;height:42px;border-radius:999px;padding:0 13px;
+      cursor:pointer;background:rgba(255,255,255,.58);border:1px solid var(--line);
+      color:var(--ink);font-size:.81rem;font-weight:850;
+      transition:transform .17s ease,background .17s ease;
+    }
+    .sound-btn:hover,.icon-btn:hover{transform:translateY(-1px);background:white}
+
+    .hero{
+      min-height:calc(100vh - 96px);
+      display:grid;grid-template-columns:.95fr 1.05fr;gap:68px;align-items:center;
+      padding:36px 0 88px;
+    }
+
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;
+      color:var(--muted);font-size:.82rem;font-weight:850;letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+
+    .eyebrow-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+
+    h1{
+      margin:0;max-width:760px;font-size:clamp(3.7rem,8vw,7.6rem);
+      line-height:.88;letter-spacing:-.078em;
+    }
+
+    .hero-copy{
+      max-width:620px;margin:28px 0 0;color:var(--muted);
+      font-size:clamp(1rem,1.45vw,1.2rem);line-height:1.72;
+    }
+
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
+
+    .primary-btn,.secondary-btn,.ghost-btn{
+      border-radius:999px;padding:16px 24px;cursor:pointer;font-weight:850;
+      transition:transform .17s ease,box-shadow .17s ease,background .17s ease,border-color .17s ease;
+    }
+
+    .primary-btn{
+      color:white;background:var(--ink);
+      box-shadow:0 12px 34px rgba(23,23,20,.17);
+    }
+    .primary-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 16px 38px rgba(23,23,20,.21);
+    }
+
+    .secondary-btn{
+      color:var(--ink);background:rgba(255,255,255,.58);border:1px solid var(--line);
+    }
+    .secondary-btn:hover{transform:translateY(-1px);background:white}
+
+    .ghost-btn{
+      color:var(--muted);background:transparent;border:1px solid transparent;
+    }
+    .ghost-btn:hover{
+      color:var(--ink);border-color:var(--line);background:rgba(255,255,255,.35);
+    }
+
+    .microcopy{
+      margin-top:18px;color:var(--muted);font-size:.81rem;line-height:1.55;
+    }
+
+    .hero-demo{
+      position:relative;min-height:640px;display:grid;place-items:center;
+    }
+
+    .demo-card{
+      position:relative;width:min(100%,585px);min-height:585px;padding:28px;
+      border-radius:var(--r-xl);display:flex;flex-direction:column;justify-content:space-between;
+      overflow:hidden;background:rgba(255,253,247,.82);
+      border:1px solid rgba(255,255,255,.9);
+      box-shadow:var(--shadow);backdrop-filter:blur(16px);
+    }
+
+    .demo-top{
+      display:flex;justify-content:space-between;align-items:center;
+      color:var(--muted);font-size:.78rem;font-weight:850;letter-spacing:.06em;text-transform:uppercase;
+    }
+
+    .demo-center{
+      display:grid;place-items:center;text-align:center;padding:36px 12px 16px;
+    }
+
+    .demo-sign{
+      font-size:clamp(6rem,13vw,9rem);
+      font-weight:950;line-height:1;letter-spacing:-.08em;
+    }
+
+    .demo-caption{margin-top:8px;color:var(--muted);font-size:.9rem}
+
+    .demo-feedback{display:grid;gap:10px}
+
+    .feedback-step{
+      display:flex;align-items:center;gap:10px;
+      padding:12px 14px;border-radius:16px;
+      background:rgba(255,255,255,.58);border:1px solid var(--line);
+      font-size:.82rem;font-weight:800;
+    }
+
+    .feedback-step .dot{
+      width:9px;height:9px;border-radius:50%;
+      background:rgba(23,23,20,.15);
+    }
+
+    .feedback-step.done{
+      color:var(--success);background:var(--success-soft);
+    }
+    .feedback-step.done .dot{background:var(--success)}
+
+    .feedback-step.active{
+      background:var(--accent-soft);border-color:rgba(255,93,61,.28);
+    }
+    .feedback-step.active .dot{
+      background:var(--accent);box-shadow:0 0 0 5px rgba(255,93,61,.10);
+    }
+
+    .floating-pill{
+      position:absolute;z-index:2;padding:12px 16px;border-radius:999px;background:white;
+      border:1px solid rgba(23,23,20,.06);box-shadow:0 14px 44px rgba(23,23,20,.11);
+      font-size:.79rem;font-weight:850;
+    }
+    .pill-one{right:-30px;top:84px;transform:rotate(4deg)}
+    .pill-two{left:-34px;bottom:124px;transform:rotate(-5deg)}
+
+    .section{padding:80px 0 112px;border-top:1px solid var(--line)}
+
+    .section-heading{
+      display:flex;align-items:end;justify-content:space-between;gap:34px;margin-bottom:34px;
+    }
+
+    .section-heading h2{
+      margin:0;font-size:clamp(2.35rem,5vw,4.6rem);
+      line-height:.96;letter-spacing:-.065em;
+    }
+
+    .section-heading p{
+      max-width:560px;margin:0;color:var(--muted);line-height:1.66;
+    }
+
+    .feature-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:15px;
+    }
+
+    .feature-card{
+      min-height:235px;padding:24px;border-radius:var(--r-lg);
+      border:1px solid var(--line);background:rgba(255,255,255,.50);
+      display:flex;flex-direction:column;justify-content:space-between;
+    }
+
+    .feature-icon{
+      width:44px;height:44px;border-radius:15px;display:grid;place-items:center;
+      background:var(--ink);color:white;font-size:1rem;font-weight:900;
+    }
+
+    .feature-card h3{margin:0 0 9px;font-size:1.23rem}
+    .feature-card p{margin:0;color:var(--muted);line-height:1.58;font-size:.91rem}
+
+    .sign-strip{
+      display:grid;grid-template-columns:repeat(10,1fr);gap:8px;margin-top:22px;
+    }
+
+    .sign-chip{
+      padding:18px 8px;border-radius:17px;border:1px solid var(--line);
+      background:rgba(255,255,255,.54);text-align:center;
+    }
+    .sign-chip strong{display:block;font-size:1.55rem;letter-spacing:-.05em}
+    .sign-chip span{color:var(--muted);font-size:.65rem}
+
+    footer{
+      padding:30px 0 50px;color:var(--muted);font-size:.8rem;line-height:1.65;
+    }
+    footer strong{color:var(--ink)}
+
+    /* overlays */
+    .overlay{
+      position:fixed;inset:0;z-index:900;display:grid;place-items:center;padding:24px;
+      background:rgba(20,20,17,.72);backdrop-filter:blur(18px);
+    }
+
+    .overlay.hidden{display:none}
+
+    .modal-card{
+      width:min(100%,700px);padding:clamp(30px,5vw,52px);
+      border-radius:36px;background:var(--surface);
+      border:1px solid rgba(255,255,255,.86);
+      box-shadow:var(--shadow-strong);
+    }
+
+    .modal-kicker{
+      display:inline-flex;align-items:center;gap:8px;margin-bottom:20px;color:var(--muted);
+      font-size:.78rem;font-weight:850;letter-spacing:.09em;text-transform:uppercase;
+    }
+
+    .modal-kicker::before{
+      content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);
+    }
+
+    .modal-card h2{
+      margin:0;font-size:clamp(2.5rem,7vw,4.8rem);
+      line-height:.94;letter-spacing:-.066em;
+    }
+
+    .modal-card>p{
+      margin:20px 0 0;color:var(--muted);line-height:1.67;
+    }
+
+    .credit-block{
+      margin-top:26px;padding-top:22px;border-top:1px solid var(--line);
+    }
+
+    .credit-block strong{display:block;margin-bottom:4px;font-size:1.02rem}
+    .credit-block span{color:var(--muted);font-size:.86rem}
+
+    .modal-card>.primary-btn{width:100%;margin-top:28px}
+    .modal-small{
+      margin:12px 0 0!important;color:var(--muted);
+      text-align:center;font-size:.75rem;
+    }
+
+    .mode-options{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px;
+    }
+
+    .mode-card{
+      text-align:left;padding:21px;border-radius:22px;border:1px solid var(--line);
+      background:rgba(255,255,255,.66);cursor:pointer;
+      transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;
+    }
+
+    .mode-card:hover{
+      transform:translateY(-2px);border-color:var(--line-strong);
+      box-shadow:0 13px 32px rgba(23,23,20,.08);
+    }
+
+    .mode-card.selected{
+      border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);
+    }
+
+    .mode-icon{
+      width:42px;height:42px;display:grid;place-items:center;border-radius:14px;
+      margin-bottom:24px;background:var(--ink);color:white;font-weight:900;
+    }
+
+    .mode-card strong{display:block;margin-bottom:8px;font-size:1.03rem}
+    .mode-card span{
+      display:block;color:var(--muted);font-size:.8rem;line-height:1.48;
+    }
+
+    .modal-row{display:flex;gap:10px;margin-top:24px}
+    .modal-row>*{flex:1}
+
+    /* app */
+    .app-shell{
+      position:fixed;inset:0;z-index:100;display:none;overflow-y:auto;
+      background:
+        radial-gradient(circle at 90% 5%,rgba(255,93,61,.09),transparent 24%),
+        var(--bg);
+    }
+
+    .app-shell.active{display:block}
+
+    .app{
+      width:min(calc(100% - 36px),1200px);
+      min-height:100vh;margin:0 auto;padding:22px 0 42px;
+      display:flex;flex-direction:column;
+    }
+
+    .app-header{
+      display:grid;grid-template-columns:1fr auto 1fr;
+      gap:18px;align-items:center;margin-bottom:17px;
+    }
+
+    .progress-text,.app-title{
+      color:var(--muted);font-size:.78rem;font-weight:850;
+      letter-spacing:.08em;text-transform:uppercase;
+    }
+
+    .app-title{justify-self:center;color:var(--ink)}
+    .app-actions{justify-self:end;display:flex;align-items:center;gap:8px}
+
+    .top-progress{
+      width:100%;height:5px;margin-bottom:25px;border-radius:999px;
+      overflow:hidden;background:rgba(23,23,20,.08);
+    }
+
+    .top-progress-bar{
+      height:100%;width:0;border-radius:inherit;background:var(--ink);
+      transition:width .38s ease;
+    }
+
+    .lesson-layout{
+      flex:1;min-height:0;display:grid;
+      grid-template-columns:.76fr 1.24fr;gap:20px;
+    }
+
+    .lesson-panel,.camera-panel{
+      border-radius:var(--r-xl);border:1px solid rgba(23,23,20,.09);
+      background:rgba(255,253,247,.74);
+      box-shadow:0 18px 62px rgba(23,23,20,.07);
+    }
+
+    .lesson-panel{
+      min-height:660px;padding:clamp(27px,4vw,44px);
+      display:flex;flex-direction:column;
+    }
+
+    .lesson-kicker{
+      color:var(--muted);font-size:.73rem;font-weight:850;
+      letter-spacing:.10em;text-transform:uppercase;
+    }
+
+    .target-sign{
+      margin:20px 0 12px;
+      font-size:clamp(4.8rem,10vw,8.8rem);
+      line-height:.92;font-weight:950;letter-spacing:-.085em;
+    }
+
+    .target-name{margin-bottom:10px;font-size:1.2rem;font-weight:850}
+
+    .target-instruction{
+      max-width:430px;margin:0;color:var(--muted);line-height:1.62;
+    }
+
+    .diagram-card{
+      margin-top:20px;border-radius:22px;border:1px solid var(--line);
+      background:rgba(255,255,255,.49);padding:14px;
+    }
+
+    .diagram-head{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;
+    }
+
+    .diagram-head strong{
+      font-size:.73rem;letter-spacing:.07em;text-transform:uppercase;
+    }
+
+    .diagram-head span{color:var(--muted);font-size:.67rem}
+
+    .hand-diagram{
+      display:grid;place-items:center;min-height:175px;
+    }
+
+    .hand-diagram svg{
+      width:min(100%,220px);height:auto;overflow:visible;
+    }
+
+    .finger-guide{
+      display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;
+    }
+
+    .finger-chip{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:8px 10px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(255,255,255,.54);color:var(--muted);
+      font-size:.71rem;font-weight:760;
+    }
+
+    .finger-chip.open{
+      color:var(--success);border-color:rgba(36,122,82,.18);
+      background:var(--success-soft);
+    }
+
+    .lesson-stages{
+      margin-top:auto;display:grid;gap:8px;padding-top:25px;
+    }
+
+    .lesson-stage{
+      display:flex;align-items:center;gap:10px;
+      padding:11px 12px;border-radius:14px;
+      color:var(--muted);font-size:.78rem;font-weight:760;
+    }
+
+    .stage-dot{
+      width:9px;height:9px;flex:0 0 9px;border-radius:50%;
+      background:rgba(23,23,20,.14);
+    }
+
+    .lesson-stage.done{
+      color:var(--success);background:rgba(223,242,231,.55);
+    }
+
+    .lesson-stage.done .stage-dot{background:var(--success)}
+
+    .lesson-stage.active{
+      color:var(--ink);background:var(--accent-soft);
+    }
+
+    .lesson-stage.active .stage-dot{
+      background:var(--accent);
+      box-shadow:0 0 0 5px rgba(255,93,61,.10);
+    }
+
+    .camera-panel{
+      min-width:0;padding:16px;display:flex;flex-direction:column;
+    }
+
+    .camera-stage{
+      position:relative;flex:1;min-height:545px;
+      border-radius:28px;overflow:hidden;isolation:isolate;
+      background:#171714;
+    }
+
+    #cameraVideo{
+      position:absolute;inset:0;width:100%;height:100%;
+      object-fit:cover;transform:scaleX(-1);z-index:1;
+    }
+
+    .camera-vignette{
+      position:absolute;inset:0;z-index:3;pointer-events:none;
+      background:
+        linear-gradient(to bottom,rgba(0,0,0,.18),transparent 22%,transparent 72%,rgba(0,0,0,.43)),
+        radial-gradient(circle at center,transparent 42%,rgba(0,0,0,.14));
+    }
+
+    .placement-guide{
+      position:absolute;z-index:3;left:50%;top:50%;
+      width:min(45%,315px);aspect-ratio:.78;
+      border:1.5px dashed rgba(255,255,255,.38);
+      border-radius:48% 48% 38% 38%;
+      transform:translate(-50%,-50%);
+      opacity:.74;pointer-events:none;
+      transition:opacity .22s ease,transform .22s ease;
+    }
+
+    .placement-guide.hand-found{
+      opacity:.10;transform:translate(-50%,-50%) scale(1.03);
+    }
+
+    .camera-topbar{
+      position:absolute;z-index:4;top:16px;left:16px;right:16px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+
+    .camera-pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:9px 12px;border-radius:999px;
+      color:rgba(255,255,255,.91);
+      background:rgba(19,19,17,.58);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter:blur(12px);
+      font-size:.73rem;font-weight:780;
+    }
+
+    .live-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:#78dda4;
+      box-shadow:0 0 0 4px rgba(120,221,164,.13);
+    }
+
+    .camera-status-wrap{
+      position:absolute;z-index:4;left:18px;right:18px;bottom:18px;
+      display:flex;align-items:end;justify-content:space-between;gap:16px;
+    }
+
+    .camera-status{
+      max-width:520px;color:white;
+      text-shadow:0 2px 16px rgba(0,0,0,.28);
+    }
+
+    .status-title{
+      margin-bottom:4px;
+      font-size:clamp(1.3rem,2.6vw,2.1rem);
+      font-weight:900;letter-spacing:-.04em;
+    }
+
+    .status-subtitle{
+      color:rgba(255,255,255,.73);
+      font-size:.81rem;line-height:1.46;
+    }
+
+    .hold-ring{
+      position:relative;width:82px;height:82px;flex:0 0 82px;
+      border-radius:50%;display:grid;place-items:center;
+      background:conic-gradient(#fff 0deg,rgba(255,255,255,.16) 0deg);
+      box-shadow:0 8px 30px rgba(0,0,0,.18);
+    }
+
+    .hold-ring::after{
+      content:"";position:absolute;width:66px;height:66px;border-radius:50%;
+      background:rgba(20,20,18,.76);backdrop-filter:blur(9px);
+    }
+
+    .hold-ring span{
+      position:relative;z-index:1;color:white;
+      font-size:.73rem;font-weight:900;
+    }
+
+    .camera-overlay{
+      position:absolute;inset:0;z-index:8;
+      display:grid;place-items:center;padding:28px;text-align:center;
+    }
+
+    .camera-overlay.hidden{display:none}
+
+    .loading-overlay,.camera-error{
+      color:white;background:#171714;
+    }
+
+    .loader{
+      width:42px;height:42px;margin:0 auto 18px;border-radius:50%;
+      border:3px solid rgba(255,255,255,.20);
+      border-top-color:white;
+      animation:spin .85s linear infinite;
+    }
+
+    .camera-overlay strong{
+      display:block;margin-bottom:6px;font-size:1.14rem;
+    }
+
+    .camera-overlay p{
+      max-width:470px;margin:0 auto;
+      color:rgba(255,255,255,.64);
+      line-height:1.56;font-size:.84rem;
+    }
+
+    .camera-error .secondary-btn{
+      margin-top:18px;color:white;
+      border-color:rgba(255,255,255,.20);
+      background:rgba(255,255,255,.08);
+    }
+
+    .success-overlay{
+      color:var(--ink);
+      background:rgba(223,242,231,.95);
+      backdrop-filter:blur(13px);
+    }
+
+    .success-card{width:min(100%,460px)}
+
+    .success-check{
+      width:82px;height:82px;margin:0 auto 18px;
+      border-radius:50%;display:grid;place-items:center;
+      color:white;background:var(--success);font-size:2rem;
+      opacity:0;transform:scale(.5);
+      animation:pop .42s cubic-bezier(.2,.9,.3,1.25) forwards;
+    }
+
+    .success-card h2{
+      margin:0;font-size:clamp(2.2rem,5vw,3.8rem);
+      line-height:1;letter-spacing:-.06em;
+    }
+
+    .success-card p{
+      margin:12px 0 24px;color:#4a665a;line-height:1.55;
+    }
+
+    .success-card .primary-btn{
+      background:var(--success);box-shadow:none;
+    }
+
+    /* tutorial */
+    .tutorial-overlay{
+      position:absolute;inset:0;z-index:9;
+      display:grid;place-items:center;padding:24px;
+      background:rgba(243,239,230,.94);
+      backdrop-filter:blur(16px);
+    }
+
+    .tutorial-overlay.hidden{display:none}
+
+    .tutorial-card{
+      width:min(100%,660px);
+      padding:clamp(28px,5vw,48px);
+      border-radius:34px;background:var(--surface);
+      border:1px solid rgba(255,255,255,.86);
+      box-shadow:var(--shadow);text-align:center;
+    }
+
+    .tutorial-count{
+      color:var(--muted);font-size:.75rem;font-weight:850;
+      letter-spacing:.08em;text-transform:uppercase;
+    }
+
+    .tutorial-symbol{
+      margin:16px 0 8px;
+      font-size:clamp(4.8rem,12vw,7.7rem);
+      line-height:1;font-weight:950;letter-spacing:-.075em;
+    }
+
+    .tutorial-diagram{
+      width:min(100%,330px);margin:14px auto 6px;padding:12px;
+      border-radius:22px;background:var(--surface-2);
+      border:1px solid var(--line);
+    }
+
+    .tutorial-diagram svg{
+      display:block;width:100%;height:auto;max-height:230px;
+    }
+
+    .tutorial-card h3{
+      margin:10px 0 0;font-size:1.4rem;
+    }
+
+    .tutorial-card>p{
+      max-width:500px;margin:12px auto 0;
+      color:var(--muted);line-height:1.62;
+    }
+
+    .tutorial-fingers{
+      display:flex;flex-wrap:wrap;justify-content:center;
+      gap:7px;margin-top:20px;
+    }
+
+    .tutorial-actions{
+      display:flex;justify-content:center;gap:10px;
+      flex-wrap:wrap;margin-top:24px;
+    }
+
+    /* practice picker */
+    .practice-picker{
+      position:absolute;inset:0;z-index:9;
+      display:grid;place-items:center;padding:24px;
+      background:rgba(243,239,230,.95);
+      backdrop-filter:blur(16px);
+    }
+
+    .practice-picker.hidden{display:none}
+
+    .practice-card{
+      width:min(100%,820px);
+      padding:clamp(28px,5vw,48px);
+      border-radius:34px;background:var(--surface);
+      border:1px solid rgba(255,255,255,.86);
+      box-shadow:var(--shadow);
+    }
+
+    .practice-card h2{
+      margin:0;font-size:clamp(2.4rem,5vw,4rem);
+      letter-spacing:-.06em;
+    }
+
+    .practice-card>p{
+      margin:12px 0 24px;color:var(--muted);line-height:1.6;
+    }
+
+    .practice-grid{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:10px;
+    }
+
+    .practice-sign{
+      min-height:118px;padding:15px;border-radius:19px;
+      border:1px solid var(--line);background:var(--surface-2);
+      cursor:pointer;text-align:left;
+      transition:transform .16s ease,border-color .16s ease;
+    }
+
+    .practice-sign:hover{
+      transform:translateY(-2px);border-color:var(--ink);
+    }
+
+    .practice-sign strong{
+      display:block;font-size:2rem;letter-spacing:-.06em;margin-bottom:5px;
+    }
+
+    .practice-sign span{
+      color:var(--muted);font-size:.72rem;line-height:1.3;
+    }
+
+    .practice-picker-actions{
+      display:flex;justify-content:flex-end;margin-top:18px;
+    }
+
+    /* completion */
+    .completion{
+      display:none;min-height:calc(100vh - 92px);
+      place-items:center;padding:40px 0 60px;
+    }
+
+    .completion.active{display:grid}
+
+    .completion-card{
+      width:min(100%,940px);
+      padding:clamp(34px,6vw,70px);
+      border-radius:42px;text-align:center;
+      background:rgba(255,253,247,.82);
+      border:1px solid rgba(255,255,255,.88);
+      box-shadow:var(--shadow);
+    }
+
+    .completion-icon{
+      font-size:clamp(5rem,10vw,8rem);
+      margin-bottom:18px;
+      animation:float 4.5s ease-in-out infinite;
+    }
+
+    .completion-card h2{
+      margin:0;font-size:clamp(3rem,7vw,6rem);
+      line-height:.93;letter-spacing:-.075em;
+    }
+
+    .completion-card>p{
+      max-width:640px;margin:18px auto 30px;
+      color:var(--muted);line-height:1.65;
+    }
+
+    .stats-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);
+      gap:11px;margin:30px 0;
+    }
+
+    .stat-card{
+      min-height:126px;padding:20px 12px;
+      display:flex;flex-direction:column;justify-content:center;
+      border-radius:21px;background:rgba(255,255,255,.63);
+      border:1px solid var(--line);
+    }
+
+    .stat-card strong{
+      display:block;margin-bottom:5px;
+      font-size:clamp(1.55rem,4vw,2.15rem);
+      line-height:1;letter-spacing:-.05em;
+    }
+
+    .stat-card span{
+      color:var(--muted);font-size:.74rem;
+    }
+
+    .result-table{
+      display:grid;gap:8px;margin:0 0 28px;
+    }
+
+    .result-row{
+      display:grid;
+      grid-template-columns:70px 1fr 110px 110px;
+      align-items:center;gap:10px;
+      padding:12px 14px;border-radius:16px;
+      background:rgba(255,255,255,.58);
+      border:1px solid var(--line);text-align:left;
+    }
+
+    .result-row strong{font-size:1.05rem}
+
+    .result-row span{
+      color:var(--muted);font-size:.76rem;
+    }
+
+    .result-status{
+      color:var(--success)!important;font-weight:800;
+    }
+
+    .completion-actions{
+      display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+    }
+
+    .completion-credit{
+      margin-top:32px;padding-top:22px;
+      border-top:1px solid var(--line);
+      color:var(--muted);font-size:.77rem;line-height:1.55;
+    }
+
+    .completion-credit strong{color:var(--ink)}
+
+    .debug-box{
+      display:none;margin-top:13px;padding:12px 14px;
+      border-radius:14px;color:#d5f6df;
+      background:rgba(0,0,0,.82);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.69rem;white-space:pre-wrap;
+    }
+
+    .debug-box.active{display:block}
+
+    @keyframes float{
+      0%,100%{transform:translateY(0) rotate(-5deg)}
+      50%{transform:translateY(-10px) rotate(-2deg)}
+    }
+
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    @keyframes pop{
+      to{transform:scale(1);opacity:1}
+    }
+
+    @media(max-width:980px){
+      .hero{grid-template-columns:1fr;gap:34px;padding-top:50px}
+      .hero-demo{min-height:0}
+      .pill-one,.pill-two{display:none}
+      .section-heading{align-items:start;flex-direction:column}
+      .feature-grid{grid-template-columns:1fr}
+      .sign-strip{grid-template-columns:repeat(5,1fr)}
+      .lesson-layout{grid-template-columns:1fr}
+      .lesson-panel{min-height:0}
+      .lesson-stages{margin-top:28px}
+      .camera-stage{min-height:min(70vh,690px)}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media(max-width:680px){
+      .page{width:min(calc(100% - 28px),var(--max))}
+      .site-header{padding:18px 0}
+      .text-link{display:none}
+      .hero{min-height:auto;padding:44px 0 70px}
+      h1{font-size:clamp(3.45rem,18vw,5.6rem)}
+      .demo-card{min-height:500px;padding:20px;border-radius:28px}
+      .mode-options{grid-template-columns:1fr}
+      .app{width:min(calc(100% - 20px),1200px);padding-top:10px}
+      .app-header{grid-template-columns:1fr auto}
+      .app-title{display:none}
+      .lesson-panel,.camera-panel{border-radius:28px}
+      .lesson-panel{padding:24px}
+      .target-sign{font-size:5.4rem}
+      .camera-panel{padding:10px}
+      .camera-stage{min-height:62vh;border-radius:22px}
+      .placement-guide{width:55%}
+      .hold-ring{width:70px;height:70px;flex-basis:70px}
+      .hold-ring::after{width:56px;height:56px}
+      .tutorial-actions{flex-direction:column}
+      .tutorial-actions>*{width:100%}
+      .practice-grid{grid-template-columns:repeat(2,1fr)}
+      .stats-grid{grid-template-columns:1fr 1fr}
+      .result-row{grid-template-columns:52px 1fr 88px}
+      .result-row .result-time{display:none}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        animation-duration:.001ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.001ms!important;
+        scroll-behavior:auto!important;
+      }
+    }
+  </style>
+</head>
+
+<body class="no-scroll">
+
+  <div class="overlay" id="entryNotice" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-kicker">SIGN · V0.3.1 · 2026</div>
+      <h2>Personal practice, without fake precision.</h2>
+
+      <p>
+        SIGN V0.3.1 removes the experimental confidence percentage and focuses on
+        clearer interaction: hand detected, shape matched, clean camera view, six-second stable hold,
+        audible countdown, and meaningful session feedback.
+      </p>
+
+      <div class="credit-block">
+        <strong>Designed &amp; developed by Marcus Zhong</strong>
+        <span>Concept, interaction design, front-end development, and prototyping.</span>
+      </div>
+
+      <button class="primary-btn" id="enterExperienceBtn">
+        Enter experience →
+      </button>
+
+      <p class="modal-small">
+        This prototype recognizes a small set of isolated static handshapes.
+        It is not a full ASL translator.
+      </p>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="modeOverlay" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-kicker">Choose a session</div>
+      <h2>How do you want to practice?</h2>
+
+      <p>
+        Learn teaches each handshape, Practice lets you choose one freely,
+        and Challenge randomizes all ten.
+      </p>
+
+      <div class="mode-options">
+        <button class="mode-card selected" data-mode="learn">
+          <div class="mode-icon">L</div>
+          <strong>Learn</strong>
+          <span>Tutorial → camera → correction → six-second confirmation.</span>
+        </button>
+
+        <button class="mode-card" data-mode="practice">
+          <div class="mode-icon">P</div>
+          <strong>Practice</strong>
+          <span>Choose any handshape and repeat it without a fixed lesson order.</span>
+        </button>
+
+        <button class="mode-card" data-mode="challenge">
+          <div class="mode-icon">C</div>
+          <strong>Challenge</strong>
+          <span>Ten randomized handshapes with no tutorial before each sign.</span>
+        </button>
+      </div>
+
+      <div class="modal-row">
+        <button class="secondary-btn" id="cancelModeBtn">Cancel</button>
+        <button class="primary-btn" id="beginSessionBtn">Begin Learn →</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="page">
+      <header class="site-header">
+        <div class="brand">
+          <span class="brand-mark">S</span>
+          SIGN
+        </div>
+
+        <div class="header-actions">
+          <a class="text-link" href="#v031">What's new</a>
+
+          <button class="sound-btn sound-toggle" aria-label="Toggle sound">
+            <span class="sound-icon">🔊</span>
+            <span class="sound-label">Sound</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            Personal ASL handshape practice
+          </div>
+
+          <h1>Learn. Hold. Remember.</h1>
+
+          <p class="hero-copy">
+            SIGN V0.3.1 keeps recognition simple and understandable.
+            Make the target handshape, follow direct correction, then hold it
+            steadily for six seconds while the interface counts down with you.
+          </p>
+
+          <div class="hero-actions">
+            <button class="primary-btn" id="startSessionBtn">Start V0.3.1 →</button>
+            <a class="secondary-btn" href="#v031" style="text-decoration:none">
+              See what's new
+            </a>
+          </div>
+
+          <p class="microcopy">
+            10 handshapes · Learn / Practice / Challenge · 6-second stable hold ·
+            audible countdown · attempts + recognition-time feedback
+          </p>
+        </div>
+
+        <div class="hero-demo" aria-hidden="true">
+          <div class="floating-pill pill-one">No confidence percentage</div>
+          <div class="floating-pill pill-two">6 → 1 audible countdown</div>
+
+          <div class="demo-card">
+            <div class="demo-top">
+              <span>V0.3.1</span>
+              <span>Practice flow</span>
+            </div>
+
+            <div class="demo-center">
+              <div class="demo-sign">W</div>
+              <div class="demo-caption">Target handshape</div>
+            </div>
+
+            <div class="demo-feedback">
+              <div class="feedback-step done">
+                <span class="dot"></span>
+                Hand detected
+              </div>
+
+              <div class="feedback-step done">
+                <span class="dot"></span>
+                Shape matched
+              </div>
+
+              <div class="feedback-step active">
+                <span class="dot"></span>
+                Hold steady · 4
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="v031">
+        <div class="section-heading">
+          <h2>Less scoring.<br/>Better feedback.</h2>
+
+          <p>
+            V0.3.1 removes the artificial confidence percentage. Users now get
+            concrete guidance based on finger state, a longer stability check,
+            and session statistics based on actual behavior instead of a synthetic score.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon">10</div>
+            <div>
+              <h3>Ten handshapes</h3>
+              <p>A, B, C, D, L, V, W, Y, ILY, and STOP are available in one prototype.</p>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">6</div>
+            <div>
+              <h3>Six-second confirmation</h3>
+              <p>A correct handshape must stay continuously matched before it is confirmed.</p>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">♪</div>
+            <div>
+              <h3>Audible countdown</h3>
+              <p>Every remaining second has a short tone, followed by a distinct success sound.</p>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">P</div>
+            <div>
+              <h3>Personal Practice</h3>
+              <p>Pick one handshape directly without completing a full lesson sequence.</p>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">↻</div>
+            <div>
+              <h3>Attempt tracking</h3>
+              <p>When a matched pose breaks during the countdown, the attempt counter records the reset.</p>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">↗</div>
+            <div>
+              <h3>Useful session results</h3>
+              <p>Average recognition time, fastest sign, and most-attempted sign are summarized.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="sign-strip">
+          <div class="sign-chip"><strong>A</strong><span>letter</span></div>
+          <div class="sign-chip"><strong>B</strong><span>letter</span></div>
+          <div class="sign-chip"><strong>C</strong><span>letter</span></div>
+          <div class="sign-chip"><strong>D</strong><span>letter</span></div>
+          <div class="sign-chip"><strong>L</strong><span>letter</span></div>
+          <div class="sign-chip"><strong>V</strong><span>letter</span></div>
+          <div class="sign-chip"><strong>W</strong><span>letter</span></div>
+          <div class="sign-chip"><strong>Y</strong><span>letter</span></div>
+          <div class="sign-chip"><strong>ILY</strong><span>handshape</span></div>
+          <div class="sign-chip"><strong>STOP</strong><span>open palm</span></div>
+        </div>
+      </section>
+
+      <footer>
+        <strong>SIGN — Designed &amp; developed by Marcus Zhong.</strong><br/>
+        An evolving prototype. Recognition quality, learning content, and interaction
+        design will continue to be updated in future versions.
+        <br/><br/>
+        Prototype note: ASL is a complete natural language with grammar, movement,
+        facial expression, spatial structure, and more. SIGN V0.3.1 focuses on a
+        small set of isolated static handshapes and is not an ASL translator.
+      </footer>
+    </div>
+  </main>
+
+  <section class="app-shell" id="appShell" aria-hidden="true">
+    <div class="app">
+
+      <div id="lessonExperience">
+
+        <header class="app-header">
+          <div class="progress-text" id="lessonProgressText">01 / 10</div>
+          <div class="app-title" id="appTitle">SIGN · Learn</div>
+
+          <div class="app-actions">
+            <button class="icon-btn sound-toggle" aria-label="Toggle sound">
+              <span class="sound-icon">🔊</span>
+            </button>
+
+            <button class="icon-btn" id="closeBtn" aria-label="Close trainer">
+              ×
+            </button>
+          </div>
+        </header>
+
+        <div class="top-progress">
+          <div class="top-progress-bar" id="topProgressBar"></div>
+        </div>
+
+        <div class="lesson-layout">
+          <aside class="lesson-panel">
+            <div class="lesson-kicker" id="lessonKicker">Make the handshape</div>
+
+            <div class="target-sign" id="targetSign">A</div>
+            <div class="target-name" id="targetName">Letter A</div>
+
+            <p class="target-instruction" id="targetInstruction"></p>
+
+            <div class="diagram-card">
+              <div class="diagram-head">
+                <strong>Handshape guide</strong>
+                <span>schematic</span>
+              </div>
+
+              <div class="hand-diagram" id="lessonHandDiagram"></div>
+            </div>
+
+            <div class="finger-guide" id="fingerGuide"></div>
+
+            <div class="lesson-stages">
+              <div class="lesson-stage" id="stageHand">
+                <span class="stage-dot"></span>
+                <span>Hand detected</span>
+              </div>
+
+              <div class="lesson-stage" id="stageShape">
+                <span class="stage-dot"></span>
+                <span>Shape matched</span>
+              </div>
+
+              <div class="lesson-stage" id="stageHold">
+                <span class="stage-dot"></span>
+                <span>6-second confirmation</span>
+              </div>
+            </div>
+
+            <div class="debug-box" id="debugBox"></div>
+          </aside>
+
+          <section class="camera-panel">
+            <div class="camera-stage">
+              <video id="cameraVideo" autoplay playsinline muted></video>
+              <div class="camera-vignette"></div>
+              <div class="placement-guide" id="placementGuide"></div>
+
+              <div class="camera-topbar">
+                <div class="camera-pill">
+                  <span class="live-dot"></span>
+                  On-device hand recognition
+                </div>
+
+                <div class="camera-pill" id="handednessPill">
+                  Waiting for hand
+                </div>
+              </div>
+
+              <div class="camera-status-wrap">
+                <div class="camera-status">
+                  <div class="status-title" id="statusTitle">
+                    Show your hand
+                  </div>
+
+                  <div class="status-subtitle" id="statusSubtitle">
+                    Keep one hand centered inside the guide.
+                  </div>
+                </div>
+
+                <div class="hold-ring" id="holdRing">
+                  <span id="holdLabel">6s</span>
+                </div>
+              </div>
+
+              <div class="camera-overlay loading-overlay" id="loadingOverlay">
+                <div>
+                  <div class="loader"></div>
+                  <strong>Starting recognition</strong>
+                  <p>Loading MediaPipe and requesting camera access.</p>
+                </div>
+              </div>
+
+              <div class="camera-overlay camera-error hidden" id="cameraError">
+                <div>
+                  <strong>Camera access is required</strong>
+                  <p id="cameraErrorText">
+                    Allow camera permission, then try again.
+                  </p>
+                  <button class="secondary-btn" id="retryCameraBtn">
+                    Try again
+                  </button>
+                </div>
+              </div>
+
+              <div class="camera-overlay success-overlay hidden" id="successOverlay">
+                <div class="success-card">
+                  <div class="success-check">✓</div>
+
+                  <h2 id="successTitle">
+                    Confirmed.
+                  </h2>
+
+                  <p id="successText">
+                    Handshape recognized.
+                  </p>
+
+                  <button class="primary-btn" id="nextBtn">
+                    Next sign →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="tutorial-overlay hidden" id="tutorialOverlay">
+          <div class="tutorial-card">
+            <div class="tutorial-count" id="tutorialCount">
+              Lesson 1 of 10
+            </div>
+
+            <div class="tutorial-symbol" id="tutorialSymbol">A</div>
+            <div class="tutorial-diagram" id="tutorialHandDiagram"></div>
+
+            <h3 id="tutorialTitle">Letter A</h3>
+            <p id="tutorialText"></p>
+
+            <div class="tutorial-fingers" id="tutorialFingers"></div>
+
+            <div class="tutorial-actions">
+              <button class="secondary-btn" id="skipTutorialBtn">
+                Skip tutorial
+              </button>
+
+              <button class="primary-btn" id="readyBtn">
+                I'm ready →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-picker hidden" id="practicePicker">
+          <div class="practice-card">
+            <h2>Choose a handshape.</h2>
+
+            <p>
+              Practice mode has no fixed order. Pick any handshape and return
+              here after each successful attempt.
+            </p>
+
+            <div class="practice-grid" id="practiceGrid"></div>
+
+            <div class="practice-picker-actions">
+              <button class="secondary-btn" id="practiceHomeBtn">
+                Back to home
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="completion" id="completionScreen">
+        <div class="completion-card">
+          <div class="completion-icon">🤟</div>
+
+          <h2>Session complete.</h2>
+
+          <p id="completionMessage"></p>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <strong id="completedStat">—</strong>
+              <span>Handshapes completed</span>
+            </div>
+
+            <div class="stat-card">
+              <strong id="avgTimeStat">—</strong>
+              <span>Average recognition time</span>
+            </div>
+
+            <div class="stat-card">
+              <strong id="fastestStat">—</strong>
+              <span>Fastest handshape</span>
+            </div>
+
+            <div class="stat-card">
+              <strong id="mostAttemptsStat">—</strong>
+              <span>Most attempts</span>
+            </div>
+          </div>
+
+          <div class="result-table" id="resultTable"></div>
+
+          <div class="completion-actions">
+            <button class="primary-btn" id="practiceWeakBtn">
+              Practice most-attempted sign
+            </button>
+
+            <button class="secondary-btn" id="tryAgainBtn">
+              Repeat session
+            </button>
+
+            <button class="secondary-btn" id="switchModeBtn">
+              Switch mode
+            </button>
+
+            <button class="ghost-btn" id="backHomeBtn">
+              Back to home
+            </button>
+          </div>
+
+          <div class="completion-credit">
+            <strong>Designed &amp; developed by Marcus Zhong.</strong><br/>
+            SIGN is an evolving prototype. V0.3.1 focuses on clearer interaction
+            and observable user behavior rather than synthetic confidence percentages.
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <script type="module">
+    import {
+      HandLandmarker,
+      FilesetResolver
+    } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/+esm";
+
+    const DEBUG = new URLSearchParams(location.search).get("debug") === "1";
+    const HOLD_DURATION_MS = 6000;
+
+    const LESSONS = [
+      {
+        id:"A",
+        sign:"A",
+        name:"Letter A",
+        instruction:"Fold all four fingers into a fist and keep the thumb close to the side of the hand.",
+        expected:{thumb:"closed",index:"closed",middle:"closed",ring:"closed",pinky:"closed"}
+      },
+      {
+        id:"B",
+        sign:"B",
+        name:"Letter B",
+        instruction:"Extend index, middle, ring, and pinky together. Keep the thumb folded close to the palm.",
+        expected:{thumb:"closed",index:"open",middle:"open",ring:"open",pinky:"open"}
+      },
+      {
+        id:"C",
+        sign:"C",
+        name:"Letter C",
+        instruction:"Curve all fingers and the thumb to create an open C-shaped space. Do not fully straighten or fully close the hand.",
+        expected:{thumb:"mid",index:"mid",middle:"mid",ring:"mid",pinky:"mid"},
+        special:"curved"
+      },
+      {
+        id:"D",
+        sign:"D",
+        name:"Letter D",
+        instruction:"Extend the index finger. Curve the other fingers toward the thumb to form the lower part of the shape.",
+        expected:{thumb:"closed",index:"open",middle:"closed",ring:"closed",pinky:"closed"},
+        special:"d"
+      },
+      {
+        id:"L",
+        sign:"L",
+        name:"Letter L",
+        instruction:"Extend the index finger and spread the thumb. Keep middle, ring, and pinky folded.",
+        expected:{thumb:"open",index:"open",middle:"closed",ring:"closed",pinky:"closed"}
+      },
+      {
+        id:"V",
+        sign:"V",
+        name:"Letter V",
+        instruction:"Extend index and middle fingers. Keep ring and pinky folded and the thumb close to the palm.",
+        expected:{thumb:"closed",index:"open",middle:"open",ring:"closed",pinky:"closed"}
+      },
+      {
+        id:"W",
+        sign:"W",
+        name:"Letter W",
+        instruction:"Extend index, middle, and ring fingers. Fold the pinky and keep the thumb close to the palm.",
+        expected:{thumb:"closed",index:"open",middle:"open",ring:"open",pinky:"closed"}
+      },
+      {
+        id:"Y",
+        sign:"Y",
+        name:"Letter Y",
+        instruction:"Spread the thumb and pinky. Fold index, middle, and ring fingers.",
+        expected:{thumb:"open",index:"closed",middle:"closed",ring:"closed",pinky:"open"}
+      },
+      {
+        id:"ILY",
+        sign:"ILY",
+        name:"I LOVE YOU",
+        instruction:"Extend thumb, index, and pinky. Fold middle and ring fingers.",
+        expected:{thumb:"open",index:"open",middle:"closed",ring:"closed",pinky:"open"}
+      },
+      {
+        id:"STOP",
+        sign:"STOP",
+        name:"Open Palm / Stop",
+        instruction:"Open the full hand with all four fingers extended and the thumb spread away from the palm.",
+        expected:{thumb:"open",index:"open",middle:"open",ring:"open",pinky:"open"}
+      }
+    ];
+
+    const HAND_CONNECTIONS = [
+      [0,1],[1,2],[2,3],[3,4],
+      [0,5],[5,6],[6,7],[7,8],
+      [5,9],[9,10],[10,11],[11,12],
+      [9,13],[13,14],[14,15],[15,16],
+      [13,17],[17,18],[18,19],[19,20],
+      [0,17]
+    ];
+
+    const FINGER_NAMES = {
+      thumb:"thumb",
+      index:"index finger",
+      middle:"middle finger",
+      ring:"ring finger",
+      pinky:"pinky"
+    };
+
+    const entryNotice = document.querySelector("#entryNotice");
+    const enterExperienceBtn = document.querySelector("#enterExperienceBtn");
+
+    const modeOverlay = document.querySelector("#modeOverlay");
+    const modeCards = [...document.querySelectorAll(".mode-card")];
+    const beginSessionBtn = document.querySelector("#beginSessionBtn");
+    const cancelModeBtn = document.querySelector("#cancelModeBtn");
+    const startSessionBtn = document.querySelector("#startSessionBtn");
+
+    const soundToggles = [...document.querySelectorAll(".sound-toggle")];
+    const soundIcons = [...document.querySelectorAll(".sound-icon")];
+    const soundLabels = [...document.querySelectorAll(".sound-label")];
+
+    const appShell = document.querySelector("#appShell");
+    const lessonExperience = document.querySelector("#lessonExperience");
+    const completionScreen = document.querySelector("#completionScreen");
+    const closeBtn = document.querySelector("#closeBtn");
+
+    const lessonProgressText = document.querySelector("#lessonProgressText");
+    const appTitle = document.querySelector("#appTitle");
+    const topProgressBar = document.querySelector("#topProgressBar");
+    const lessonKicker = document.querySelector("#lessonKicker");
+    const targetSign = document.querySelector("#targetSign");
+    const targetName = document.querySelector("#targetName");
+    const targetInstruction = document.querySelector("#targetInstruction");
+    const lessonHandDiagram = document.querySelector("#lessonHandDiagram");
+    const fingerGuide = document.querySelector("#fingerGuide");
+
+    const stageHand = document.querySelector("#stageHand");
+    const stageShape = document.querySelector("#stageShape");
+    const stageHold = document.querySelector("#stageHold");
+
+    const tutorialOverlay = document.querySelector("#tutorialOverlay");
+    const tutorialCount = document.querySelector("#tutorialCount");
+    const tutorialSymbol = document.querySelector("#tutorialSymbol");
+    const tutorialHandDiagram = document.querySelector("#tutorialHandDiagram");
+    const tutorialTitle = document.querySelector("#tutorialTitle");
+    const tutorialText = document.querySelector("#tutorialText");
+    const tutorialFingers = document.querySelector("#tutorialFingers");
+    const readyBtn = document.querySelector("#readyBtn");
+    const skipTutorialBtn = document.querySelector("#skipTutorialBtn");
+
+    const practicePicker = document.querySelector("#practicePicker");
+    const practiceGrid = document.querySelector("#practiceGrid");
+    const practiceHomeBtn = document.querySelector("#practiceHomeBtn");
+
+    const video = document.querySelector("#cameraVideo");
+
+    const placementGuide = document.querySelector("#placementGuide");
+    const handednessPill = document.querySelector("#handednessPill");
+    const statusTitle = document.querySelector("#statusTitle");
+    const statusSubtitle = document.querySelector("#statusSubtitle");
+    const holdRing = document.querySelector("#holdRing");
+    const holdLabel = document.querySelector("#holdLabel");
+
+    const loadingOverlay = document.querySelector("#loadingOverlay");
+    const cameraError = document.querySelector("#cameraError");
+    const cameraErrorText = document.querySelector("#cameraErrorText");
+    const retryCameraBtn = document.querySelector("#retryCameraBtn");
+
+    const successOverlay = document.querySelector("#successOverlay");
+    const successTitle = document.querySelector("#successTitle");
+    const successText = document.querySelector("#successText");
+    const nextBtn = document.querySelector("#nextBtn");
+
+    const completedStat = document.querySelector("#completedStat");
+    const avgTimeStat = document.querySelector("#avgTimeStat");
+    const fastestStat = document.querySelector("#fastestStat");
+    const mostAttemptsStat = document.querySelector("#mostAttemptsStat");
+    const completionMessage = document.querySelector("#completionMessage");
+    const resultTable = document.querySelector("#resultTable");
+    const practiceWeakBtn = document.querySelector("#practiceWeakBtn");
+    const tryAgainBtn = document.querySelector("#tryAgainBtn");
+    const switchModeBtn = document.querySelector("#switchModeBtn");
+    const backHomeBtn = document.querySelector("#backHomeBtn");
+    const debugBox = document.querySelector("#debugBox");
+
+    if(DEBUG) debugBox.classList.add("active");
+
+    let selectedMode = "learn";
+    let sessionMode = "learn";
+    let sessionLessons = [...LESSONS];
+    let currentLessonIndex = 0;
+    let practiceLesson = null;
+
+    let handLandmarker = null;
+    let mediaStream = null;
+    let animationFrameId = null;
+    let lastVideoTime = -1;
+    let appRunning = false;
+    let lessonLocked = false;
+
+    let holdStartTime = null;
+    let lastCountdownSecond = null;
+    let lessonStartTime = null;
+    let currentAttempts = 1;
+    let hadActiveHold = false;
+
+    let sessionResults = [];
+
+    const SoundEngine = {
+      enabled:true,
+      context:null,
+
+      async unlock(){
+        if(!this.context){
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+          if(!AudioContext){
+            this.enabled=false;
+            updateSoundButtons();
+            return;
+          }
+
+          this.context = new AudioContext();
+        }
+
+        if(this.context.state === "suspended"){
+          try{
+            await this.context.resume();
+          }catch(error){}
+        }
+      },
+
+      tone({
+        frequency=440,
+        endFrequency=frequency,
+        duration=.1,
+        gain=.025,
+        type="sine",
+        delay=0
+      }={}){
+        if(!this.enabled || !this.context) return;
+
+        const now = this.context.currentTime + delay;
+        const osc = this.context.createOscillator();
+        const amp = this.context.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(frequency, now);
+
+        osc.frequency.exponentialRampToValueAtTime(
+          Math.max(1, endFrequency),
+          now + duration
+        );
+
+        amp.gain.setValueAtTime(.0001, now);
+        amp.gain.exponentialRampToValueAtTime(gain, now + .018);
+        amp.gain.exponentialRampToValueAtTime(.0001, now + duration);
+
+        osc.connect(amp);
+        amp.connect(this.context.destination);
+
+        osc.start(now);
+        osc.stop(now + duration + .03);
+      },
+
+      toggle(){
+        this.enabled = !this.enabled;
+        updateSoundButtons();
+
+        if(this.enabled){
+          this.unlock().then(() => this.tap());
+        }
+      },
+
+      tap(){
+        this.tone({
+          frequency:520,
+          endFrequency:610,
+          duration:.075,
+          gain:.02
+        });
+      },
+
+      enter(){
+        this.tone({
+          frequency:390,
+          endFrequency:540,
+          duration:.18,
+          gain:.03
+        });
+
+        this.tone({
+          frequency:620,
+          endFrequency:690,
+          duration:.17,
+          gain:.022,
+          delay:.09
+        });
+      },
+
+      handDetected(){
+        this.tone({
+          frequency:610,
+          endFrequency:690,
+          duration:.07,
+          gain:.016,
+          type:"triangle"
+        });
+      },
+
+      matched(){
+        this.tone({
+          frequency:470,
+          endFrequency:590,
+          duration:.09,
+          gain:.02
+        });
+      },
+
+      countdown(second){
+        const frequency = 520 + (6-second) * 55;
+
+        this.tone({
+          frequency,
+          endFrequency:frequency * 1.04,
+          duration:second === 1 ? .14 : .085,
+          gain:second <= 2 ? .038 : .026
+        });
+      },
+
+      success(){
+        this.tone({
+          frequency:523.25,
+          endFrequency:659.25,
+          duration:.18,
+          gain:.038
+        });
+
+        this.tone({
+          frequency:659.25,
+          endFrequency:783.99,
+          duration:.22,
+          gain:.032,
+          delay:.10
+        });
+      },
+
+      complete(){
+        [
+          [523.25,0],
+          [659.25,.11],
+          [783.99,.22],
+          [1046.5,.36]
+        ].forEach(([frequency,delay])=>{
+          this.tone({
+            frequency,
+            endFrequency:frequency*1.03,
+            duration:.26,
+            gain:.03,
+            delay
+          });
+        });
+      }
+    };
+
+    function updateSoundButtons(){
+      const icon = SoundEngine.enabled ? "🔊" : "🔇";
+
+      soundIcons.forEach(el => el.textContent = icon);
+
+      soundLabels.forEach(el => {
+        el.textContent = SoundEngine.enabled ? "Sound" : "Muted";
+      });
+    }
+
+    soundToggles.forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        await SoundEngine.unlock();
+        SoundEngine.toggle();
+      });
+    });
+
+    function clamp(v,min=0,max=1){
+      return Math.max(min,Math.min(max,v));
+    }
+
+    function distance(a,b){
+      return Math.hypot(
+        a.x-b.x,
+        a.y-b.y,
+        (a.z??0)-(b.z??0)
+      );
+    }
+
+    function angleDegrees(a,b,c){
+      const ab={
+        x:a.x-b.x,
+        y:a.y-b.y,
+        z:(a.z??0)-(b.z??0)
+      };
+
+      const cb={
+        x:c.x-b.x,
+        y:c.y-b.y,
+        z:(c.z??0)-(b.z??0)
+      };
+
+      const dot=
+        ab.x*cb.x+
+        ab.y*cb.y+
+        ab.z*cb.z;
+
+      const magAB=Math.hypot(ab.x,ab.y,ab.z);
+      const magCB=Math.hypot(cb.x,cb.y,cb.z);
+
+      if(!magAB || !magCB) return 0;
+
+      const cosine=Math.max(
+        -1,
+        Math.min(1,dot/(magAB*magCB))
+      );
+
+      return Math.acos(cosine)*180/Math.PI;
+    }
+
+    function palmCenter(lm){
+      const ids=[0,5,9,13,17];
+
+      const sum=ids.reduce(
+        (acc,i)=>({
+          x:acc.x+lm[i].x,
+          y:acc.y+lm[i].y,
+          z:acc.z+(lm[i].z??0)
+        }),
+        {x:0,y:0,z:0}
+      );
+
+      return{
+        x:sum.x/ids.length,
+        y:sum.y/ids.length,
+        z:sum.z/ids.length
+      };
+    }
+
+    function fingerExtensionValue(lm,mcp,pip,dip,tip){
+      const pipAngle=angleDegrees(lm[mcp],lm[pip],lm[dip]);
+      const dipAngle=angleDegrees(lm[pip],lm[dip],lm[tip]);
+
+      const wrist=lm[0];
+
+      const reach=
+        distance(lm[tip],wrist)/
+        (distance(lm[mcp],wrist)||.001);
+
+      const angleScore=
+        clamp((pipAngle-90)/80)*.55+
+        clamp((dipAngle-90)/80)*.25;
+
+      const reachScore=
+        clamp((reach-.95)/.65)*.20;
+
+      return clamp(angleScore+reachScore);
+    }
+
+    function thumbSpreadValue(lm){
+      const palmWidth=distance(lm[5],lm[17])||.001;
+      const center=palmCenter(lm);
+
+      const angle=angleDegrees(lm[2],lm[3],lm[4]);
+      const centerDist=distance(lm[4],center)/palmWidth;
+      const indexDist=distance(lm[4],lm[5])/palmWidth;
+
+      return clamp(
+        clamp((angle-95)/70)*.38+
+        clamp((centerDist-.50)/.70)*.34+
+        clamp((indexDist-.35)/.70)*.28
+      );
+    }
+
+    function getFingerValues(lm){
+      return{
+        thumb:thumbSpreadValue(lm),
+        index:fingerExtensionValue(lm,5,6,7,8),
+        middle:fingerExtensionValue(lm,9,10,11,12),
+        ring:fingerExtensionValue(lm,13,14,15,16),
+        pinky:fingerExtensionValue(lm,17,18,19,20)
+      };
+    }
+
+    function toFingerState(value){
+      if(value >= .62) return "open";
+      if(value <= .38) return "closed";
+      return "mid";
+    }
+
+    function getFingerStates(values){
+      return{
+        thumb:toFingerState(values.thumb),
+        index:toFingerState(values.index),
+        middle:toFingerState(values.middle),
+        ring:toFingerState(values.ring),
+        pinky:toFingerState(values.pinky)
+      };
+    }
+
+    function classifyTarget(values,states,lesson){
+      if(lesson.special === "curved"){
+        const allCurved = [
+          values.thumb,
+          values.index,
+          values.middle,
+          values.ring,
+          values.pinky
+        ].every(v => v > .30 && v < .78);
+
+        return{
+          matched:allCurved,
+          mismatches:allCurved ? [] : ["curve"]
+        };
+      }
+
+      const mismatches=[];
+
+      for(const [finger,expected] of Object.entries(lesson.expected)){
+        if(expected === "mid"){
+          const v = values[finger];
+
+          if(v < .28 || v > .80){
+            mismatches.push(finger);
+          }
+        }else if(states[finger] !== expected){
+          mismatches.push(finger);
+        }
+      }
+
+      return{
+        matched:mismatches.length===0,
+        mismatches
+      };
+    }
+
+    function handBounds(lm){
+      const xs=lm.map(p=>p.x);
+      const ys=lm.map(p=>p.y);
+
+      const minX=Math.min(...xs);
+      const maxX=Math.max(...xs);
+      const minY=Math.min(...ys);
+      const maxY=Math.max(...ys);
+
+      return{
+        width:maxX-minX,
+        height:maxY-minY,
+        centerX:(minX+maxX)/2,
+        centerY:(minY+maxY)/2
+      };
+    }
+
+    function correctionMessage(lm,values,states,lesson,result){
+      const box=handBounds(lm);
+
+      if(box.width < .15 || box.height < .22){
+        return "Move your hand a little closer to the camera.";
+      }
+
+      if(box.width > .72 || box.height > .88){
+        return "Move your hand slightly farther from the camera.";
+      }
+
+      if(
+        box.centerX < .22 ||
+        box.centerX > .78 ||
+        box.centerY < .20 ||
+        box.centerY > .80
+      ){
+        return "Move your hand toward the center of the guide.";
+      }
+
+      if(lesson.special === "curved"){
+        return "Curve the fingers and thumb into a C shape. Avoid a fully open or fully closed hand.";
+      }
+
+      const finger=result.mismatches[0];
+
+      if(!finger){
+        return "Adjust your hand slightly.";
+      }
+
+      const expected=lesson.expected[finger];
+
+      if(expected === "open"){
+        return `Open or extend your ${FINGER_NAMES[finger]}.`;
+      }
+
+      if(expected === "closed"){
+        return `Fold or relax your ${FINGER_NAMES[finger]}.`;
+      }
+
+      return `Curve your ${FINGER_NAMES[finger]} slightly.`;
+    }
+
+    function createHandDiagramSVG(lesson){
+      const state=lesson.expected;
+
+      const fingerX={
+        index:111,
+        middle:139,
+        ring:167,
+        pinky:195
+      };
+
+      const openTop={
+        index:35,
+        middle:22,
+        ring:33,
+        pinky:53
+      };
+
+      function fingerPath(name){
+        const x=fingerX[name];
+        const expected=state[name];
+
+        if(expected === "open"){
+          return `
+            <path
+              d="M ${x} 126 L ${x} ${openTop[name]}"
+              fill="none"
+              stroke="#171714"
+              stroke-width="19"
+              stroke-linecap="round"
+            />
+            <circle
+              cx="${x}"
+              cy="${openTop[name]}"
+              r="6"
+              fill="#ff5d3d"
+            />
+          `;
+        }
+
+        if(expected === "mid"){
+          const endY = 82;
+
+          return `
+            <path
+              d="M ${x} 126
+                 Q ${x-4} 94 ${x-15} ${endY}
+                 Q ${x-22} ${endY+12} ${x-18} 112"
+              fill="none"
+              stroke="#171714"
+              stroke-width="18"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle
+              cx="${x-15}"
+              cy="${endY}"
+              r="5.5"
+              fill="#ff5d3d"
+            />
+          `;
+        }
+
+        const bendX=x-(name==="pinky"?10:7);
+        const bendY=name==="pinky"?91:87;
+
+        return `
+          <path
+            d="M ${x} 127
+               Q ${x} 104 ${bendX} ${bendY}
+               Q ${bendX-9} ${bendY+10} ${x-18} 111"
+            fill="none"
+            stroke="#171714"
+            stroke-width="18"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle
+            cx="${x-18}"
+            cy="111"
+            r="5.5"
+            fill="#ff5d3d"
+          />
+        `;
+      }
+
+      let thumb;
+
+      if(state.thumb === "open"){
+        thumb=`
+          <path
+            d="M 91 148 Q 64 132 39 105"
+            fill="none"
+            stroke="#171714"
+            stroke-width="20"
+            stroke-linecap="round"
+          />
+          <circle cx="39" cy="105" r="6" fill="#ff5d3d"/>
+        `;
+      }else if(state.thumb === "mid"){
+        thumb=`
+          <path
+            d="M 93 148 Q 77 143 62 128"
+            fill="none"
+            stroke="#171714"
+            stroke-width="19"
+            stroke-linecap="round"
+          />
+          <circle cx="62" cy="128" r="5.5" fill="#ff5d3d"/>
+        `;
+      }else{
+        thumb=`
+          <path
+            d="M 92 146 Q 112 158 139 161"
+            fill="none"
+            stroke="#171714"
+            stroke-width="19"
+            stroke-linecap="round"
+          />
+          <circle cx="139" cy="161" r="5.5" fill="#ff5d3d"/>
+        `;
+      }
+
+      return `
+        <svg
+          viewBox="0 0 250 260"
+          role="img"
+          aria-label="${lesson.name} schematic handshape"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            x="84"
+            y="112"
+            width="122"
+            height="108"
+            rx="42"
+            fill="#f3efe6"
+            stroke="#171714"
+            stroke-width="7"
+          />
+
+          <rect
+            x="115"
+            y="205"
+            width="60"
+            height="48"
+            rx="20"
+            fill="#f3efe6"
+            stroke="#171714"
+            stroke-width="7"
+          />
+
+          ${["index","middle","ring","pinky"].map(fingerPath).join("")}
+          ${thumb}
+
+          <circle
+            cx="145"
+            cy="164"
+            r="28"
+            fill="none"
+            stroke="rgba(23,23,20,.08)"
+            stroke-width="2"
+          />
+
+          <text
+            x="145"
+            y="171"
+            text-anchor="middle"
+            font-size="21"
+            font-weight="900"
+            font-family="Inter,Arial,sans-serif"
+            fill="#171714"
+          >${lesson.sign}</text>
+        </svg>
+      `;
+    }
+
+    function fingerChipsHTML(lesson){
+      return Object.entries(lesson.expected)
+        .map(([finger,state])=>{
+          const openClass = state === "open" ? "open" : "";
+
+          return `
+            <span class="finger-chip ${openClass}">
+              ${FINGER_NAMES[finger]} · ${state}
+            </span>
+          `;
+        })
+        .join("");
+    }
+
+    function currentLesson(){
+      if(sessionMode === "practice"){
+        return practiceLesson;
+      }
+
+      return sessionLessons[currentLessonIndex];
+    }
+
+    function shuffle(array){
+      const copy=[...array];
+
+      for(let i=copy.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [copy[i],copy[j]]=[copy[j],copy[i]];
+      }
+
+      return copy;
+    }
+
+    function setStatus(title,subtitle){
+      statusTitle.textContent=title;
+      statusSubtitle.textContent=subtitle;
+    }
+
+    function setHoldProgress(progress,remainingMs=HOLD_DURATION_MS){
+      const p=clamp(progress);
+      const degrees=Math.round(p*360);
+
+      const seconds=Math.max(
+        0,
+        Math.ceil(remainingMs/1000)
+      );
+
+      holdRing.style.background=
+        `conic-gradient(#fff ${degrees}deg,rgba(255,255,255,.16) ${degrees}deg)`;
+
+      holdLabel.textContent=
+        p >= 1 ? "✓" : `${seconds}s`;
+    }
+
+    function resetHold(){
+      holdStartTime=null;
+      lastCountdownSecond=null;
+      setHoldProgress(0,HOLD_DURATION_MS);
+    }
+
+    function resetStages(){
+      [stageHand,stageShape,stageHold].forEach(stage=>{
+        stage.classList.remove("done","active");
+      });
+    }
+
+    function setStages({
+      hand=false,
+      shape=false,
+      hold=false
+    }){
+      resetStages();
+
+      if(hand){
+        stageHand.classList.add("done");
+      }
+
+      if(hand && !shape){
+        stageShape.classList.add("active");
+      }
+
+      if(shape){
+        stageShape.classList.add("done");
+      }
+
+      if(shape && !hold){
+        stageHold.classList.add("active");
+      }
+
+      if(hold){
+        stageHold.classList.add("done");
+      }
+    }
+
+    function renderPracticeGrid(){
+      practiceGrid.innerHTML=LESSONS
+        .map(lesson=>`
+          <button class="practice-sign" data-id="${lesson.id}">
+            <strong>${lesson.sign}</strong>
+            <span>${lesson.name}</span>
+          </button>
+        `)
+        .join("");
+
+      practiceGrid
+        .querySelectorAll(".practice-sign")
+        .forEach(btn=>{
+          btn.addEventListener("click",()=>{
+            practiceLesson=LESSONS.find(
+              lesson=>lesson.id === btn.dataset.id
+            );
+
+            practicePicker.classList.add("hidden");
+            renderLesson();
+            hideTutorialAndStart();
+            SoundEngine.tap();
+          });
+        });
+    }
+
+    function renderLesson(){
+      const lesson=currentLesson();
+
+      if(!lesson) return;
+
+      lessonLocked=false;
+      currentAttempts=1;
+      hadActiveHold=false;
+      resetHold();
+      setStages({});
+      successOverlay.classList.add("hidden");
+
+      if(sessionMode === "practice"){
+        lessonProgressText.textContent="FREE PRACTICE";
+        topProgressBar.style.width="0%";
+        appTitle.textContent="SIGN · Practice";
+        lessonKicker.textContent="Personal practice";
+      }else{
+        lessonProgressText.textContent=
+          `${String(currentLessonIndex+1).padStart(2,"0")} / ${String(sessionLessons.length).padStart(2,"0")}`;
+
+        topProgressBar.style.width=
+          `${(currentLessonIndex/sessionLessons.length)*100}%`;
+
+        appTitle.textContent=
+          `SIGN · ${sessionMode === "learn" ? "Learn" : "Challenge"}`;
+
+        lessonKicker.textContent=
+          sessionMode === "learn"
+            ? "Learn this handshape"
+            : "Challenge · make this sign";
+      }
+
+      targetSign.textContent=lesson.sign;
+      targetName.textContent=lesson.name;
+
+      targetInstruction.textContent=
+        sessionMode === "challenge"
+          ? "No tutorial this time. Use what you remember and follow the live correction."
+          : lesson.instruction;
+
+      const svg=createHandDiagramSVG(lesson);
+
+      lessonHandDiagram.innerHTML=svg;
+      fingerGuide.innerHTML=
+        sessionMode === "challenge"
+          ? ""
+          : fingerChipsHTML(lesson);
+
+      successTitle.textContent="Confirmed.";
+
+      successText.textContent=
+        `${lesson.name} stayed correctly matched for six seconds.`;
+
+      nextBtn.textContent=
+        sessionMode === "practice"
+          ? "Choose another sign →"
+          : currentLessonIndex === sessionLessons.length-1
+            ? "See your result →"
+            : "Next sign →";
+
+      setStatus(
+        "Show your hand",
+        "Keep one hand centered inside the guide."
+      );
+
+      if(DEBUG){
+        debugBox.textContent="";
+      }
+
+      if(sessionMode === "learn"){
+        showTutorial();
+      }else if(sessionMode === "challenge"){
+        hideTutorialAndStart();
+      }
+    }
+
+    function showTutorial(){
+      const lesson=currentLesson();
+
+      tutorialCount.textContent=
+        `Lesson ${currentLessonIndex+1} of ${sessionLessons.length}`;
+
+      tutorialSymbol.textContent=lesson.sign;
+      tutorialHandDiagram.innerHTML=createHandDiagramSVG(lesson);
+      tutorialTitle.textContent=lesson.name;
+      tutorialText.textContent=lesson.instruction;
+      tutorialFingers.innerHTML=fingerChipsHTML(lesson);
+
+      tutorialOverlay.classList.remove("hidden");
+    }
+
+    function hideTutorialAndStart(){
+      tutorialOverlay.classList.add("hidden");
+      lessonStartTime=performance.now();
+    }
+
+    function showPracticePicker(){
+      tutorialOverlay.classList.add("hidden");
+      practicePicker.classList.remove("hidden");
+
+      setStatus(
+        "Choose a handshape",
+        "Pick any sign from the Practice menu."
+      );
+    }
+
+    function registerBrokenHold(){
+      if(hadActiveHold){
+        currentAttempts += 1;
+        hadActiveHold=false;
+      }
+    }
+
+    function showSuccess(){
+      const lesson=currentLesson();
+
+      lessonLocked=true;
+
+      const now=performance.now();
+
+      const recognitionTime=
+        lessonStartTime !== null
+          ? now-lessonStartTime
+          : 0;
+
+      sessionResults.push({
+        id:lesson.id,
+        name:lesson.name,
+        timeMs:recognitionTime,
+        attempts:currentAttempts
+      });
+
+      setStages({
+        hand:true,
+        shape:true,
+        hold:true
+      });
+
+      setHoldProgress(1,0);
+      SoundEngine.success();
+
+      if(sessionMode !== "practice"){
+        topProgressBar.style.width=
+          `${((currentLessonIndex+1)/sessionLessons.length)*100}%`;
+      }
+
+      successOverlay.classList.remove("hidden");
+    }
+
+    async function nextAction(){
+      if(sessionMode === "practice"){
+        successOverlay.classList.add("hidden");
+        showPracticePicker();
+        return;
+      }
+
+      if(currentLessonIndex < sessionLessons.length-1){
+        currentLessonIndex += 1;
+        renderLesson();
+        return;
+      }
+
+      showCompletion();
+    }
+
+    function showCompletion(){
+      lessonExperience.style.display="none";
+      completionScreen.classList.add("active");
+
+      stopCamera();
+      renderCompletion();
+      SoundEngine.complete();
+    }
+
+    function renderCompletion(){
+      const results=sessionResults;
+
+      const avgTime=
+        results.length
+          ? results.reduce((sum,result)=>sum+result.timeMs,0)/results.length
+          : 0;
+
+      const fastest=
+        results.length
+          ? [...results].sort((a,b)=>a.timeMs-b.timeMs)[0]
+          : null;
+
+      const mostAttempts=
+        results.length
+          ? [...results].sort((a,b)=>{
+              if(b.attempts !== a.attempts){
+                return b.attempts-a.attempts;
+              }
+
+              return b.timeMs-a.timeMs;
+            })[0]
+          : null;
+
+      completedStat.textContent=
+        `${results.length} / ${sessionLessons.length}`;
+
+      avgTimeStat.textContent=
+        results.length
+          ? `${(avgTime/1000).toFixed(1)}s`
+          : "—";
+
+      fastestStat.textContent=
+        fastest
+          ? `${fastest.id} · ${(fastest.timeMs/1000).toFixed(1)}s`
+          : "—";
+
+      mostAttemptsStat.textContent=
+        mostAttempts
+          ? `${mostAttempts.id} · ${mostAttempts.attempts}`
+          : "—";
+
+      completionMessage.textContent=
+        sessionMode === "challenge"
+          ? "You completed the randomized challenge. The result below highlights which handshape required the most retries."
+          : "You completed the guided session. Recognition time and attempt count show where more practice may help.";
+
+      resultTable.innerHTML=results
+        .map(result=>`
+          <div class="result-row">
+            <strong>${result.id}</strong>
+            <span class="result-status">Completed</span>
+            <span>${result.attempts} attempt${result.attempts === 1 ? "" : "s"}</span>
+            <span class="result-time">${(result.timeMs/1000).toFixed(1)}s</span>
+          </div>
+        `)
+        .join("");
+
+      practiceWeakBtn.disabled=!mostAttempts;
+      practiceWeakBtn.dataset.id=mostAttempts?.id ?? "";
+    }
+
+    async function createHandLandmarker(){
+      if(handLandmarker) return;
+
+      const vision=await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm"
+      );
+
+      const modelAssetPath=
+        "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task";
+
+      const options={
+        baseOptions:{
+          modelAssetPath,
+          delegate:"GPU"
+        },
+        runningMode:"VIDEO",
+        numHands:1,
+        minHandDetectionConfidence:.55,
+        minHandPresenceConfidence:.55,
+        minTrackingConfidence:.55
+      };
+
+      try{
+        handLandmarker=
+          await HandLandmarker.createFromOptions(
+            vision,
+            options
+          );
+      }catch(error){
+        console.warn(
+          "GPU unavailable. Falling back.",
+          error
+        );
+
+        handLandmarker=
+          await HandLandmarker.createFromOptions(
+            vision,
+            {
+              ...options,
+              baseOptions:{modelAssetPath}
+            }
+          );
+      }
+    }
+
+    async function startCamera(){
+      loadingOverlay.classList.remove("hidden");
+      cameraError.classList.add("hidden");
+
+      if(!window.isSecureContext){
+        throw new Error(
+          "Camera access requires HTTPS or localhost."
+        );
+      }
+
+      if(!navigator.mediaDevices?.getUserMedia){
+        throw new Error(
+          "This browser does not support getUserMedia."
+        );
+      }
+
+      await createHandLandmarker();
+
+      mediaStream=
+        await navigator.mediaDevices.getUserMedia({
+          audio:false,
+          video:{
+            facingMode:"user",
+            width:{ideal:1280},
+            height:{ideal:720}
+          }
+        });
+
+      video.srcObject=mediaStream;
+
+      await new Promise(resolve=>{
+        if(video.readyState >= 2){
+          resolve();
+          return;
+        }
+
+        video.addEventListener(
+          "loadeddata",
+          resolve,
+          {once:true}
+        );
+      });
+
+      await video.play();
+
+      loadingOverlay.classList.add("hidden");
+
+      appRunning=true;
+      lastVideoTime=-1;
+
+      animationFrameId=
+        requestAnimationFrame(predict);
+    }
+
+    function stopCamera(){
+      appRunning=false;
+      resetHold();
+
+      if(animationFrameId){
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId=null;
+      }
+
+      if(mediaStream){
+        mediaStream
+          .getTracks()
+          .forEach(track=>track.stop());
+
+        mediaStream=null;
+      }
+
+      video.srcObject=null;
+
+      placementGuide.classList.remove("hand-found");
+      handednessPill.textContent="Waiting for hand";
+    }
+
+    async function safelyStartCamera(){
+      try{
+        stopCamera();
+        await startCamera();
+      }catch(error){
+        console.error(error);
+
+        loadingOverlay.classList.add("hidden");
+        cameraError.classList.remove("hidden");
+
+        if(error?.name === "NotAllowedError"){
+          cameraErrorText.textContent=
+            "Camera permission was blocked. Allow camera access in browser settings, then try again.";
+        }else if(error?.name === "NotFoundError"){
+          cameraErrorText.textContent=
+            "No available camera was found.";
+        }else{
+          cameraErrorText.textContent=
+            error?.message ||
+            "Unable to start the camera.";
+        }
+      }
+    }
+
+    function predict(){
+      if(!appRunning || !handLandmarker){
+        return;
+      }
+
+      if(
+        video.readyState >= 2 &&
+        video.currentTime !== lastVideoTime
+      ){
+        lastVideoTime=video.currentTime;
+
+        const now=performance.now();
+
+        const result=
+          handLandmarker.detectForVideo(
+            video,
+            now
+          );
+
+        handlePrediction(
+          result,
+          now
+        );
+      }
+
+      animationFrameId=
+        requestAnimationFrame(predict);
+    }
+
+    let previousHandDetected=false;
+    let previousMatched=false;
+
+    function handlePrediction(result,now){
+      const landmarks=
+        result?.landmarks?.[0];
+
+      const handedness=
+        result?.handedness?.[0]?.[0]?.categoryName ||
+        result?.handednesses?.[0]?.[0]?.categoryName ||
+        "";
+
+      if(!landmarks){
+        placementGuide.classList.remove("hand-found");
+        handednessPill.textContent="Waiting for hand";
+
+        if(!lessonLocked){
+          registerBrokenHold();
+          resetHold();
+          setStages({});
+          previousMatched=false;
+          previousHandDetected=false;
+
+          setStatus(
+            "Show your hand",
+            "Keep one hand centered inside the guide."
+          );
+        }
+
+        if(DEBUG){
+          debugBox.textContent="No hand detected";
+        }
+
+        return;
+      }
+
+      placementGuide.classList.add("hand-found");
+
+      handednessPill.textContent=
+        handedness
+          ? `${handedness} hand detected`
+          : "Hand detected";
+
+      if(!previousHandDetected){
+        SoundEngine.handDetected();
+      }
+
+      previousHandDetected=true;
+
+      if(lessonLocked){
+        return;
+      }
+
+      const lesson=currentLesson();
+
+      if(!lesson){
+        return;
+      }
+
+      const values=getFingerValues(landmarks);
+      const states=getFingerStates(values);
+
+      const resultForTarget=
+        classifyTarget(
+          values,
+          states,
+          lesson
+        );
+
+      if(DEBUG){
+        debugBox.textContent=
+          `Target: ${lesson.id}\n`+
+          `Matched: ${resultForTarget.matched}\n`+
+          `Attempts: ${currentAttempts}\n`+
+          `Mismatches: ${resultForTarget.mismatches.join(", ") || "none"}\n\n`+
+          `Values:\n${JSON.stringify(values,null,2)}\n\n`+
+          `States:\n${JSON.stringify(states,null,2)}`;
+      }
+
+      if(!resultForTarget.matched){
+        if(previousMatched){
+          registerBrokenHold();
+        }
+
+        previousMatched=false;
+        resetHold();
+        setStages({hand:true});
+
+        setStatus(
+          "Almost there",
+          correctionMessage(
+            landmarks,
+            values,
+            states,
+            lesson,
+            resultForTarget
+          )
+        );
+
+        return;
+      }
+
+      if(!previousMatched){
+        SoundEngine.matched();
+      }
+
+      previousMatched=true;
+
+      if(holdStartTime === null){
+        holdStartTime=now;
+        lastCountdownSecond=6;
+        hadActiveHold=true;
+
+        SoundEngine.countdown(6);
+      }
+
+      const elapsed=
+        now-holdStartTime;
+
+      const remaining=
+        Math.max(
+          0,
+          HOLD_DURATION_MS-elapsed
+        );
+
+      const progress=
+        elapsed/HOLD_DURATION_MS;
+
+      const second=
+        Math.max(
+          0,
+          Math.ceil(remaining/1000)
+        );
+
+      if(
+        second > 0 &&
+        second !== lastCountdownSecond
+      ){
+        lastCountdownSecond=second;
+        SoundEngine.countdown(second);
+      }
+
+      setHoldProgress(
+        progress,
+        remaining
+      );
+
+      setStages({
+        hand:true,
+        shape:true,
+        hold:progress >= 1
+      });
+
+      if(progress < 1){
+        setStatus(
+          `Hold steady · ${second}`,
+          `Keep the handshape stable. ${second} second${second === 1 ? "" : "s"} remaining.`
+        );
+
+        return;
+      }
+
+      setStatus(
+        "Confirmed.",
+        "The handshape stayed matched for six seconds."
+      );
+
+      showSuccess();
+    }
+
+    function resetSession(){
+      currentLessonIndex=0;
+      sessionResults=[];
+      practiceLesson=null;
+
+      sessionLessons=
+        sessionMode === "challenge"
+          ? shuffle(LESSONS)
+          : [...LESSONS];
+
+      lessonExperience.style.display="block";
+      completionScreen.classList.remove("active");
+      practicePicker.classList.add("hidden");
+
+      previousHandDetected=false;
+      previousMatched=false;
+
+      if(sessionMode === "practice"){
+        renderPracticeGrid();
+        showPracticePicker();
+      }else{
+        renderLesson();
+      }
+    }
+
+    async function openTrainer(mode){
+      sessionMode=mode;
+
+      document.body.classList.add("no-scroll");
+
+      appShell.classList.add("active");
+      appShell.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+      resetSession();
+
+      await safelyStartCamera();
+    }
+
+    function closeTrainer(){
+      stopCamera();
+
+      appShell.classList.remove("active");
+      appShell.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      document.body.classList.remove("no-scroll");
+
+      lessonExperience.style.display="block";
+      completionScreen.classList.remove("active");
+
+      tutorialOverlay.classList.add("hidden");
+      practicePicker.classList.add("hidden");
+      successOverlay.classList.add("hidden");
+
+      sessionResults=[];
+    }
+
+    function openModeChooser(){
+      selectedMode="learn";
+
+      modeCards.forEach(card=>{
+        card.classList.toggle(
+          "selected",
+          card.dataset.mode === selectedMode
+        );
+      });
+
+      beginSessionBtn.textContent=
+        "Begin Learn →";
+
+      modeOverlay.classList.remove("hidden");
+      document.body.classList.add("no-scroll");
+    }
+
+    function closeModeChooser(){
+      modeOverlay.classList.add("hidden");
+
+      if(!appShell.classList.contains("active")){
+        document.body.classList.remove("no-scroll");
+      }
+    }
+
+    enterExperienceBtn.addEventListener(
+      "click",
+      async ()=>{
+        await SoundEngine.unlock();
+        SoundEngine.enter();
+
+        entryNotice.classList.add("hidden");
+        document.body.classList.remove("no-scroll");
+
+        startSessionBtn.focus();
+      }
+    );
+
+    startSessionBtn.addEventListener(
+      "click",
+      async ()=>{
+        await SoundEngine.unlock();
+        SoundEngine.tap();
+        openModeChooser();
+      }
+    );
+
+    modeCards.forEach(card=>{
+      card.addEventListener(
+        "click",
+        ()=>{
+          selectedMode=card.dataset.mode;
+
+          modeCards.forEach(item=>{
+            item.classList.toggle(
+              "selected",
+              item === card
+            );
+          });
+
+          beginSessionBtn.textContent=
+            selectedMode === "learn"
+              ? "Begin Learn →"
+              : selectedMode === "practice"
+                ? "Open Practice →"
+                : "Begin Challenge →";
+
+          SoundEngine.tap();
+        }
+      );
+    });
+
+    cancelModeBtn.addEventListener(
+      "click",
+      ()=>{
+        SoundEngine.tap();
+        closeModeChooser();
+      }
+    );
+
+    beginSessionBtn.addEventListener(
+      "click",
+      async ()=>{
+        SoundEngine.tap();
+        closeModeChooser();
+        await openTrainer(selectedMode);
+      }
+    );
+
+    readyBtn.addEventListener(
+      "click",
+      async ()=>{
+        await SoundEngine.unlock();
+        SoundEngine.tap();
+        hideTutorialAndStart();
+      }
+    );
+
+    skipTutorialBtn.addEventListener(
+      "click",
+      async ()=>{
+        await SoundEngine.unlock();
+        SoundEngine.tap();
+        hideTutorialAndStart();
+      }
+    );
+
+    retryCameraBtn.addEventListener(
+      "click",
+      async ()=>{
+        SoundEngine.tap();
+        await safelyStartCamera();
+      }
+    );
+
+    nextBtn.addEventListener(
+      "click",
+      async ()=>{
+        SoundEngine.tap();
+        await nextAction();
+      }
+    );
+
+    closeBtn.addEventListener(
+      "click",
+      ()=>{
+        SoundEngine.tap();
+        closeTrainer();
+      }
+    );
+
+    practiceHomeBtn.addEventListener(
+      "click",
+      ()=>{
+        SoundEngine.tap();
+        closeTrainer();
+      }
+    );
+
+    practiceWeakBtn.addEventListener(
+      "click",
+      async ()=>{
+        const id=
+          practiceWeakBtn.dataset.id;
+
+        if(!id){
+          return;
+        }
+
+        sessionMode="practice";
+
+        practiceLesson=
+          LESSONS.find(
+            lesson=>lesson.id === id
+          );
+
+        lessonExperience.style.display="block";
+        completionScreen.classList.remove("active");
+        practicePicker.classList.add("hidden");
+
+        renderLesson();
+        hideTutorialAndStart();
+
+        await safelyStartCamera();
+      }
+    );
+
+    tryAgainBtn.addEventListener(
+      "click",
+      async ()=>{
+        SoundEngine.tap();
+        resetSession();
+        await safelyStartCamera();
+      }
+    );
+
+    switchModeBtn.addEventListener(
+      "click",
+      ()=>{
+        SoundEngine.tap();
+        closeTrainer();
+        openModeChooser();
+      }
+    );
+
+    backHomeBtn.addEventListener(
+      "click",
+      ()=>{
+        SoundEngine.tap();
+        closeTrainer();
+      }
+    );
+
+    document.addEventListener(
+      "keydown",
+      event=>{
+        if(event.key !== "Escape"){
+          return;
+        }
+
+        if(!modeOverlay.classList.contains("hidden")){
+          closeModeChooser();
+          return;
+        }
+
+        if(appShell.classList.contains("active")){
+          closeTrainer();
+        }
+      }
+    );
+
+    window.addEventListener(
+      "beforeunload",
+      stopCamera
+    );
+
+    updateSoundButtons();
+  </script>
+</body>
+</html>
